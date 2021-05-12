@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="@string/action_search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_sort_by"
+        android:title="@string/sort"
+        android:icon="@drawable/ic_baseline_sort_24"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_menu"
+        android:title="@string/action_menu"
+        android:icon="@drawable/ic_baseline_more_vert_24"
+        app:showAsAction="always" >
+
+        <menu>
+            <item
+                android:id="@+id/action_select"
+                android:title="Select"
+
+                android:icon="@drawable/action_select"
+                app:showAsAction="always"></item>
+            <item
+                android:id="@+id/action_refresh"
+                android:title="Refresh"
+
+                android:icon="@drawable/action_refresh"
+                app:showAsAction="always"></item>
+            <item
+                android:id="@+id/action_equalizer"
+                android:title="Equalizer"
+
+                android:icon="@drawable/action_equalizer"
+                app:showAsAction="always"></item>
+            <item
+                android:id="@+id/action_settings"
+                android:title="Settings"
+
+                android:icon="@drawable/action_settings"
+                app:showAsAction="always"></item>
+        </menu>
+    </item>
+
+
+
+</menu>

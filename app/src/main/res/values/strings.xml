@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">VPlayer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_video">Video</string>
+    <string name="title_music">Music</string>
+    <string name="title_playlist">Playlist</string>
+    <string name="action_search">Search</string>
+    <string name="sort">Sort</string>
+    <string name="action_menu">menu</string>
+
+    <string-array name="menu_array">
+        <item>Background Play</item>
+        <item>Add to Playlist</item>
+        <item>Rename</item>
+        <item>Delete</item>
+        <item>Share</item>
+    </string-array>
+</resources>

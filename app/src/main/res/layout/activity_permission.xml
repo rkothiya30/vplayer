@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+android:background="@color/white">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:padding="1dp"
+            android:background="@mipmap/ic_launcher"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_dec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:text="To play videos, please allow VPlayer to access videos on your device."
+            android:textColor="@color/black"
+            android:textSize="@dimen/_18sdp" />
+
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_70sdp"
+            app:cardBackgroundColor="@color/theme_color"
+            app:cardElevation="0dp"
+
+            app:cardCornerRadius="@dimen/_17sdp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/btn_allow1"
+                android:layout_width="@dimen/_140sdp"
+                android:layout_height="@dimen/_38sdp"
+                android:gravity="center"
+                android:text="Allow"
+
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_18sdp" />
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</LinearLayout>

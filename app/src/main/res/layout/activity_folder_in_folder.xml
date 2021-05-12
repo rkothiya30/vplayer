@@ -1,0 +1,98 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/darkGray"
+        android:elevation="0dp"
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_back"
+            android:src="@drawable/ic_back"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="5dp"
+            android:backgroundTint="@color/white"></ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_title"
+            android:layout_toRightOf="@id/iv_back"
+            android:text="erfef"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/_20sdp"></TextView>
+
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:layout_toLeftOf="@+id/iv_list_grid"
+                android:padding="@dimen/_6sdp"
+                android:src="@drawable/ic_baseline_search_24"
+                 />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_list_grid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:layout_toLeftOf="@+id/iv_more"
+                android:padding="@dimen/_6sdp"
+                android:src="@drawable/ic_grid"
+                />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:padding="@dimen/_6sdp"
+                android:src="@drawable/ic_baseline_more_vert_24"
+                 />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/videoList"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/emptyString"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="No Any Video"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</LinearLayout>
