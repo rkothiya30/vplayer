@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/f_lout"
+
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_3sdp"
+>
+    <ImageView
+
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_110sdp"
+            android:id="@+id/iv_grey"
+        android:layout_below="@+id/tv_videos"
+            android:background="@color/md_grey_600"
+            android:padding="@dimen/_20sdp" />
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_videos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="videos"
+        android:layout_gravity="top|left"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:textSize="@dimen/_14sdp"
+
+        />
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="videos"
+        android:layout_gravity="top"
+        android:layout_alignRight="@id/iv_grey"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:textSize="@dimen/_14sdp"
+
+        />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_image"
+        android:layout_below="@+id/tv_videos"
+
+        >
+        <ImageView
+            android:id="@+id/videoThumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_110sdp"
+            android:background="@color/white_transparent"
+            android:scaleType="centerCrop" />
+        <TextView
+            android:id="@+id/videoDuration"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_2sdp"
+            android:paddingHorizontal="5dp"
+            android:text="5555"
+            android:layout_alignBottom="@+id/videoThumbnail"
+            android:layout_alignRight="@+id/videoThumbnail"
+            android:background="@color/black_transparent"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/white"/>
+    </RelativeLayout>
+    <ProgressBar
+        android:id="@+id/videoProgress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:minHeight="4dp"
+        android:layout_below="@+id/tv_videos"
+        android:progress="0"
+        android:visibility="gone" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_below="@+id/ll_image"
+
+        >
+
+        <TextView
+            android:id="@+id/videoName"
+
+            android:layout_width="@dimen/_95sdp"
+            android:layout_height="wrap_content"
+
+            android:text="filename"
+
+            android:singleLine="true"
+            android:textSize="@dimen/_16sdp" />
+        <TextView
+            android:id="@+id/videoSize"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_below="@id/videoName"
+            android:paddingBottom="@dimen/_3sdp"
+            android:textSize="@dimen/_14sdp" />
+        <ImageView
+            android:id="@+id/popup_menu"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?actionBarItemBackground"
+            app:tint="@color/black"
+            android:src="@drawable/ic_baseline_more_vert_24" />
+    </RelativeLayout>
+</RelativeLayout>
+
+
+    </FrameLayout>
