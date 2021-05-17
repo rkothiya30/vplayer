@@ -1,0 +1,53 @@
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/continueWatchingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginRight="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_24sdp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_4sdp">
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continue Watching"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18sdp" />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_see_more"
+                android:text="SEE MORE"
+                android:textColor="@color/tab_selected_color"
+                android:paddingRight="@dimen/_10sdp"
+                android:layout_alignParentRight="true"
+                android:textStyle="bold"
+                android:textSize="@dimen/_18sdp" />
+
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/continueVideoList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:clipToPadding="false" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -25,24 +25,13 @@
         android:id="@+id/tv_videos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="videos"
+        android:textColor="@color/white"
         android:layout_gravity="top|left"
-        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginVertical="@dimen/_10sdp"
         android:textSize="@dimen/_14sdp"
 
         />
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/tv_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="videos"
-        android:layout_gravity="top"
-        android:layout_alignRight="@id/iv_grey"
-        android:layout_marginHorizontal="@dimen/_10sdp"
-        android:textSize="@dimen/_14sdp"
 
-        />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -96,7 +85,7 @@
             android:layout_height="wrap_content"
 
             android:text="filename"
-
+            android:textColor="@color/white"
             android:singleLine="true"
             android:textSize="@dimen/_16sdp" />
         <TextView
@@ -106,6 +95,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:layout_below="@id/videoName"
+            android:textColor="@color/white"
             android:paddingBottom="@dimen/_3sdp"
             android:textSize="@dimen/_14sdp" />
         <ImageView
@@ -116,7 +106,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="?actionBarItemBackground"
-            app:tint="@color/black"
+            app:tint="@color/white"
             android:src="@drawable/ic_baseline_more_vert_24" />
     </RelativeLayout>
 </RelativeLayout>

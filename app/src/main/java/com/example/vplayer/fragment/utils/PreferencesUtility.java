@@ -29,6 +29,7 @@ public class PreferencesUtility {
 
     public static final String PREF_HISTORY_VIDEOS = "history_videos";
     public static final String PREF_LAST_PLAY_VIDEOS = "last_play_videos";
+    public static final String SHARED_PREFS_DIR_LIST_GRID = "grid_view";
 
     private static PreferencesUtility sInstance;
     private static volatile SharedPreferences mPreferences;
@@ -94,6 +95,18 @@ public class PreferencesUtility {
                 videoList.addAll(historyVideo.getVideoList());
         }
         return videoList;
+    }
+
+    public  void saveToDirList_Grid( boolean value) {
+
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putBoolean(SHARED_PREFS_DIR_LIST_GRID, value);
+        editor.commit();
+
+    }
+
+    public  boolean getDirList_Grid() {
+        return mPreferences.getBoolean(SHARED_PREFS_DIR_LIST_GRID, false);
     }
 
     public void setAutoPlayVideo(boolean isShow) {

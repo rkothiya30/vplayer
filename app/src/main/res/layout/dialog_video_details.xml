@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme_color"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_16sdp"
+        android:id="@+id/text_properties"
+        android:text="@string/action_details"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16sdp" />
+
+
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_file_name"
+        android:layout_below="@+id/text_properties"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:text="File Name"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/videoName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="qqqqq"
+        android:textColor="@color/white"
+        android:layout_below="@id/text_properties"
+        android:layout_toRightOf="@+id/text_file_name"
+        android:layout_alignTop="@+id/text_file_name"
+        android:layout_marginLeft="@dimen/_70sdp"
+        android:textSize="@dimen/_14sdp" />
+
+
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_duration"
+        android:layout_below="@id/videoName"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:text="text_duration"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_14sdp" />
+
+    <TextView
+        android:id="@+id/videoDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/text_duration"
+        android:layout_alignLeft="@id/videoName"
+        android:textColor="@color/white"
+        android:text="wwwww"
+        android:textSize="@dimen/_14sdp" />
+
+
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_size"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_below="@id/videoDuration"
+        android:text="Size"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_14sdp" />
+
+    <TextView
+        android:id="@+id/videoSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/text_size"
+        android:layout_alignLeft="@id/videoName"
+        android:textColor="@color/white"
+        android:text="wwwww"
+        android:textSize="@dimen/_14sdp" />
+
+
+
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_file_path"
+        android:text="File Path"
+        android:layout_below="@id/videoSize"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_14sdp" />
+
+    <TextView
+        android:id="@+id/videoPath"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/text_file_path"
+        android:layout_alignLeft="@id/videoName"
+        android:textColor="@color/white"
+        android:text="wwwww"
+        android:textSize="@dimen/_14sdp" />
+
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_resolution"
+        android:layout_below="@id/videoPath"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:textColor="@color/white"
+        android:text="Resolution"
+        android:textSize="@dimen/_14sdp" />
+
+    <TextView
+        android:id="@+id/videoResolution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/text_resolution"
+        android:layout_alignLeft="@id/videoName"
+        android:textColor="@color/white"
+        android:text="wwwww"
+        android:textSize="@dimen/_14sdp" />
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:id="@+id/text_modify_date"
+            android:textColor="@color/white"
+            android:layout_below="@+id/videoResolution"
+            android:text="Modify Date"
+            android:textSize="@dimen/_14sdp" />
+
+        <TextView
+            android:id="@+id/videoModifyDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/text_modify_date"
+            android:layout_alignLeft="@id/videoName"
+            android:textColor="@color/white"
+            android:text="wwwww"
+            android:textSize="@dimen/_14sdp" />
+
+
+
+    <TextView
+        android:id="@+id/btnOk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_modify_date"
+        android:gravity="right"
+        android:padding="@dimen/_16sdp"
+        android:layout_marginRight="@dimen/_8sdp"
+        android:text="@string/action_ok"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/_18sdp" />
+
+</RelativeLayout>

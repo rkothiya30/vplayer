@@ -1,0 +1,99 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/darkGray"
+        android:elevation="0dp"
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_back"
+            android:src="@drawable/ic_back"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="5dp"
+            android:backgroundTint="@color/white"></ImageView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toRightOf="@id/iv_back"
+            android:layout_toLeftOf="@id/iv_delete"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_title"
+                android:layout_toRightOf="@id/iv_back"
+                android:text="Continue Watching"
+                android:singleLine="true"
+                android:ellipsize="end"
+
+                android:textSize="@dimen/_22sdp"></TextView>
+
+           <!-- <TextView
+                android:id="@+id/tv_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="videos"
+
+
+                android:textSize="@dimen/_14sdp"
+
+                />-->
+        </LinearLayout>
+
+
+
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/ic_delete"
+            />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/videoList"
+            android:background="@color/theme_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/emptyString"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="No Any Video"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</LinearLayout>

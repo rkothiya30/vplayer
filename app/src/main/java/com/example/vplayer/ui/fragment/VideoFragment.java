@@ -17,23 +17,36 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 import com.example.vplayer.R;
+import com.example.vplayer.fragment.adapter.ContinueWatchingVideoAdapter;
 import com.example.vplayer.fragment.adapter.VideoFolderAdapter;
+import com.example.vplayer.fragment.event.UpdateContinueWatchingEvent;
+import com.example.vplayer.fragment.event.UpdateVideoList;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
+import com.example.vplayer.fragment.utils.RxBus;
+import com.example.vplayer.model.HistoryVideo;
 import com.example.vplayer.model.Video;
 import com.example.vplayer.service.VideoDataService;
 import com.example.vplayer.ui.activity.FolderInFolderActivity;
+import com.example.vplayer.ui.activity.SeeMoreActivity;
+import com.google.gson.Gson;
 
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static android.content.ContentValues.TAG;
 import static com.example.vplayer.service.VideoDataService.videobuckets;
@@ -49,8 +62,11 @@ public class VideoFragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
     ImageView emptyString;
 
+    List<Video> videoListWithAd;
+    List<Video> continueWatchingVideoList;
+
     VideoFolderAdapter videoFolderAdapter;
-    //ContinueWatchingVideoAdapter continueWatchingVideoAdapter;
+    ContinueWatchingVideoAdapter continueWatchingVideoAdapter;
     /*@Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
@@ -92,26 +108,39 @@ public class VideoFragment extends Fragment {
 
     }*/
 
+    public void setVideoList() {
+        videoListWithAd = new ArrayList<>();
+        videoListWithAd.addAll(videoList);
 
+        //videoFolderAdapter.setVideoList(videoListWithAd, true);
+        refreshLayout.setRefreshing(false);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         videoList = new ArrayList<>();
+        continueWatchingVideoList = new ArrayList<>();
+
+        continueWatchingVideoAdapter = new ContinueWatchingVideoAdapter(getContext());
 
         preferencesUtility = PreferencesUtility.getInstance(getContext());
+        continueWatchingVideoList = preferencesUtility.getContinueWatchingVideos();
         setHasOptionsMenu(true);
+
+
+        subscribeUpdateVideoListEvent();
+        subscribeUpdateContinueWatchingEvent();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate( R.layout.fragment_video, container, false);
+        view = inflater.inflate(R.layout.fragment_video, container, false);
 
         videoLList = view.findViewById(R.id.videoList);
-        refreshLayout =view.findViewById(R.id.refreshLayout);
+        refreshLayout = view.findViewById(R.id.refreshLayout);
         emptyString = view.findViewById(R.id.emptyString);
-
 
 
         return view;
@@ -125,8 +154,18 @@ public class VideoFragment extends Fragment {
     }
 
     public void initView() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        videoLList.setLayoutManager(linearLayoutManager);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3, RecyclerView.VERTICAL, false);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if(position==0)
+                    return 3;
+                return 1;
+            }
+        });
+        videoLList.setLayoutManager(gridLayoutManager);
+
         videoLList.setNestedScrollingEnabled(false);
         videoLList.setHasFixedSize(true);
         videoLList.setItemViewCacheSize(20);
@@ -141,7 +180,7 @@ public class VideoFragment extends Fragment {
                 // TODO Auto-generated method stub
                 //super.onScrollStateChanged(recyclerView, newState);
                 try {
-                    int firstPos = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+                    int firstPos = gridLayoutManager.findFirstCompletelyVisibleItemPosition();
                     if (firstPos > 0) {
                         refreshLayout.setEnabled(false);
                     } else {
@@ -167,16 +206,58 @@ public class VideoFragment extends Fragment {
         videoFolderAdapter.setOnItemClickListener(new VideoFolderAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-
+                position--;
                 if (videobuckets.get(position).getFolderList() != null && videobuckets.get(position).getFolderList().size() != 0) {
                     startActivity(FolderInFolderActivity.getInstance(getActivity(), position, videobuckets.get(position).folderPath, videobuckets.get(position).getFolderList().get(0)));
                 } else {
-                   startActivity(FolderInFolderActivity.getInstance(getActivity(), position,  videobuckets.get(position).folderPath));
+                    startActivity(FolderInFolderActivity.getInstance(getActivity(), position, videobuckets.get(position).folderPath));
                 }
+            }
+        });
+        videoFolderAdapter.setOnMoreItemClickListener(new VideoFolderAdapter.MoreClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                startActivity(new Intent(getActivity(), SeeMoreActivity.class));
             }
         });
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_video, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                Toast.makeText(getContext(), "Search Clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+
+            case R.id.action_select:
+                Toast.makeText(getContext(), "Select Clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.action_refresh:
+                Toast.makeText(getContext(), "Refresh Clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.action_equalizer:
+                Toast.makeText(getContext(), "Equalizer Clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.action_settings:
+                Toast.makeText(getContext(), "Settings Clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     private class DownloadWebPageTask extends AsyncTask<String, Void, String> {
         @Override
@@ -243,12 +324,12 @@ public class VideoFragment extends Fragment {
             } catch (Exception e) {
             }
             videoFolderAdapter = new VideoFolderAdapter(getContext());
+
             initView();
         }
 
 
     }
-
 
 
     @Override
@@ -262,7 +343,7 @@ public class VideoFragment extends Fragment {
         }
 
         if (VideoDataService.videoList.size() == 0) {
-           // mPresenter.loadVideos();
+            // mPresenter.loadVideos();
             VideoDataService.videoList.clear();
         }
         if (videoFolderAdapter != null) {
@@ -300,13 +381,59 @@ public class VideoFragment extends Fragment {
 
                 }
             }
-       /*     sortList();*/
+            /*     sortList();*/
             refreshLayout.setRefreshing(false);
         }
     }
 
 
+    private void subscribeUpdateVideoListEvent() {
 
+        Subscription subscription = RxBus.getInstance()
+                .toObservable(UpdateVideoList.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged()
+                .subscribe(new Action1<UpdateVideoList>() {
+                    @Override
+                    public void call(UpdateVideoList event) {
+                        videoListWithAd.remove(event.getPosition());
+                        setVideoList();
+                        videoFolderAdapter.notifyDataSetChanged();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
+        RxBus.getInstance().addSubscription(this, subscription);
+    }
+
+    private void subscribeUpdateContinueWatchingEvent() {
+        Subscription subscription = RxBus.getInstance()
+                .toObservable(UpdateContinueWatchingEvent.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged()
+                .subscribe(new Action1<UpdateContinueWatchingEvent>() {
+                    @Override
+                    public void call(UpdateContinueWatchingEvent event) {
+                        HistoryVideo updateVideos = new HistoryVideo(preferencesUtility.getContinueWatchingVideos());
+
+                        VideoFolderAdapter.videoListWithContinueWatching.remove(0);
+                        VideoFolderAdapter.videoListWithContinueWatching.add(0, new Gson().toJson(updateVideos));
+                        setVideoList();
+                        videoFolderAdapter.notifyDataSetChanged();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
+        RxBus.getInstance().addSubscription(this, subscription);
+    }
 
 
 }

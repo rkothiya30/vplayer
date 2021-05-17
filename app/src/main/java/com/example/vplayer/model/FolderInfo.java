@@ -14,6 +14,10 @@ public class FolderInfo  {
     public int folderCount;
     List<ParentFolder> multiFolderList;
 
+    public int getVideoCount() {
+        return videoCount;
+    }
+
     public FolderInfo() {
         this.folderName = "";
         this.folderPath = "";

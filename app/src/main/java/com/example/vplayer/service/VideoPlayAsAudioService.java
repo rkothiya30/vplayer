@@ -234,13 +234,13 @@ public class VideoPlayAsAudioService extends Service {
         notificationId = hashCode();
         mNotificationManager.cancelAll();
 
-        /*if (!isRefresh) {
+        if (!isRefresh) {
             startForeground(notificationId, buildNotification());
         } else {
             mNotificationManager.notify(notificationId, buildNotification());
-        }*/
+        }
     }
-/*
+
     private Notification buildNotification() {
 
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.layout_notification_collapse);
@@ -293,7 +293,7 @@ public class VideoPlayAsAudioService extends Service {
         expandedView.setTextViewText(R.id.artistName, text);
         expandedView.setImageViewResource(R.id.play_pause, playButtonResId);
 
-        notificationBuilder.setSmallIcon(R.drawable.splash_icon)
+        notificationBuilder.setSmallIcon(R.drawable.vplayer)
                 .setContentIntent(clickIntent)
                 .setCustomContentView(contentView)
                 .setCustomBigContentView(expandedView);
@@ -323,7 +323,7 @@ public class VideoPlayAsAudioService extends Service {
         };
 
         return notificationBuilder.build();
-    }*/
+    }
 
     public static Bitmap drawableToBitmap(Drawable drawable) {
         Bitmap bitmap = null;

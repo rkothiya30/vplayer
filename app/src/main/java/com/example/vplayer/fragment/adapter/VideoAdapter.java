@@ -45,6 +45,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.example.vplayer.R;
+import com.example.vplayer.fragment.interfaces.OuterClickListener;
 import com.example.vplayer.fragment.utils.Constant;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
@@ -62,7 +63,7 @@ import java.util.List;
 
 import static com.example.vplayer.service.VideoDataService.videobucketimagesDataHashMap;
 
-public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OuterClickListener {
 
 
     private int position;
@@ -95,6 +96,11 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public VideoAdapter( boolean isGrid, Context context) {
 
         this.context = context;
+    }
+
+    @Override
+    public void onOuterClick() {
+
     }
 
     public interface ClickListener {
@@ -137,16 +143,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
 
-    public static long folderSize(File directory) {
-        long length = 0;
-        for (File file : directory.listFiles()) {
-            if (file.isFile())
-                length += file.length();
-            else
-                length += folderSize(file);
-        }
-        return length;
-    }
+
 
 
     public void setVideoList(List<Video> videoList) {
@@ -197,9 +194,9 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                 if (position == 0) {
                     videoViewHolder.videoTitle.setVisibility(View.VISIBLE);
-                    File f = new File(videoList.get(0).getFullPath());
 
-                    videoViewHolder.videoTitle.setText(String.valueOf(videoList.size()) + " VIDEOS      " + VideoPlayerUtils.formateSize(folderSize(new File(f.getParentFile().getAbsolutePath()))));
+
+                    videoViewHolder.videoTitle.setText(String.valueOf(videoList.size()) + " VIDEOS");
                 } else {
                     videoViewHolder.videoTitle.setVisibility(View.GONE);
                 }
@@ -260,7 +257,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 videoViewHolder.popup_menu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showShortDialog(-2, video.getTitle());
+                        showShortDialog(-2, video);
                     }
                 });
                 break;
@@ -270,18 +267,18 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                 if (position == 0) {
                     gridHolder.tv_videos.setVisibility(View.VISIBLE);
-                    gridHolder.tv_size.setVisibility(View.VISIBLE);
+
                     File f = new File(videoList.get(0).getFullPath());
 
                     gridHolder.tv_videos.setText(String.valueOf(videoList.size()) + " VIDEOS" );
-                    gridHolder.tv_size.setText(VideoPlayerUtils.formateSize(folderSize(new File(f.getParentFile().getAbsolutePath()))));
+
                 } else if(position == 1 || position == 2) {
                     gridHolder.tv_videos.setVisibility(View.INVISIBLE);
-                    gridHolder.tv_size.setVisibility(View.INVISIBLE);
+
                 }
                    else {
                         gridHolder.tv_videos.setVisibility(View.GONE);
-                        gridHolder.tv_size.setVisibility(View.GONE);
+
                     }
 
 
@@ -341,7 +338,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 gridHolder.popup_menu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showShortDialog(-2, video1.getTitle());
+                        showShortDialog(-2, video1);
                     }
                 });
                 break;
@@ -361,10 +358,11 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     }*/
 
-        public void showShortDialog ( int adapterPosition, String title){
-            OnMenuFragment bottomSheetDialog = OnMenuFragment.newInstance(adapterPosition, title);
-
+        public void showShortDialog ( int adapterPosition, Video video){
+            OnMenuFragment bottomSheetDialog = OnMenuFragment.newInstance(adapterPosition, video);
+            bottomSheetDialog.setOuterClickListener(this);
             bottomSheetDialog.show(( (FragmentActivity) context ).getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
+
 
         }
 
@@ -413,7 +411,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public class GridHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
             ImageView videoThumbnail, popup_menu;
-            TextView videoName, videoDuration, videoSize, videoTitle, tv_videos, tv_size;
+            TextView videoName, videoDuration, videoSize, videoTitle, tv_videos;
             ProgressBar videoProgress;
 
             public GridHolder(View itemView) {
@@ -428,7 +426,6 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 popup_menu = itemView.findViewById(R.id.popup_menu);
                 videoProgress = itemView.findViewById(R.id.videoProgress);
                 tv_videos = itemView.findViewById(R.id.tv_videos);
-                tv_size = itemView.findViewById(R.id.tv_size);
 
                 itemView.setOnClickListener(this);
                 itemView.setOnLongClickListener(this);

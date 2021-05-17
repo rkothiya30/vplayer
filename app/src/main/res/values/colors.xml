@@ -6,8 +6,8 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="tab_color">#9e9ea1</color>
-    <color name="tab_selected_color">#05c200</color>
-    <color name="darkGray">#212121</color>
+    <color name="tab_selected_color">#3c8cf0</color>
+    <color name="darkGray">#1c2939</color>
     <color name="gray_divider">#e1e1e1</color>
     <color name="theme_color">@color/darkGray</color>
 
@@ -428,4 +428,5 @@
     <color name="defaultGray">#7a7a7a</color>
     <color name="card_color_grid">#F2F2F2</color>
     <color name="trans_color_gray">#95DFDEDE</color>
+    <color name="theme_bg">#16202b</color>
 </resources>

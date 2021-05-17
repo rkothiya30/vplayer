@@ -1,18 +1,26 @@
 package com.example.vplayer.ui.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vplayer.R;
+import com.example.vplayer.dialog.RenameDialog;
+import com.example.vplayer.dialog.VideoDetailsDialog;
 import com.example.vplayer.fragment.adapter.OnMenuAdapter;
-import com.example.vplayer.fragment.interfaces.SortByClickListener;
+import com.example.vplayer.fragment.interfaces.OuterClickListener;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
+import com.example.vplayer.fragment.utils.VideoPlayerUtils;
+import com.example.vplayer.model.Video;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
@@ -27,8 +35,9 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
     OnMenuAdapter onMenuAdapter;
     List<String> sortByList;
     PreferencesUtility preferencesUtility;
-    SortByClickListener sortByClickListener;
+    OuterClickListener outerClickListener;
     private static int check;
+    private static Video video;
     private static String title;
 
 
@@ -39,9 +48,10 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
     }
 
 
-    public static OnMenuFragment newInstance(int checks, String t) {
+    public static OnMenuFragment newInstance(int checks, Video vide) {
         OnMenuFragment fragment = new OnMenuFragment();
-        title = t;
+        title = vide.getTitle();
+        video = vide;
         check = checks;
         return fragment;
     }
@@ -77,18 +87,43 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
         sortList.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        onMenuAdapter = new OnMenuAdapter(getContext(), sortByList, this);
+        onMenuAdapter = new OnMenuAdapter(getContext(), sortByList, this, video);
         sortList.setAdapter(onMenuAdapter);
     }
 
     @Override
-    public void onSortByClick(String item) {
-        preferencesUtility.setSortByVideo(sortByList.indexOf(item));
-        sortByClickListener.onSortByClick();
+    public void onItemClick(int item) {
+       // preferencesUtility.setSortByVideo(sortByList.indexOf(item));
+        outerClickListener.onOuterClick();
         getDialog().dismiss();
+
+        switch (item) {
+            case 2:
+                RenameDialog.getInstance(getActivity(), video.getTitle(), video.getId(), video.getFullPath())
+                        .show(getFragmentManager(), "");
+
+                break;
+            case 4:
+                VideoPlayerUtils.shareVideo(video.getId(), getActivity());
+                break;
+            case 3:
+                long[] videoId = {video.getId()};
+                VideoPlayerUtils.showDeleteDialog(getActivity(), video.getTitle(), videoId);
+                break;
+            case 5:
+                VideoDetailsDialog.getInstance(video)
+                        .show(((AppCompatActivity) getContext())
+                                .getSupportFragmentManager(), "");
+
+
+                break;
+
+        }
+
+
     }
 
-    public void setSortByClickListener(SortByClickListener sortByClickListener) {
-        this.sortByClickListener = sortByClickListener;
+    public void setOuterClickListener(OuterClickListener outerClickListener) {
+        this.outerClickListener = outerClickListener;
     }
 }

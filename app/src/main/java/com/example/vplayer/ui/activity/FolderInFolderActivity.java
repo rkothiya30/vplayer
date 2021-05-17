@@ -23,11 +23,22 @@ import android.widget.Toast;
 
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.adapter.VideoAdapter;
+import com.example.vplayer.fragment.event.UpdateVideoList;
 import com.example.vplayer.fragment.utils.Constant;
+import com.example.vplayer.fragment.utils.PreferencesUtility;
+import com.example.vplayer.fragment.utils.RxBus;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
+import com.example.vplayer.model.Video;
 import com.google.android.material.appbar.AppBarLayout;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static com.example.vplayer.service.VideoDataService.videobucketimagesDataHashMap;
 import static com.example.vplayer.service.VideoDataService.videobuckets;
@@ -39,11 +50,13 @@ public class FolderInFolderActivity extends AppCompatActivity {
     int Position;
     Toolbar toolbar;
     RecyclerView videoList;
+    List<Video> videoListList;
     VideoAdapter videoAdapter;
-    TextView text_title, videoTitle;
+    TextView text_title, videoTitle, tv_size;
     ImageView iv_back;
     AppCompatImageView iv_list_grid;
 
+    PreferencesUtility preferencesUtility;
     boolean isGrid = false;
 
 
@@ -75,6 +88,8 @@ public class FolderInFolderActivity extends AppCompatActivity {
         }
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 
+        preferencesUtility = PreferencesUtility.getInstance(this);
+        videoListList = new ArrayList<>();
 
         videoList = findViewById(R.id.videoList);
         text_title = findViewById(R.id.text_title);
@@ -82,13 +97,13 @@ public class FolderInFolderActivity extends AppCompatActivity {
         iv_list_grid = findViewById(R.id.iv_list_grid);
         //appbar = findViewById(R.id.appbar);
         videoTitle = findViewById(R.id.videoTitle);
-
+        tv_size = findViewById(R.id.tv_size);
         iv_list_grid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isGrid) {
                     isGrid = false;
-                    //PreferencesManager.saveToDirList_Grid(this, isGrid);
+                    preferencesUtility.saveToDirList_Grid(isGrid);
 
 
                     initView();
@@ -98,14 +113,9 @@ public class FolderInFolderActivity extends AppCompatActivity {
 
                 } else {
                     isGrid = true;
-                    //PreferencesManager.saveToDirList_Grid(this, isGrid);
-                    videoAdapter = new VideoAdapter(FolderInFolderActivity.this, folderName, isGrid);
-                    videoList.setLayoutManager(new GridLayoutManager(getApplication(), 3));
-                    videoList.setHasFixedSize(true);
-                    videoList.setItemViewCacheSize(20);
-                    videoList.setDrawingCacheEnabled(true);
-                    videoList.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-                    videoList.setAdapter(videoAdapter);
+                    preferencesUtility.saveToDirList_Grid(isGrid);
+
+                    initView();
                     iv_list_grid.setImageDrawable(getResources().getDrawable(R.drawable.ic_list));
                     // ivListGrid.setImageDrawable(getResources().getDrawable(R.drawable.ic_grid));
 
@@ -122,8 +132,11 @@ public class FolderInFolderActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
         text_title.setText(folderName);
+        File f = new File(videobucketimagesDataHashMap.get(folderName).get(0).getFullPath());
+        tv_size.setText(VideoPlayerUtils.formateSize(folderSize(new File(f.getParentFile().getAbsolutePath()))));
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.darkGray)));
 
+        isGrid = preferencesUtility.getDirList_Grid();
         initView();
 
         videoAdapter.setOnItemClickListener(new VideoAdapter.ClickListener() {
@@ -139,9 +152,21 @@ public class FolderInFolderActivity extends AppCompatActivity {
             }
         });
 
+
+        subscribeUpdateVideoListEvent();
     }
 
 
+    public static long folderSize(File directory) {
+        long length = 0;
+        for (File file : directory.listFiles()) {
+            if (file.isFile())
+                length += file.length();
+            else
+                length += folderSize(file);
+        }
+        return length;
+    }
 
     @Override
     public void onBackPressed() {
@@ -150,16 +175,41 @@ public class FolderInFolderActivity extends AppCompatActivity {
 
     public void initView() {
         if(isGrid)
-        videoAdapter = new VideoAdapter(this, folderName, isGrid);
+            videoList.setLayoutManager(new GridLayoutManager(getApplication(), 3));
+
         else
-            videoAdapter = new VideoAdapter(this, folderName, isGrid);
-        videoList.setLayoutManager(new LinearLayoutManager(this));
+            videoList.setLayoutManager(new LinearLayoutManager(this));
+
+        videoAdapter = new VideoAdapter(this, folderName, isGrid);
+
         videoList.setHasFixedSize(true);
         videoList.setItemViewCacheSize(20);
         videoList.setDrawingCacheEnabled(true);
         videoList.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         videoList.setAdapter(videoAdapter);
 
+    }
+
+    private void subscribeUpdateVideoListEvent() {
+        Subscription subscription = RxBus.getInstance()
+                .toObservable(UpdateVideoList.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged()
+                .subscribe(new Action1<UpdateVideoList>() {
+                    @Override
+                    public void call(UpdateVideoList event) {
+                        //videoList.remove(event.getPosition());
+                        videoAdapter.setVideoList(videoListList);
+                        videoAdapter.notifyDataSetChanged();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
+        RxBus.getInstance().addSubscription(this, subscription);
     }
 
 

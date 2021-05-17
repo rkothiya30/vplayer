@@ -21,6 +21,16 @@ public class Video{
     public int videoLastPlayPosition = 0;
     int frameRate;
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    boolean isSelected = false;
+
     public Video() {
     }
 

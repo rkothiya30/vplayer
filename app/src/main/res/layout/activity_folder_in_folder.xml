@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
+
     android:orientation="vertical">
 
 
@@ -24,15 +25,35 @@
             android:paddingVertical="16dp"
             android:paddingHorizontal="5dp"
             android:backgroundTint="@color/white"></ImageView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toRightOf="@id/iv_back"
+            android:layout_toLeftOf="@id/iv_search"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/text_title"
             android:layout_toRightOf="@id/iv_back"
             android:text="erfef"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
+            android:singleLine="true"
+            android:ellipsize="end"
+
             android:textSize="@dimen/_20sdp"></TextView>
+        <TextView
+            android:id="@+id/tv_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="videos"
+
+
+            android:textSize="@dimen/_14sdp"
+
+            />
+        </LinearLayout>
 
 
 
@@ -77,12 +98,13 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/videoList"
-
+            android:background="@color/theme_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

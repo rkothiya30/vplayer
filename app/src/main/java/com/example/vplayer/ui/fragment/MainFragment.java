@@ -196,10 +196,10 @@ public class MainFragment extends Fragment {
                     fragment = new VideoFragment();
                     break;
                 case ITEM_FOLDER:
-                    fragment = new FolderFragment();
+                    fragment = new MusicFragment();
                     break;
                 case ITEM_HISTORY:
-                    fragment = new HistoryFragment();
+                    fragment = new PlaylistFragment();
                     break;
                 default:
                     break;

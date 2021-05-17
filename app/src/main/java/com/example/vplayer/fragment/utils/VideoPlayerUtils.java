@@ -9,8 +9,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.BaseColumns;
@@ -25,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.vplayer.R;
+import com.example.vplayer.dialog.DeleteDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -119,11 +118,11 @@ public class VideoPlayerUtils {
         }
     }
 
-    /*public static void showDeleteDialog(final Context context, final String name, final long[] list) {
+    public static void showDeleteDialog(final Context context, final String name, final long[] list) {
         DeleteDialog.getInstance((Activity) context, name, list)
                 .show(((AppCompatActivity) context)
                         .getSupportFragmentManager(), "");
-    }*/
+    }
 
     public static void deleteTracks(final Context context, final long[] list) {
         final String[] projection = new String[]{
