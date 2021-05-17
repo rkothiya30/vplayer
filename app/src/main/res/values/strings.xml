@@ -37,4 +37,13 @@
         <item>Share</item>
         <item>Properties</item>
     </string-array>
+
+    <string-array name="playlist_menu_array">
+        <item>Background Play</item>
+        <item>Play next</item>
+        <item>Add to queue</item>
+        <item>Add to playlist</item>
+        <item>Rename</item>
+        <item>Delete</item>
+    </string-array>
 </resources>

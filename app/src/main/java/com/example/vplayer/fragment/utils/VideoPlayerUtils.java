@@ -1,6 +1,7 @@
 package com.example.vplayer.fragment.utils;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.net.Uri;
 import android.os.Build;
+import android.os.storage.StorageManager;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -21,17 +23,26 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.example.vplayer.R;
 import com.example.vplayer.dialog.DeleteDialog;
+import com.example.vplayer.dialog.RenameDialog;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class VideoPlayerUtils {
+
 
     public static boolean isMarshmallow() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
@@ -83,6 +94,113 @@ public class VideoPlayerUtils {
         return path.substring(path.lastIndexOf("/") + 1);
     }
 
+    public static boolean renameFile(File file, String newName, Context context) {
+        DocumentFile targetDocument = getDocumentFile(file, false, context);
+        boolean renamed = targetDocument.renameTo(newName);
+
+        Log.e("renameFileUtils", "ParentFile: " + targetDocument.getParentFile() + " Name: " + targetDocument.getName());
+
+        return renamed;
+    }
+
+    public static DocumentFile getDocumentFile(final File file, final boolean isDirectory, Context context) {
+        String baseFolder = getExtSdCardFolder(file, context);
+        boolean originalDirectory = false;
+        if (baseFolder == null) {
+            return null;
+        }
+
+        String relativePath = null;
+        try {
+            String fullPath = file.getCanonicalPath();
+            Log.e("StorageUtils","fullPath: "+fullPath);
+            if (!baseFolder.equals(fullPath))
+                relativePath = fullPath.substring(baseFolder.length() + 1);
+            else originalDirectory = true;
+        } catch (IOException e) {
+            return null;
+        } catch (Exception f) {
+            originalDirectory = true;
+            //continue
+        }
+
+//        String as = "";
+        String as = PreferencesUtility.getSDCardTreeUri(context);
+
+        Uri treeUri = null;
+        if (!TextUtils.isEmpty(as)) treeUri = Uri.parse(as);
+        if (treeUri == null) {
+            return null;
+        }
+
+        Log.e("StorageUtils","treeUri: "+treeUri + " as: " +as);
+        Log.e("StorageUtils","relativePath: "+relativePath);
+        Log.e("StorageUtils","baseFolder: "+baseFolder);
+
+        // start with root of SD card and then parse through document tree.
+        DocumentFile document = DocumentFile.fromTreeUri(context, treeUri);
+        if (originalDirectory) return document;
+        String[] parts = relativePath.split("\\/");
+
+        Log.e("StorageUtils","parts: "+parts.toString());
+        if (document != null) {
+            for (int i = 0; i < parts.length; i++) {
+                if (parts[i] != null) {
+                    if (document != null) {
+                        DocumentFile nextDocument = document.findFile(parts[i]);
+
+                        if (nextDocument == null) {
+                            if ((i < parts.length - 1) || isDirectory) {
+                                nextDocument = document.createDirectory(parts[i]);
+                            } else {
+                                nextDocument = document.createFile("image", parts[i]);
+                            }
+                        }
+                        document = nextDocument;
+                    }
+                }
+            }
+        }
+        return document;
+    }
+
+    public static String getExtSdCardFolder(final File file, Context context) {
+        String[] extSdPaths = getExtSdCardPaths(context);
+        try {
+            for (int i = 0; i < extSdPaths.length; i++) {
+                if (file.getCanonicalPath().startsWith(extSdPaths[i])) {
+                    return extSdPaths[i];
+                }
+            }
+        } catch (IOException e) {
+            return null;
+        }
+        return null;
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static String[] getExtSdCardPaths(Context context) {
+        List<String> paths = new ArrayList<String>();
+        for (File file : ContextCompat.getExternalFilesDirs(context, "external")) {
+            if (file != null && !file.equals(context.getExternalFilesDir("external"))) {
+                int index = file.getAbsolutePath().lastIndexOf("/Android/data");
+                if (index < 0) {
+                    Log.w("FileUtils", "Unexpected external manager dir: " + file.getAbsolutePath());
+                } else {
+                    String path = file.getAbsolutePath().substring(0, index);
+                    try {
+                        path = new File(path).getCanonicalPath();
+                    } catch (IOException e) {
+                        // Keep non-canonical path.
+                    }
+                    paths.add(path);
+                }
+            }
+        }
+        if (paths.isEmpty()) paths.add("/storage/sdcard1");
+        return paths.toArray(new String[0]);
+    }
+
     public static String getParentPath(String path) {
         if (path.endsWith(getFilenameFromPath(path))) {
             return path.substring(0, path.length() - getFilenameFromPath(path).length());
@@ -90,9 +208,7 @@ public class VideoPlayerUtils {
         return "";
     }
 
-    public static String getFilenameExtension(String path) {
-        return path.substring(path.lastIndexOf(".") + 1);
-    }
+
 
     public static String getMimeTypeFromFilePath(String filePath) {
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
@@ -165,6 +281,10 @@ public class VideoPlayerUtils {
 
         Toast.makeText(context, "Video delete successfully", Toast.LENGTH_SHORT).show();
         context.getContentResolver().notifyChange(Uri.parse("content://media"), null);
+    }
+
+    public static String getFilenameExtension(String path) {
+        return path.substring(path.lastIndexOf(".") + 1);
     }
 
     public static void renameVideo(final Context context, long videoId, String newName, String oldPath) {
@@ -274,6 +394,36 @@ public class VideoPlayerUtils {
         return newPath;
     }
 
+    public static String getExternalStoragePath(Context mContext, boolean is_removable) {
+
+        StorageManager mStorageManager = (StorageManager) mContext.getSystemService(Context.STORAGE_SERVICE);
+        Class<?> storageVolumeClazz = null;
+        try {
+            storageVolumeClazz = Class.forName("android.os.storage.StorageVolume");
+            Method getVolumeList = mStorageManager.getClass().getMethod("getVolumeList");
+            Method getPath = storageVolumeClazz.getMethod("getPath");
+            Method isRemovable = storageVolumeClazz.getMethod("isRemovable");
+            Object result = getVolumeList.invoke(mStorageManager);
+            final int length = Array.getLength(result);
+            for (int i = 0; i < length; i++) {
+                Object storageVolumeElement = Array.get(result, i);
+                String path = (String) getPath.invoke(storageVolumeElement);
+                boolean removable = (Boolean) isRemovable.invoke(storageVolumeElement);
+                if (is_removable == removable) {
+                    return path;
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
    /* public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

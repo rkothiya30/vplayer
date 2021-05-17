@@ -37,6 +37,7 @@ public class DeleteDialog extends DialogFragment {
         dialog.context = context;
         dialog.title = title;
         dialog.videoId = id;
+        dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.WideDialog);
         return dialog;
     }
 

@@ -1,180 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ll_root"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    android:layout_marginLeft="@dimen/_10sdp"
-    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/videoTitle"
-
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="videos"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:layout_marginBottom="@dimen/_8sdp"
-        android:textSize="@dimen/_14sdp"
-        android:textColor="@color/white"
-        android:visibility="gone"
-        />
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:layout_width="@dimen/_85sdp"
-            android:layout_height="@dimen/_80sdp"
-            android:layout_gravity="center">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:background="@color/md_grey_600"
-                android:padding="@dimen/_20sdp" />
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                >
-                <ImageView
-                    android:id="@+id/videoThumbnail"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white_transparent"
-                    android:scaleType="centerCrop" />
-                <TextView
-                    android:id="@+id/videoDuration"
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="@dimen/_2sdp"
-                    android:paddingHorizontal="5dp"
-                    android:text="5555"
-                    android:layout_alignBottom="@+id/videoThumbnail"
-                    android:layout_alignRight="@+id/videoThumbnail"
-                    android:background="@color/black_transparent"
-                    android:textSize="@dimen/_14sdp"
-                    android:textColor="@color/white"/>
-            </RelativeLayout>
-            <ProgressBar
-                android:id="@+id/videoProgress"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:minHeight="4dp"
-                android:progress="0"
-                android:visibility="gone" />
-
-        </FrameLayout>
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_marginLeft="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:paddingTop="@dimen/_4sdp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/videoName"
-
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="middle"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_18sdp" />
-            <!--android:marqueeRepeatLimit="marquee_forever"-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            <!--<LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:orientation="horizontal">
-
-                <TextView
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/theme_bg"
+                        android:nestedScrollingEnabled="false"
+                        android:paddingTop="@dimen/_8sdp" />
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/progress_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/_2sdp"
-                    android:text="format"
-                    android:textSize="@dimen/_8sdp" />
-
-                <TextView
-                    android:id="@+id/videoExtension"
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="@dimen/_4sdp"
-                    android:singleLine="true"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/_8sdp" />
-
-               &lt;!&ndash; <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_4sdp"
-                    android:layout_marginRight="@dimen/_2sdp"
-                    android:text="duration"
-                    android:textSize="@dimen/_8sdp" />&ndash;&gt;
+                    android:layout_centerInParent="true"
+                    android:theme="@style/Progress_tint"
+                    android:visibility="gone" />
+                <ImageView
+                    android:id="@+id/emptyString"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:gravity="center"
+                    android:src="@drawable/no_data"
+                    android:visibility="gone" />
+            </RelativeLayout>
 
 
-            </LinearLayout>-->
+        </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="horizontal">
-
-                <!--  <TextView
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_marginRight="@dimen/_2sdp"
-                      android:text="size"
-                      android:textSize="@dimen/_8sdp" />-->
-
-                <TextView
-                    android:id="@+id/videoSize"
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:textColor="@color/white"
-                    android:paddingBottom="@dimen/_3sdp"
-                    android:textSize="@dimen/_14sdp" />
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/popup_menu"
-            style="@style/Widget.AppCompat.ActionButton.Overflow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="?actionBarItemBackground"
-            app:tint="@color/white"
-            android:src="@drawable/ic_baseline_more_vert_24" />
-
-    </LinearLayout>
-
-    <!--<TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1sdp"
-        android:layout_marginLeft="@dimen/_90sdp"
-        android:layout_marginTop="@dimen/_4sdp"
-        android:background="@drawable/item_divider_black" />-->
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

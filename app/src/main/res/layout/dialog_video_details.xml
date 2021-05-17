@@ -3,12 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/theme_color"
+
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_16sdp"
+        android:layout_marginVertical="@dimen/_15sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
         android:id="@+id/text_properties"
         android:text="@string/action_details"
         android:textColor="@color/white"
@@ -24,7 +26,9 @@
         android:id="@+id/text_file_name"
         android:layout_below="@+id/text_properties"
         android:layout_marginTop="@dimen/_10sdp"
+
         android:text="File Name"
+        android:layout_alignLeft="@+id/text_properties"
         android:textColor="@color/white"
         android:textSize="12sp" />
 
@@ -49,6 +53,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/text_duration"
         android:layout_below="@id/videoName"
+        android:layout_alignLeft="@+id/text_properties"
         android:layout_marginTop="@dimen/_10sdp"
         android:text="text_duration"
         android:textColor="@color/white"
@@ -73,6 +78,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/text_size"
         android:layout_marginTop="@dimen/_10sdp"
+        android:layout_alignLeft="@+id/text_properties"
         android:layout_below="@id/videoDuration"
         android:text="Size"
         android:textColor="@color/white"
@@ -96,6 +102,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/text_file_path"
         android:text="File Path"
+        android:layout_alignLeft="@+id/text_properties"
         android:layout_below="@id/videoSize"
         android:layout_marginTop="@dimen/_10sdp"
         android:textColor="@color/white"
@@ -119,6 +126,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/text_resolution"
         android:layout_below="@id/videoPath"
+        android:layout_alignLeft="@+id/text_properties"
         android:layout_marginTop="@dimen/_10sdp"
         android:textColor="@color/white"
         android:text="Resolution"
@@ -140,6 +148,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/text_properties"
             android:layout_marginTop="@dimen/_10sdp"
             android:id="@+id/text_modify_date"
             android:textColor="@color/white"

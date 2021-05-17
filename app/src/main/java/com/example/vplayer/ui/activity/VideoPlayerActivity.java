@@ -301,7 +301,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
             @Override
             public void onRenameCallBack() {
-                RenameDialog.getInstance(VideoPlayerActivity.this, videosList.get(videoPosition).getTitle(), videosList.get(videoPosition).getId(), videosList.get(videoPosition).getFullPath())
+                RenameDialog.getInstance(VideoPlayerActivity.this, videosList.get(videoPosition).getTitle(), videosList.get(videoPosition).getId(), videosList.get(videoPosition))
                         .show(getSupportFragmentManager(), "");
             }
 

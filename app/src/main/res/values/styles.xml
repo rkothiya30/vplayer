@@ -15,4 +15,15 @@
     <style name="ShapeAppearanceOverlay.App.CornerSize5Percent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
         <item name="cornerSize">10%</item>
     </style>
+
+
+    <style name="Progress_tint">
+        <item name="colorAccent">@color/white</item>
+    </style>
+
+    <style name="WideDialog" parent="Base.Theme.AppCompat.Dialog">
+        <item name="android:windowMinWidthMajor">95%</item>
+        <item name="android:windowMinWidthMinor">95%</item>
+    </style>
+
 </resources>

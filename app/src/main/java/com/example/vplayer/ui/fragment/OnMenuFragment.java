@@ -99,7 +99,7 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
 
         switch (item) {
             case 2:
-                RenameDialog.getInstance(getActivity(), video.getTitle(), video.getId(), video.getFullPath())
+                RenameDialog.getInstance(getActivity(), video.getTitle(), video.getId(), video)
                         .show(getFragmentManager(), "");
 
                 break;

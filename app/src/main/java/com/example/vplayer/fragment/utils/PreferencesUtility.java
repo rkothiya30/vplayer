@@ -30,6 +30,7 @@ public class PreferencesUtility {
     public static final String PREF_HISTORY_VIDEOS = "history_videos";
     public static final String PREF_LAST_PLAY_VIDEOS = "last_play_videos";
     public static final String SHARED_PREFS_DIR_LIST_GRID = "grid_view";
+    public static final String PREF_SDCARD_TREE_URI = "sdcard_tree_uri";
 
     private static PreferencesUtility sInstance;
     private static volatile SharedPreferences mPreferences;
@@ -95,6 +96,19 @@ public class PreferencesUtility {
                 videoList.addAll(historyVideo.getVideoList());
         }
         return videoList;
+    }
+
+    public static String getSDCardTreeUri(Context context) {
+
+        return mPreferences.getString(PREF_SDCARD_TREE_URI, "");
+    }
+
+    public static void setSDCardTreeUri(Context context, String treeUri) {
+
+
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(PREF_SDCARD_TREE_URI, treeUri);
+        editor.apply();
     }
 
     public  void saveToDirList_Grid( boolean value) {

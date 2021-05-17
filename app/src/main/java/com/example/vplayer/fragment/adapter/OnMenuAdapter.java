@@ -57,7 +57,7 @@ public class OnMenuAdapter extends RecyclerView.Adapter<OnMenuAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.text.setText(mItems.get(position));
         holder.item_image.setImageResource(mImages[position]);
-        holder.item_image.setColorFilter(ContextCompat.getColor(holder.item_image.getContext(), R.color.defaultGray), PorterDuff.Mode.SRC_IN);
+        holder.item_image.setColorFilter(ContextCompat.getColor(holder.item_image.getContext(), R.color.white), PorterDuff.Mode.SRC_IN);
 
        // setOnPopupMenuListener(holder, position);
     }

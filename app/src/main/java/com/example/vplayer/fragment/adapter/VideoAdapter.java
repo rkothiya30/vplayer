@@ -222,7 +222,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 ContentResolver crThumb = context.getContentResolver();
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inSampleSize = 1;
-                Bitmap curThumb = MediaStore.Video.Thumbnails.getThumbnail(crThumb, video.getId(), MediaStore.Video.Thumbnails.MICRO_KIND, options);
+                Bitmap curThumb = MediaStore.Video.Thumbnails.getThumbnail(crThumb, video.getId(), MediaStore.Video.Thumbnails.FULL_SCREEN_KIND, options);
 
                 if (curThumb != null) {
                     videoViewHolder.videoThumbnail.setImageBitmap(curThumb);

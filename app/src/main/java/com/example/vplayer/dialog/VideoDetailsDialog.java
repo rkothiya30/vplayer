@@ -23,7 +23,7 @@ public class VideoDetailsDialog extends DialogFragment {
     
     public static VideoDetailsDialog getInstance(Video video) {
         VideoDetailsDialog dialog = new VideoDetailsDialog();
-
+        dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.WideDialog);
         dialog.video = video;
         return dialog;
     }
