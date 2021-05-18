@@ -18,8 +18,10 @@ package com.khizar1556.mkvideoplayer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.os.Build;
@@ -721,6 +723,9 @@ public class MKPlayer {
         seekBar.setPadding(0, 0, 0, 0);
         seekBar.setMax(1000);
         seekBar.setOnSeekBarChangeListener(mSeekListener);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            seekBar.setProgressTintList(ColorStateList.valueOf(Color.RED));
+        }
 
         slideDownAnimation = AnimationUtils.loadAnimation(activity,
                 R.anim.activity_fade_out);
@@ -752,6 +757,8 @@ public class MKPlayer {
 
         audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
         mMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
+
         final GestureDetector gestureDetector = new GestureDetector(activity, new PlayerGestureListener());
         final ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(activity, new PlayerScaleGestureListener());
 

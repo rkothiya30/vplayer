@@ -44,6 +44,7 @@ import com.example.vplayer.fragment.adapter.MusicAdapter;
 import com.example.vplayer.fragment.adapter.PlayListAdapter;
 import com.example.vplayer.fragment.utils.Constant;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
+import com.example.vplayer.fragment.utils.VideoPlayerUtils;
 import com.example.vplayer.model.AudioModel;
 
 import java.io.File;
@@ -55,12 +56,11 @@ import java.util.ArrayList;
 public class MusicFragment extends Fragment {
 
     View view;
-    ArrayList<AudioModel> audioList = new ArrayList<>();
+    public static ArrayList<AudioModel> audioList = new ArrayList<>();
     RecyclerView recycler_view;
     ImageView emptyString;
-    MusicAdapter adapter;
+    public static MusicAdapter adapter;
     ProgressDialog loadingDialog;
-    ProgressBar progress_bar;
     SwipeRefreshLayout refreshLayout;
 
     @Override
@@ -76,7 +76,7 @@ public class MusicFragment extends Fragment {
 
         recycler_view = view.findViewById(R.id.recycler_view);
         emptyString = view.findViewById(R.id.emptyString);
-        progress_bar = view.findViewById(R.id.progress_bar);
+       // progress_bar = view.findViewById(R.id.progress_bar);
         refreshLayout = view.findViewById(R.id.refreshLayout);
         return view;
     }
@@ -93,16 +93,16 @@ public class MusicFragment extends Fragment {
     }
 
     public void initView() {
-        progress_bar.setVisibility(View.VISIBLE);
+        //progress_bar.setVisibility(View.VISIBLE);
         new Thread(this::getAllAudioList).start();
 
 
 
-        loadingDialog = new ProgressDialog(getActivity());
+       /* loadingDialog = new ProgressDialog(getActivity());
         loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loadingDialog.setCancelable(false);
         loadingDialog.setMessage("Fetching list...");
-        loadingDialog.setCanceledOnTouchOutside(false);
+        loadingDialog.setCanceledOnTouchOutside(false);*/
 
     }
 
@@ -179,55 +179,33 @@ public class MusicFragment extends Fragment {
 
 
     public void setAdapter() {
-        progress_bar.setVisibility(View.GONE);
+        //progress_bar.setVisibility(View.GONE);
         if (audioList != null && audioList.size() != 0) {
             recycler_view.setVisibility(View.VISIBLE);
             emptyString.setVisibility(View.GONE);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             recycler_view.setLayoutManager(layoutManager);
-            adapter = new MusicAdapter(getActivity(), audioList);
+            adapter = new MusicAdapter(getActivity(), audioList, false);
             recycler_view.setAdapter(adapter);
 
-            /*adapter.setOnItemClickListener(new AudioAdapter.ClickListener() {
+            adapter.setOnItemClickListener(new MusicAdapter.ClickListener() {
                 @Override
                 public void onItemClick(int position, View v) {
 
-                    if (audioList.get(position).isCheckboxVisible()) {
 
-                        if (audioList.get(position).isSelected()) {
-                            audioList.get(position).setSelected(false);
-                        } else
-                            audioList.get(position).setSelected(true);
-
-                        adapter.notifyDataSetChanged();
-                        setSelectedFile();
-
-                    } else {
                         File file = new File(audioList.get(position).getPath());
-                        Uri uri = FileProvider.getUriForFile(AudioActivity.this, getPackageName() + ".provider", file);
+                        Uri uri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", file);
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
-                        intent.setDataAndType(uri, Utils.getMimeTypeFromFilePath(file.getPath()));
+                        intent.setDataAndType(uri, VideoPlayerUtils.getMimeTypeFromFilePath(file.getPath()));
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                         startActivity(Intent.createChooser(intent, "Open with"));
-                    }
+
                 }
             });
 
-            adapter.setOnLongClickListener(new AudioAdapter.LongClickListener() {
-                @Override
-                public void onItemLongClick(int position, View v) {
-                    audioList.get(position).setSelected(true);
-                    for (int i = 0; i < audioList.size(); i++) {
-                        if (audioList.get(i) != null)
-                            audioList.get(i).setCheckboxVisible(true);
-                    }
-                    adapter.notifyDataSetChanged();
-                    setSelectedFile();
-                }
-            });*/
 
         } else {
             recycler_view.setVisibility(View.GONE);

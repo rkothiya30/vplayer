@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.VPlayer">
-        <activity android:name=".ui.activity.SeeMoreActivity"></activity>
+        <activity android:name=".ui.activity.SelectItemActivity"></activity>
+        <activity android:name=".ui.activity.SeeMoreActivity" />
         <activity android:name=".ui.activity.VideoPlayerActivity" />
         <activity android:name=".ui.activity.FolderInFolderActivity" />
         <activity android:name=".ui.activity.PermissionActivity" />
@@ -28,6 +29,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
 
         <service
             android:name=".service.VideoDataService"

@@ -39,7 +39,7 @@
                         android:layout_width="@dimen/_40sdp"
                         android:layout_height="@dimen/_40sdp"
                         android:layout_gravity="center"
-                        android:padding="@dimen/_1sdp"
+
                         android:scaleType="centerCrop"
                         android:id="@+id/iv_music"
                         android:layout_centerInParent="true"
@@ -81,6 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/_13sdp"
+            android:layout_toLeftOf="@+id/popup_menu"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -88,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/popup_menu"
+                android:layout_marginRight="@dimen/_56sdp"
                 android:ellipsize="middle"
                 android:singleLine="true"
                 android:text="My Favourites"
@@ -98,20 +99,18 @@
 
             <LinearLayout
                 android:id="@+id/lout_bottom_data"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txt_music_name"
-                android:layout_alignParentLeft="true"
-                android:layout_marginTop="@dimen/_3sdp"
-                android:layout_marginRight="@dimen/_7sdp"
-                android:layout_toLeftOf="@+id/popup_menu"
                 android:layout_alignLeft="@+id/txt_folder_name"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/txt_music_name"
+                android:layout_marginRight="@dimen/_7sdp"
                 android:orientation="horizontal">
 
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txt_authors"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
 
                     android:layout_gravity="center_vertical"
@@ -121,16 +120,49 @@
                     android:textSize="@dimen/_14sdp" />
 
             </LinearLayout>
-            <ImageView
-                android:id="@+id/popup_menu"
-                style="@style/Widget.AppCompat.ActionButton.Overflow"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="?actionBarItemBackground"
-                app:tint="@color/white"
-                android:src="@drawable/ic_baseline_more_vert_24" />
+                android:id="@+id/side_ic"
+                >
+
+                <ImageView
+                    android:id="@+id/popup_menu"
+                    style="@style/Widget.AppCompat.ActionButton.Overflow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="?actionBarItemBackground"
+                    app:tint="@color/white"
+
+                    android:src="@drawable/ic_baseline_more_vert_24" />
+
+                <ImageView
+                    android:id="@+id/iv_empty_checkbox"
+                    style="@style/Widget.AppCompat.ActionButton.Overflow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="?actionBarItemBackground"
+                    app:tint="@color/white"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_unchecked" />
+                <ImageView
+                    android:id="@+id/iv_selected_checkbox"
+                    style="@style/Widget.AppCompat.ActionButton.Overflow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="?actionBarItemBackground"
+
+                    android:visibility="gone"
+                    app:tint="@color/tab_selected_color"
+                    android:src="@drawable/ic_checked" />
+            </RelativeLayout>
 
         </RelativeLayout>
 

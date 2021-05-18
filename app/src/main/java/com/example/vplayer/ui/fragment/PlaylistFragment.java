@@ -38,6 +38,7 @@ import com.example.vplayer.fragment.adapter.PlayListAdapter;
 import com.example.vplayer.fragment.adapter.VideoFolderAdapter;
 import com.example.vplayer.ui.activity.FolderInFolderActivity;
 import com.example.vplayer.ui.activity.SeeMoreActivity;
+import com.example.vplayer.ui.activity.SelectItemActivity;
 
 import java.util.ArrayList;
 
@@ -69,11 +70,22 @@ public class PlaylistFragment extends Fragment  {
         emptyString = view.findViewById(R.id.emptyString);
         iv_add = view.findViewById(R.id.iv_add);
 
+        refreshLayout.setEnabled(false);
+
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initView();
+
         iv_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Dialog dialog = new Dialog(getContext(), R.style.WideDialog);
+                Dialog dialog = new Dialog(getActivity(), R.style.WideDialog);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(true);
                 dialog.setContentView(R.layout.dialog_create_playlist);
@@ -102,22 +114,14 @@ public class PlaylistFragment extends Fragment  {
                         dialog.dismiss();
 
                         playListAdapter.notifyDataSetChanged();
+                        startActivity(new Intent(getActivity(), SelectItemActivity.class));
                     }
                 });
 
+
+                dialog.show();
             }
         });
-
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        initView();
-
-
     }
 
     public void initView() {

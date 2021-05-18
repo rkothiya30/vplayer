@@ -54,9 +54,12 @@
                 android:layout_marginRight="@dimen/_6sdp"
                 android:layout_marginBottom="@dimen/_7sdp"
                 android:background="@color/theme_color"
+                android:imeOptions="actionGo"
+                android:textColorHighlight="@color/white"
                 android:inputType="text"
                 android:singleLine="true"
-                android:text=""
+
+                android:hint="ENTER PLAYLIST NAME"
                 android:textColor="@color/white"
                 android:textColorHint="@color/Grey_500"
                 android:textSize="@dimen/_16sdp" />

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+
+    android:orientation="vertical"
+    tools:ignore="MissingDefaultResource">
+
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/darkGray"
+        android:elevation="0dp"
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_back"
+            android:src="@drawable/ic_back"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="5dp"
+            android:backgroundTint="@color/white"></ImageView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toRightOf="@id/iv_back"
+            android:layout_toLeftOf="@id/iv_search"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_title"
+                android:layout_toRightOf="@id/iv_back"
+                android:text="0 selected"
+                android:singleLine="true"
+                android:ellipsize="end"
+
+                android:textSize="@dimen/_22sdp"></TextView>
+
+            <!-- <TextView
+                 android:id="@+id/tv_size"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="videos"
+
+
+                 android:textSize="@dimen/_14sdp"
+
+                 />-->
+        </LinearLayout>
+
+
+
+
+
+        <ImageView
+            android:id="@+id/iv_true"
+            android:layout_width="@dimen/_56sdp"
+            android:layout_height="@dimen/_56sdp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+
+            android:paddingVertical="@dimen/_6sdp"
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:src="@drawable/ic_add"
+            android:backgroundTint="@color/md_green_600"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_search"
+            android:layout_width="@dimen/_56sdp"
+            android:layout_height="@dimen/_56sdp"
+            android:layout_toLeftOf="@id/iv_true"
+            android:layout_centerVertical="true"
+            android:paddingVertical="@dimen/_6sdp"
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:src="@drawable/ic_baseline_search_24"
+            />
+
+
+    </RelativeLayout>
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/theme_color"
+        >
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:tabGravity="fill"
+            android:background="@color/theme_color"
+            app:tabTextColor="@color/white"
+            app:tabIndicatorColor="@color/white"
+            app:tabMode="fixed"></com.google.android.material.tabs.TabLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/theme_color"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        <TextView
+            android:id="@+id/emptyString"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="No Any Video"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</LinearLayout>

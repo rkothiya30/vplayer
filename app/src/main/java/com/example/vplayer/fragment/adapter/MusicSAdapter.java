@@ -1,9 +1,7 @@
 package com.example.vplayer.fragment.adapter;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.text.Selection;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,10 +28,10 @@ import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.ui.fragment.OnPlaylistMenuFragment;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder> implements OuterClickListener {
+
+public class MusicSAdapter extends RecyclerView.Adapter<MusicSAdapter.MyViewHolder> implements OuterClickListener {
 
     Context context;
     private static ClickListener listener;
@@ -41,7 +39,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
 
     ArrayList<AudioModel> audioList = new ArrayList<>();
 
-    public MusicAdapter(Context context, ArrayList<AudioModel> audioList, boolean Selection) {
+    public MusicSAdapter(Context context, ArrayList<AudioModel> audioList, boolean Selection) {
         this.context = context;
         this.audioList = audioList;
         this.Selection = Selection;
@@ -88,10 +86,10 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                          // holder.ivFolder.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_audio_file));
-                         //  holder.ivFolder.setColorFilter(context.getResources().getColor(R.color.theme_color), PorterDuff.Mode.SRC_IN);
-                         //  holder.ivFolder.setVisibility(View.VISIBLE);
-                           holder.card_view.setVisibility(View.GONE);
+                            // holder.ivFolder.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_audio_file));
+                            //  holder.ivFolder.setColorFilter(context.getResources().getColor(R.color.theme_color), PorterDuff.Mode.SRC_IN);
+                            //  holder.ivFolder.setVisibility(View.VISIBLE);
+                            holder.card_view.setVisibility(View.GONE);
                             return false;
                         }
 

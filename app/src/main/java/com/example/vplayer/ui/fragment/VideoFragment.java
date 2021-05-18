@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -60,7 +61,7 @@ public class VideoFragment extends Fragment {
 
     RecyclerView videoLList;
     SwipeRefreshLayout refreshLayout;
-    ImageView emptyString;
+    AppCompatImageView emptyString;
 
     List<Video> videoListWithAd;
     List<Video> continueWatchingVideoList;
@@ -138,13 +139,19 @@ public class VideoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_video, container, false);
 
+
         videoLList = view.findViewById(R.id.videoList);
         refreshLayout = view.findViewById(R.id.refreshLayout);
         emptyString = view.findViewById(R.id.emptyString);
 
 
+        refreshLayout.setEnabled(false);
+
+
         return view;
     }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -259,6 +266,8 @@ public class VideoFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+
+
     private class DownloadWebPageTask extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
@@ -330,6 +339,7 @@ public class VideoFragment extends Fragment {
 
 
     }
+
 
 
     @Override
