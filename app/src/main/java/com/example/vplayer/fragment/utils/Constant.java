@@ -62,4 +62,8 @@ public class Constant {
     public static final int PROTECTION_NONE = -1;
     public static final int PROTECTION_PATTERN = 0;
     public static final int PROTECTION_PIN = 1;
+
+    public static final String ACTION_PLAY = "play";
+    public static final String ACTION_NEXT = "next";
+    public static final String ACTION_PREVIOUS = "previous";
 }

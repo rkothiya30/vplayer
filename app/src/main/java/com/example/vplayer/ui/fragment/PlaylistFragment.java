@@ -36,11 +36,19 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.adapter.PlayListAdapter;
 import com.example.vplayer.fragment.adapter.VideoFolderAdapter;
+import com.example.vplayer.model.AudioModel;
+import com.example.vplayer.model.PlayListModel;
+import com.example.vplayer.model.Video;
 import com.example.vplayer.ui.activity.FolderInFolderActivity;
+import com.example.vplayer.ui.activity.PlayPlayListActivity;
 import com.example.vplayer.ui.activity.SeeMoreActivity;
 import com.example.vplayer.ui.activity.SelectItemActivity;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static android.content.ContentValues.TAG;
 
@@ -51,8 +59,14 @@ public class PlaylistFragment extends Fragment  {
     RecyclerView videoLList;
     SwipeRefreshLayout refreshLayout;
     ImageView emptyString, iv_add;
-    PlayListAdapter playListAdapter;
+    public static PlayListAdapter playListAdapter;
     ArrayList<String> playlists= new ArrayList<>();
+    public static LinkedHashMap<String, String> allPlaylist = new LinkedHashMap<>();
+    public static String tempPlayListName = "";
+
+    Set<String> keys = new LinkedHashSet<>();
+
+    ArrayList<String> listkeys = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,8 +124,9 @@ public class PlaylistFragment extends Fragment  {
                 btn_ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        playlists.add(edtFileName.getText().toString());
+                        //playlists.add(edtFileName.getText().toString());
                         dialog.dismiss();
+                        tempPlayListName = edtFileName.getText().toString();
 
                         playListAdapter.notifyDataSetChanged();
                         startActivity(new Intent(getActivity(), SelectItemActivity.class));
@@ -122,11 +137,29 @@ public class PlaylistFragment extends Fragment  {
                 dialog.show();
             }
         });
+        playListAdapter.setOnItemClickListener(new PlayListAdapter.ClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+
+                keys = allPlaylist.keySet();
+                listkeys.clear();
+                listkeys = new ArrayList<>();
+                listkeys.addAll(keys);
+                Intent inc = new Intent(getActivity(), PlayPlayListActivity.class);
+                inc.putExtra("Position", position);
+
+                inc.putExtra("PlayName", listkeys.get(position));
+                startActivity(inc);
+            }
+        });
     }
 
     public void initView() {
 
-        playListAdapter = new PlayListAdapter(getContext(), playlists);
+        PlayListModel playListModel = new PlayListModel(new ArrayList<AudioModel>(), new ArrayList<Video>());
+        String playListString = new Gson().toJson(playListModel);
+        allPlaylist.put("My Favourites", playListString);
+        playListAdapter = new PlayListAdapter(getContext(), allPlaylist);
         videoLList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         videoLList.setNestedScrollingEnabled(false);

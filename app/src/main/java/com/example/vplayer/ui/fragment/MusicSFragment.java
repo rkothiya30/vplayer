@@ -136,6 +136,7 @@ public class MusicSFragment extends Fragment {
                         audioList.get(position).setSelected(true);
                         SelectItemActivity.SelectCount++;
                     }
+                    SelectItemActivity.text_title.setText(SelectItemActivity.SelectCount + " selected");
                         adapter.notifyItemChanged(position);
 
 
@@ -146,28 +147,43 @@ public class MusicSFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AudioModel current = new AudioModel();
-                for(int i = 0; i< audioList.size(); i++){
-                    current = audioList.get(i);
-                    if(current.isSelected()) {
+
+                if(select_all.getText().equals("UNSELECT ALL")){
+
+
+                    for(int i = 0; i< audioList.size(); i++) {
+                        current = audioList.get(i);
+
                         current.setSelected(false);
                         SelectItemActivity.SelectCount--;
+
                     }
-                    else{
+
+
+
+                } else{
+                    for(int i = 0; i< audioList.size(); i++) {
+                        current = audioList.get(i);
+
                         current.setSelected(true);
                         SelectItemActivity.SelectCount++;
-                    }
-                    if(current.isSelected()){
-                        select_all.setText("UNSELECT ALL");
-
-                    } else {
-                        select_all.setText("SELECT ALL");
-
 
                     }
-                    SelectItemActivity.text_title.setText(SelectItemActivity.SelectCount + " selected");
-                    adapter.notifyDataSetChanged();
+                }
+
+
+                if(current.isSelected()){
+                    select_all.setText("UNSELECT ALL");
+
+                } else {
+                    select_all.setText("SELECT ALL");
+
 
                 }
+                SelectItemActivity.text_title.setText(SelectItemActivity.SelectCount + " selected");
+                adapter.notifyDataSetChanged();
+
+
             }});
 
 

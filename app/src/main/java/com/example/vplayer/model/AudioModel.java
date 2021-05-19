@@ -2,6 +2,9 @@ package com.example.vplayer.model;
 
 import android.graphics.Bitmap;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class AudioModel {
 
     String name;
@@ -10,6 +13,28 @@ public class AudioModel {
     String path;
     boolean isPlay;
     boolean isSelected;
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
+    }
+
+    String Id;
+    String Duration;
+
+    public String getDuration() {
+        return Duration;
+    }
+
+    public void setDuration(String duration) {
+        Duration = duration;
+    }
+
+
+
     boolean isCheckboxVisible = false;
     Bitmap bitmap;
     boolean isFavorite = false;

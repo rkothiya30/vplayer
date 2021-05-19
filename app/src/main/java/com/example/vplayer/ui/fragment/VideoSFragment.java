@@ -147,16 +147,31 @@ public class VideoSFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Video current = new Video();
-                    for(int i = 0; i<VideoSAdapter.videoList.size(); i++){
-                        current = VideoSAdapter.videoList.get(i);
-                        if(current.isSelected()) {
+
+                    if(select_all.getText().equals("UNSELECT ALL")){
+
+
+                        for(int i = 0; i< VideoSAdapter.videoList.size(); i++) {
+                            current = VideoSAdapter.videoList.get(i);
+
                             current.setSelected(false);
                             SelectItemActivity.SelectCount--;
+
                         }
-                        else{
+
+
+
+                    } else{
+                        for(int i = 0; i< VideoSAdapter.videoList.size(); i++) {
+                            current = VideoSAdapter.videoList.get(i);
+
                             current.setSelected(true);
                             SelectItemActivity.SelectCount++;
+
+                        }
                     }
+
+
                     if(current.isSelected()){
                         select_all.setText("UNSELECT ALL");
 
@@ -165,11 +180,10 @@ public class VideoSFragment extends Fragment {
 
 
                     }
-                        SelectItemActivity.text_title.setText(SelectItemActivity.SelectCount + " selected");
+                    SelectItemActivity.text_title.setText(SelectItemActivity.SelectCount + " selected");
                     videoSAdapter.notifyDataSetChanged();
 
-                }
-            }});
+                }});
 
 
 

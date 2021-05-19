@@ -21,16 +21,30 @@ import com.example.vplayer.ui.fragment.OnMenuFragment;
 import com.example.vplayer.ui.fragment.OnPlaylistMenuFragment;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.MyViewHolder> implements OuterClickListener {
 
     Context context;
-    ArrayList<String> playlist = new ArrayList<>();
+    LinkedHashMap<String, String> playlist = new LinkedHashMap<>();
 
-    public PlayListAdapter(Context context, ArrayList<String> playlist) {
+
+    private static ClickListener listener;
+    private static LongClickListener longClickListener;
+    Set<String> keys = new LinkedHashSet<>();
+
+    ArrayList<String> listkeys = new ArrayList<>();
+
+    public PlayListAdapter(Context context, LinkedHashMap<String, String> playlist) {
         this.context = context;
        this.playlist = playlist;
-       this.playlist.add(0, "My Favorites");
+       keys = playlist.keySet();
+        listkeys.clear();
+        listkeys = new ArrayList<>();
+        listkeys.addAll(keys);
+
     }
 
     @NonNull
@@ -41,14 +55,16 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
+        listkeys.clear();
+        listkeys = new ArrayList<>();
+        listkeys.addAll(keys);
         if(position==0){
             holder.ll_fav.setVisibility(View.VISIBLE);
         }
         else{
             holder.ll_fav.setVisibility(View.GONE);
             holder.ll_music.setVisibility(View.VISIBLE);
-            holder.txt_folder_name.setText(playlist.get(position));
+            holder.txt_folder_name.setText(listkeys.get(position));
         }
 
         holder.popup_menu.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +73,7 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.MyView
                 showShortDialog(position, playlist.get(position));
             }
         });
+
 
     }
 
@@ -78,7 +95,23 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.MyView
 
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public interface ClickListener {
+        void onItemClick(int position, View v);
+    }
+
+    public void setOnItemClickListener(ClickListener clickListener) {
+        this.listener = clickListener;
+    }
+
+    public interface LongClickListener {
+        void onItemLongClick(int position, View v);
+    }
+
+    public void setOnLongClickListener(LongClickListener longClickListener) {
+        this.longClickListener = longClickListener;
+    }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         ImageView popup_menu, iv_video;
         RelativeLayout ll_fav, ll_music, ll_video;
@@ -97,7 +130,19 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.MyView
             txt_folder_item = itemView.findViewById(R.id.txt_folder_item);
             txt_folder_name = itemView.findViewById(R.id.txt_folder_name);
 
-
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
+
+            @Override
+            public void onClick(View view) {
+
+                listener.onItemClick(getAdapterPosition(), view);
+            }
+
+            public boolean onLongClick(View v) {
+                longClickListener.onItemLongClick(getAdapterPosition(), v);
+                return true;
+            }
     }
 }

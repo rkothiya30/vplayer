@@ -37,14 +37,12 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
 
     Context context;
     private static ClickListener listener;
-    public static boolean Selection = false;
 
     ArrayList<AudioModel> audioList = new ArrayList<>();
 
     public MusicAdapter(Context context, ArrayList<AudioModel> audioList, boolean Selection) {
         this.context = context;
         this.audioList = audioList;
-        this.Selection = Selection;
     }
 
     public interface ClickListener {
@@ -151,17 +149,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
                             viewholder.ivCheck.setVisibility(View.GONE);*/
 
 
-        if(Selection == true){
-            if(audioList.get(position).isSelected()){
-                holder.iv_empty_checkbox.setVisibility(View.GONE);
-                holder.iv_selected_checkbox.setVisibility(View.VISIBLE);
-            } else{
-                holder.iv_empty_checkbox.setVisibility(View.VISIBLE);
-                holder.iv_selected_checkbox.setVisibility(View.GONE);
-            }
-
-
-        } else{
             holder.iv_empty_checkbox.setVisibility(View.GONE);
             holder.popup_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -169,7 +156,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
                     showShortDialog(position, currentString);
                 }
             });
-        }
+
 
 
     }
@@ -211,13 +198,10 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
             card_view = itemView.findViewById(R.id.card_view);
             iv_empty_checkbox = itemView.findViewById(R.id.iv_empty_checkbox);
             iv_selected_checkbox = itemView.findViewById(R.id.iv_selected_checkbox);
-            if(Selection = true){
-                popup_menu.setVisibility(View.GONE);
-                iv_empty_checkbox.setVisibility(View.VISIBLE);
-            }else{
+
                 popup_menu.setVisibility(View.VISIBLE);
                 iv_empty_checkbox.setVisibility(View.GONE);
-            }
+
             itemView.setOnClickListener(this);
 
         }

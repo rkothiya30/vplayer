@@ -16,24 +16,37 @@ import android.widget.TextView;
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.adapter.FragmentAdapter;
 import com.example.vplayer.fragment.adapter.MusicAdapter;
+import com.example.vplayer.fragment.adapter.MusicSAdapter;
 import com.example.vplayer.fragment.adapter.VideoSAdapter;
+import com.example.vplayer.model.AudioModel;
+import com.example.vplayer.model.PlayListModel;
+import com.example.vplayer.model.Video;
 import com.example.vplayer.ui.fragment.MusicFragment;
 import com.example.vplayer.ui.fragment.MusicSFragment;
+import com.example.vplayer.ui.fragment.PlaylistFragment;
 import com.example.vplayer.ui.fragment.VideoSFragment;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static com.example.vplayer.ui.fragment.MusicFragment.audioList;
+import static com.example.vplayer.ui.fragment.PlaylistFragment.allPlaylist;
+import static com.example.vplayer.ui.fragment.PlaylistFragment.tempPlayListName;
 
 public class SelectItemActivity extends AppCompatActivity {
 
     ViewPager viewPager;
     TabLayout tabLayout;
     ArrayList<Fragment> fragments;
-    ImageView iv_back;
+    ImageView iv_back, iv_true;
     public static TextView text_title;
     public static int SelectCount = 0;
+
+    public static LinkedHashMap<String, String> playlist = new LinkedHashMap<>();
+    public static ArrayList<String> playlistItems = new ArrayList<>();
     Toolbar toolbar;
 
     @Override
@@ -59,6 +72,7 @@ public class SelectItemActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         iv_back = findViewById(R.id.iv_back);
         text_title = findViewById(R.id.text_title);
+        iv_true = findViewById(R.id.iv_true);
         fragments =new ArrayList<>();
 
         fragments.add(new MusicSFragment());
@@ -80,12 +94,38 @@ public class SelectItemActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        iv_true.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Video> tempVideos = new ArrayList<>();
+                ArrayList<AudioModel> tempAudios = new ArrayList<>();
+
+                for(int i = 0; i<audioList.size(); i++)
+                {
+                    if(audioList.get(i).isSelected()){
+                        tempAudios.add(audioList.get(i));
+                    }
+                }
+                for(int j=0; j< VideoSAdapter.videoList.size(); j++){
+                    if(VideoSAdapter.videoList.get(j).isSelected()){
+                        tempVideos.add(VideoSAdapter.videoList.get(j));
+                    }
+                }
+
+                PlayListModel playListModel = new PlayListModel(tempAudios, tempVideos);
+                String playListString = new Gson().toJson(playListModel);
+                allPlaylist.put(tempPlayListName, playListString);
+
+                PlaylistFragment.playListAdapter.notifyDataSetChanged();
+                onBackPressed();
+            }
+        });
 
     }
 
     @Override
     public void onBackPressed() {
-        MusicAdapter.Selection = false;
+        MusicSAdapter.Selection = false;
         for(int i = 0; i<audioList.size(); i++)
         {
             audioList.get(i).setSelected(false);

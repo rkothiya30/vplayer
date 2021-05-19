@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -46,11 +47,14 @@ import com.example.vplayer.fragment.utils.Constant;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
 import com.example.vplayer.model.AudioModel;
+import com.example.vplayer.ui.activity.PlayingSongActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static android.provider.MediaStore.Images.Thumbnails.IMAGE_ID;
 
 
 public class MusicFragment extends Fragment {
@@ -108,7 +112,8 @@ public class MusicFragment extends Fragment {
 
     private void getAllAudioList() {
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.ArtistColumns.ARTIST, MediaStore.Audio.Media.ALBUM_ID};
+        String[] projection = {MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.ALBUM,
+                MediaStore.Audio.ArtistColumns.ARTIST, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media._ID};
         Cursor c = getActivity().getContentResolver().query(uri, projection, null, null,
                 "LOWER(" + MediaStore.Audio.Media.DATE_MODIFIED + ") DESC");
 
@@ -125,6 +130,13 @@ public class MusicFragment extends Fragment {
                 String album = c.getString(1);
                 String artist = c.getString(2);
                 Long albumId = c.getLong(3);
+                String id = c.getString(4);
+
+                MediaMetadataRetriever mediaMetadataRetriever= new MediaMetadataRetriever();
+                mediaMetadataRetriever.setDataSource(path);
+
+                String duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
 
                 File file = new File(path);
                 Uri sArtworkUri = Uri
@@ -150,11 +162,13 @@ public class MusicFragment extends Fragment {
                     audioModel.setAlbum(album);
                     audioModel.setArtist(artist);
                     audioModel.setPath(path);
+                    audioModel.setDuration(duration);
                     /*if (favList.contains(path)) {
                         audioModel.setFavorite(true);
                     } else {
                         audioModel.setFavorite(false);
                     }*/
+                    audioModel.setId(id);
                     audioModel.setPlay(false);
                     audioModel.setSelected(false);
                     audioModel.setCheckboxVisible(false);
@@ -194,14 +208,20 @@ public class MusicFragment extends Fragment {
                 public void onItemClick(int position, View v) {
 
 
-                        File file = new File(audioList.get(position).getPath());
+                       /* File file = new File(audioList.get(position).getPath());
                         Uri uri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", file);
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.setDataAndType(uri, VideoPlayerUtils.getMimeTypeFromFilePath(file.getPath()));
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                        startActivity(Intent.createChooser(intent, "Open with"));
+                        startActivity(Intent.createChooser(intent, "Open with"));*/
+
+                    Intent i = new Intent(getActivity(), PlayingSongActivity.class);
+                    i.putExtra("Position", position);
+                    i.putExtra("ActivityName", "MusicFragment");
+                    getActivity().startActivity(i);
+
 
                 }
             });
