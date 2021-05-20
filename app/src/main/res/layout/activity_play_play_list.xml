@@ -23,7 +23,9 @@
             android:id="@+id/iv_back"
             android:src="@drawable/ic_back"
             android:paddingVertical="16dp"
-            android:paddingHorizontal="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="@dimen/_10sdp"
+
             android:backgroundTint="@color/white"></ImageView>
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -57,9 +59,10 @@
                         android:layout_width="@dimen/_60sdp"
                         android:layout_height="@dimen/_60sdp"
                         android:layout_gravity="center"
-
+                        android:src="@drawable/ic_playlist"
                         android:scaleType="centerCrop"
                         android:id="@+id/iv_music"
+                        android:tint="@color/theme_color"
                         android:layout_centerInParent="true"
                         />
 
@@ -131,6 +134,7 @@
             android:layout_marginRight="@dimen/_5sdp"
             android:padding="@dimen/_6sdp"
             android:src="@drawable/ic_baseline_more_vert_24"
+            android:visibility="gone"
             />
 
     </RelativeLayout>
@@ -168,9 +172,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/txt_play"
+                android:id="@+id/play_mun"
                 android:layout_marginLeft="@dimen/_5sdp"
                 android:text="3"
                 android:textSize="@dimen/_18sdp"
+                android:layout_alignBaseline="@+id/txt_play"
                 android:textColor="@color/Grey_500"></TextView>
 
             <ImageView

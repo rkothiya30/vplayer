@@ -18,9 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +39,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.adapter.PlayListAdapter;
 import com.example.vplayer.fragment.adapter.VideoFolderAdapter;
+import com.example.vplayer.fragment.utils.PreferencesUtility;
 import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.model.PlayListModel;
 import com.example.vplayer.model.Video;
@@ -56,6 +60,7 @@ public class PlaylistFragment extends Fragment  {
 
     View view;
 
+    TextView playlist_nums;
     RecyclerView videoLList;
     SwipeRefreshLayout refreshLayout;
     ImageView emptyString, iv_add;
@@ -63,6 +68,7 @@ public class PlaylistFragment extends Fragment  {
     ArrayList<String> playlists= new ArrayList<>();
     public static LinkedHashMap<String, String> allPlaylist = new LinkedHashMap<>();
     public static String tempPlayListName = "";
+    PreferencesUtility preferencesUtility;
 
     Set<String> keys = new LinkedHashSet<>();
 
@@ -83,7 +89,8 @@ public class PlaylistFragment extends Fragment  {
         refreshLayout = view.findViewById(R.id.refreshLayout);
         emptyString = view.findViewById(R.id.emptyString);
         iv_add = view.findViewById(R.id.iv_add);
-
+        playlist_nums = view.findViewById(R.id.playlist_nums);
+        preferencesUtility = PreferencesUtility.getInstance(getContext());
         refreshLayout.setEnabled(false);
 
         return view;
@@ -99,6 +106,8 @@ public class PlaylistFragment extends Fragment  {
             @Override
             public void onClick(View v) {
 
+
+
                 Dialog dialog = new Dialog(getActivity(), R.style.WideDialog);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(true);
@@ -110,6 +119,8 @@ public class PlaylistFragment extends Fragment  {
                 AppCompatEditText edtFileName;
                 LinearLayout btn_cancel, btn_ok;
                 edtFileName = dialog.findViewById(R.id.edt_file_name);
+                edtFileName.setFocusable(true);
+                edtFileName.requestFocus();
                 btn_cancel = dialog.findViewById(R.id.btn_cancel);
                 btn_ok = dialog.findViewById(R.id.btn_ok);
 
@@ -133,7 +144,7 @@ public class PlaylistFragment extends Fragment  {
                     }
                 });
 
-
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 dialog.show();
             }
         });
@@ -156,9 +167,15 @@ public class PlaylistFragment extends Fragment  {
 
     public void initView() {
 
+
+        allPlaylist = preferencesUtility.getPlaylists();
+
         PlayListModel playListModel = new PlayListModel(new ArrayList<AudioModel>(), new ArrayList<Video>());
         String playListString = new Gson().toJson(playListModel);
-        allPlaylist.put("My Favourites", playListString);
+        if(preferencesUtility.getPlaylists().size() < 2) {
+            allPlaylist.put("My Favourites", playListString);
+            preferencesUtility.setPlaylists(allPlaylist);
+        }
         playListAdapter = new PlayListAdapter(getContext(), allPlaylist);
         videoLList.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -174,5 +191,10 @@ public class PlaylistFragment extends Fragment  {
 
     }
 
+    @Override
+    public void onResume() {
+        playlist_nums.setText(allPlaylist.size() +" Playlists");
 
+        super.onResume();
+    }
 }

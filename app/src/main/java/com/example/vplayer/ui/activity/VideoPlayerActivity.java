@@ -177,6 +177,10 @@ public class VideoPlayerActivity extends AppCompatActivity {
             @Override
             public void run() {
                 isFloatingVideo = false;
+                if(videosList.size() == 1) {
+                    finish();
+                    return;
+                }
                 if (isAutoPlay) {
                     if (isShuffleClick) {
                         getRandomVideoPosition();
@@ -230,6 +234,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 }
                 if (videoPosition != videosList.size()) {
                     videoPosition = videoPosition + 1;
+                    if(videosList.size()==1)
+                        finish();
                     if (videosList.get(videoPosition).getLayoutType() == 1) {
                         videoPosition = videoPosition + 1;
                     }
@@ -246,6 +252,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 }
                 if (videoPosition != 0) {
                     videoPosition = videoPosition - 1;
+                    if(videosList.size()==1)
+                        finish();
                     if (videosList.get(videoPosition).getLayoutType() == 1) {
                         videoPosition = videoPosition - 1;
                     }

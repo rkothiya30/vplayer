@@ -140,8 +140,8 @@
         </FrameLayout>-->
 
         <androidx.cardview.widget.CardView
-            android:layout_width="@dimen/_185sdp"
-            android:layout_height="@dimen/_105sdp"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
             app:cardCornerRadius="@dimen/_8sdp"
             android:layout_gravity="center"
             android:id="@+id/cardView"

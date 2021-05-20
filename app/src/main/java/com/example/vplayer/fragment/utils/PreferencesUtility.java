@@ -5,12 +5,16 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.example.vplayer.model.FolderInfo;
+import com.example.vplayer.model.HashMapModel;
 import com.example.vplayer.model.HistoryVideo;
+import com.example.vplayer.model.PlayListModel;
 import com.example.vplayer.model.Video;
 import com.google.gson.Gson;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static com.example.vplayer.fragment.utils.Constant.PREF_CONTINUE_WATCHING_VIDEO;
@@ -31,6 +35,7 @@ public class PreferencesUtility {
     public static final String PREF_LAST_PLAY_VIDEOS = "last_play_videos";
     public static final String SHARED_PREFS_DIR_LIST_GRID = "grid_view";
     public static final String PREF_SDCARD_TREE_URI = "sdcard_tree_uri";
+    public static  final String PLAYLISTS = "all_playlist";
 
     private static PreferencesUtility sInstance;
     private static volatile SharedPreferences mPreferences;
@@ -77,6 +82,31 @@ public class PreferencesUtility {
         HistoryVideo historyVideo = new HistoryVideo(videoList);
         editor.putString(PREF_HISTORY_VIDEOS, new Gson().toJson(historyVideo));
         editor.apply();
+    }
+
+    public void setPlaylists(LinkedHashMap<String, String> a) {
+        List<PlayListModel> videoList = new ArrayList<>();
+
+
+
+        final SharedPreferences.Editor editor = mPreferences.edit();
+        HashMapModel hashMapModel = new HashMapModel(a);
+        editor.putString(PLAYLISTS, new Gson().toJson(hashMapModel));
+        editor.apply();
+    }
+
+    public LinkedHashMap<String, String> getPlaylists(){
+        String playlists = mPreferences.getString(PLAYLISTS, "");
+        HashMapModel hashMapModel = new HashMapModel();
+        if(playlists != null){
+            hashMapModel = new Gson().fromJson(playlists, HashMapModel.class);
+            if(hashMapModel == null){
+                hashMapModel = new HashMapModel();
+                hashMapModel.setA(new LinkedHashMap<>());
+            }
+        }
+
+        return hashMapModel.getA();
     }
 
     public void updateHistoryVideo(List<Video> videoList) {

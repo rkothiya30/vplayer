@@ -18,7 +18,13 @@ import com.example.vplayer.fragment.adapter.FragmentAdapter;
 import com.example.vplayer.fragment.adapter.MusicAdapter;
 import com.example.vplayer.fragment.adapter.MusicSAdapter;
 import com.example.vplayer.fragment.adapter.VideoSAdapter;
+import com.example.vplayer.fragment.event.UpdateAdapterEvent;
+import com.example.vplayer.fragment.event.UpdateContinueWatchingEvent;
+import com.example.vplayer.fragment.utils.PreferencesUtility;
+import com.example.vplayer.fragment.utils.RxBus;
 import com.example.vplayer.model.AudioModel;
+import com.example.vplayer.model.HashMapModel;
+import com.example.vplayer.model.HistoryVideo;
 import com.example.vplayer.model.PlayListModel;
 import com.example.vplayer.model.Video;
 import com.example.vplayer.ui.fragment.MusicFragment;
@@ -43,6 +49,7 @@ public class SelectItemActivity extends AppCompatActivity {
     ArrayList<Fragment> fragments;
     ImageView iv_back, iv_true;
     public static TextView text_title;
+    PreferencesUtility preferencesUtility;
     public static int SelectCount = 0;
 
     public static LinkedHashMap<String, String> playlist = new LinkedHashMap<>();
@@ -74,6 +81,8 @@ public class SelectItemActivity extends AppCompatActivity {
         text_title = findViewById(R.id.text_title);
         iv_true = findViewById(R.id.iv_true);
         fragments =new ArrayList<>();
+
+        preferencesUtility = PreferencesUtility.getInstance(SelectItemActivity.this);
 
         fragments.add(new MusicSFragment());
         fragments.add(new VideoSFragment());
@@ -112,11 +121,36 @@ public class SelectItemActivity extends AppCompatActivity {
                     }
                 }
 
-                PlayListModel playListModel = new PlayListModel(tempAudios, tempVideos);
-                String playListString = new Gson().toJson(playListModel);
-                allPlaylist.put(tempPlayListName, playListString);
+                PlayListModel playListModel = new PlayListModel(); // new PlayListModel(tempAudios, tempVideos);
+                String playListString = ""; //new Gson().toJson(playListModel);
 
+
+                List<Video> videoList = new ArrayList<>();
+                List<AudioModel> audioModels = new ArrayList<>();
+
+                LinkedHashMap<String, String> playlists = preferencesUtility.getPlaylists();
+                if(playlists.containsKey(tempPlayListName)){
+                    String s = playlists.get(tempPlayListName);
+                    PlayListModel playListModel1 = new Gson().fromJson(s, PlayListModel.class);
+                    videoList = playListModel1.getVideoList();
+                    audioModels = playListModel1.getAudioList();
+                    videoList.addAll(tempVideos);
+                    audioModels.addAll(tempAudios);
+
+                    playListModel = new PlayListModel(audioModels, videoList);
+                    playListString = new Gson().toJson(playListModel);
+                }else {
+
+                   playListModel =new PlayListModel(tempAudios, tempVideos);
+                  playListString =new Gson().toJson(playListModel);
+
+                }
+
+                allPlaylist.put(tempPlayListName, playListString);
+                preferencesUtility.setPlaylists(allPlaylist);
                 PlaylistFragment.playListAdapter.notifyDataSetChanged();
+                RxBus.getInstance().post(new UpdateAdapterEvent());
+
                 onBackPressed();
             }
         });

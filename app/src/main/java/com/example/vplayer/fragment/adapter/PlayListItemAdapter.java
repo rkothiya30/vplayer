@@ -89,7 +89,7 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case ITEM_MUSIC_TYPE:
-                return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_music_item, parent, false));
+                return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.selected_video_list, parent, false));
             case ITEM_VIDEO_TYPE:
                 return new VideoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_video, parent, false));
 
@@ -169,7 +169,7 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                         Intent i = new Intent(context, PlayingSongActivity.class);
                         i.putExtra("Position", position);
-                        i.putExtra("Audio", Parcels.wrap(finalAudioFile));
+                        i.putExtra("Audio", Parcels.wrap(aList));
                         i.putExtra("ActivityName", "PlayPlayListActivity");
                         context.startActivity(i);
                     }
@@ -252,6 +252,7 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }
         return 3;
+            //throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
 
 

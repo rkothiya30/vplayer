@@ -4,6 +4,7 @@ import java.util.List;
 
 public class PlayListModel {
 
+    List<AudioModel> AudioList;
     List<Video> videoList;
 
     public PlayListModel() {
@@ -17,11 +18,11 @@ public class PlayListModel {
         AudioList = audioList;
     }
 
-    List<AudioModel> AudioList;
+
 
     public PlayListModel(List<AudioModel> audioList, List<Video> videoList) {
         this.videoList = videoList;
-        this.AudioList = AudioList;
+        this.AudioList = audioList;
     }
 
     public List<Video> getVideoList() {

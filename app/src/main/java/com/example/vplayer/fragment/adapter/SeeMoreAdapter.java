@@ -152,9 +152,9 @@ public class SeeMoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         options.inSampleSize = 1;
         Bitmap curThumb = MediaStore.Video.Thumbnails.getThumbnail(crThumb, video.getId(), MediaStore.Video.Thumbnails.MICRO_KIND, options);
 
-        if (curThumb != null) {
+        /*if (curThumb != null) {
             videoViewHolder.videoThumbnail.setImageBitmap(curThumb);
-        } else {
+        } else*/ {
             File file = new File(video.getFullPath());
 
             RequestOptions option = new RequestOptions()

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -98,20 +99,26 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
         getDialog().dismiss();
 
         switch (item) {
+
+            case 1:
+                Video video = new Video();
+                showShortDialog(-2, video);
+                break;
+
             case 2:
-                RenameDialog.getInstance(getActivity(), video.getTitle(), video.getId(), video)
+                RenameDialog.getInstance(getActivity(), OnMenuFragment.video.getTitle(), OnMenuFragment.video.getId(), OnMenuFragment.video)
                         .show(getFragmentManager(), "");
 
                 break;
             case 4:
-                VideoPlayerUtils.shareVideo(video.getId(), getActivity());
+                VideoPlayerUtils.shareVideo(OnMenuFragment.video.getId(), getActivity());
                 break;
             case 3:
-                long[] videoId = {video.getId()};
-                VideoPlayerUtils.showDeleteDialog(getActivity(), video.getTitle(), videoId);
+                long[] videoId = {OnMenuFragment.video.getId()};
+                VideoPlayerUtils.showDeleteDialog(getActivity(), OnMenuFragment.video.getTitle(), videoId);
                 break;
             case 5:
-                VideoDetailsDialog.getInstance(video)
+                VideoDetailsDialog.getInstance(OnMenuFragment.video)
                         .show(((AppCompatActivity) getContext())
                                 .getSupportFragmentManager(), "");
 
@@ -125,5 +132,13 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
 
     public void setOuterClickListener(OuterClickListener outerClickListener) {
         this.outerClickListener = outerClickListener;
+    }
+
+    public void showShortDialog ( int adapterPosition, Video video){
+        AddPlaylistFragment addPlaylistFragment = AddPlaylistFragment.newInstance(adapterPosition, video, getContext());
+        //bottomSheetDialog.setOuterClickListener(this);
+        addPlaylistFragment.show(getFragmentManager(), "Bottom Sheet Dialog Fragment");
+
+
     }
 }

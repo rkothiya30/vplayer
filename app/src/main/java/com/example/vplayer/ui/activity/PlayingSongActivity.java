@@ -1,6 +1,7 @@
 package com.example.vplayer.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.core.content.ContextCompat;
 
 import android.content.ComponentName;
@@ -51,7 +52,7 @@ import static com.example.vplayer.ui.fragment.MusicFragment.audioList;
 public class PlayingSongActivity extends AppCompatActivity implements ActionPlaying, ServiceConnection/*, MediaPlayer.OnCompletionListener*/ {
 
     private static boolean FIRST_OPEN = false;
-    private ImageView ivBAck, ivFavouritesSong, ivAddToPlaylist, ivEqualizer, ivShuffleSong;
+    private ImageView ivBAck, ivFavouritesSong, ivAddToPlaylist, ivShuffleSong;
     private String songTitle, artistName, songPath, songAlbum, songDuration, songId;
     private Uri songAlbumArt;
     private boolean isJustOpen = false;
@@ -61,7 +62,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
    // public static MediaPlayer mp;
     public static ImageView ivPlayPause;
     private ImageView ivPrevious, ivNext;
-    private SeekBar seekBar;
+    private AppCompatSeekBar seekBar;
     Handler mHandler;
     private Utilities utils;
     public static List<AudioModel> songsList = new ArrayList<>();
@@ -138,7 +139,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
         seekBar = findViewById(R.id.sbSongDuration);
         ivFavouritesSong = findViewById(R.id.ivFavouritesSong);
         ivAddToPlaylist = findViewById(R.id.ivAddToPlaylist);
-        ivEqualizer = findViewById(R.id.ivEqualizerSong);
+
         ivShuffleSong = findViewById(R.id.ivShuffleSong);
         //ivSearch = findViewById(R.id.ivSearch);
 
@@ -175,22 +176,6 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
             }
         });*/
 
-        ivEqualizer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-/*
-                if(musicService != null)
-                {
-                    Intent equalizerIntent = new Intent(PlayingSongActivity.this, EqualizerActivity.class);
-                    startActivity(equalizerIntent);
-                }
-                else
-                {
-                    Toast.makeText(PlayingSongActivity.this, "Media player is not started", Toast.LENGTH_LONG).show();
-                }*/
-            }
-        });
 
 
 
@@ -202,7 +187,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
                     Collections.shuffle(shuffledList);
                     IS_SHUFFLED = true;
                     Toast.makeText(PlayingSongActivity.this, "Songs Shuffled", Toast.LENGTH_SHORT).show();
-                    ivShuffleSong.setColorFilter(ContextCompat.getColor(PlayingSongActivity.this, R.color.tab_selected_color), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    ivShuffleSong.setColorFilter(ContextCompat.getColor(PlayingSongActivity.this, R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
                 }
                 else
                 {
@@ -323,11 +308,11 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
             position = getIntent().getIntExtra("Position", -1);
         } else if(activityName.equals("PlayPlayListActivity")){
             List<AudioModel> a = new ArrayList<>();
-            AudioModel audio1 =  Parcels.unwrap(getIntent().getParcelableExtra("Audio"));
+            a =  Parcels.unwrap(getIntent().getParcelableExtra("Audio"));
 
-                    a.add(audio1);
+                 //   a.add(audio1);
             songsList = a;
-                    position = 0;
+                    position = getIntent().getIntExtra("Position", -1);
         }
 
        /* if(activityName.equals("Album"))
@@ -441,7 +426,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
         }
         else
         {
-            ivSongImage.setImageResource(R.drawable.circular_image);
+            ivSongImage.setImageResource(R.drawable.ic_music_icon_round);
         }
         currentSongIndex = position;
 

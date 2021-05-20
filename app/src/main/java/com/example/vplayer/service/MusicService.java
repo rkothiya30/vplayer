@@ -197,7 +197,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             uri = Uri.parse(songsList.get(position).getPath());
         }
 
-        mediaPlayer = MediaPlayer.create(getBaseContext(), uri);
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
     }
 
     public int getCurrentPosition()
