@@ -44,11 +44,16 @@ public class AddPlaylistAdapter extends RecyclerView.Adapter<AddPlaylistAdapter.
     private static LongClickListener longClickListener;
     Set<String> keys = new LinkedHashSet<>();
     Video video;
+    AudioModel audioModel;
     Dialog dialog;
+    private static int check;
+    private static List<Video> mainVideoList;
+    private static List<AudioModel> mainAudioList;
 
     ArrayList<String> listkeys = new ArrayList<>();
 
-    public AddPlaylistAdapter(Context context, LinkedHashMap<String, String> playlist, Video video, Dialog dialog) {
+    public AddPlaylistAdapter(int chec, Context context, LinkedHashMap<String, String> playlist, Video video, Dialog dialog) {
+        check = chec;
         this.context = context;
        this.playlist = playlist;
        keys = playlist.keySet();
@@ -56,6 +61,34 @@ public class AddPlaylistAdapter extends RecyclerView.Adapter<AddPlaylistAdapter.
         listkeys = new ArrayList<>();
         listkeys.addAll(keys);
         this.video = video;
+        this.dialog = dialog;
+        preferencesUtility = PreferencesUtility.getInstance(context);
+
+    }
+    public AddPlaylistAdapter(int chec, Context context, LinkedHashMap<String, String> playlist, AudioModel audioModel, Dialog dialog) {
+        check =chec;
+        this.context = context;
+        this.playlist = playlist;
+        keys = playlist.keySet();
+        listkeys.clear();
+        listkeys = new ArrayList<>();
+        listkeys.addAll(keys);
+        this.audioModel = audioModel;
+        this.dialog = dialog;
+        preferencesUtility = PreferencesUtility.getInstance(context);
+
+    }
+
+    public AddPlaylistAdapter(int chec, Context context, LinkedHashMap<String, String> playlist, List<Video> videoLis, List<AudioModel> audioLis, Dialog dialog) {
+        check =chec;
+        this.context = context;
+        this.playlist = playlist;
+        keys = playlist.keySet();
+        listkeys.clear();
+        listkeys = new ArrayList<>();
+        listkeys.addAll(keys);
+        mainVideoList = videoLis;
+        mainAudioList = audioLis;
         this.dialog = dialog;
         preferencesUtility = PreferencesUtility.getInstance(context);
 
@@ -126,15 +159,32 @@ public class AddPlaylistAdapter extends RecyclerView.Adapter<AddPlaylistAdapter.
                         PlayListModel playListModel1 = new Gson().fromJson(s, PlayListModel.class);
                         videoList = playListModel1.getVideoList();
                         audioModels = playListModel1.getAudioList();
-                        videoList.add(video);
-                        //audioModels.add();
+                        if(check==-2) {
+                            if(!videoList.contains(video))
+                            videoList.add(video);
+                        }
+                        else if(check==-3) {
+                            if(!audioModels.contains(audioModel))
+                            audioModels.add(audioModel);
+                        }
+                        else if(check == -1){
+                            for(int i = 0; i<mainVideoList.size(); i++){
+                                if(!videoList.contains(mainVideoList.get(i)))
+                                videoList.add(mainVideoList.get(i));
+                            }
+                            for(int i = 0; i<mainAudioList.size(); i++){
+                                if(!audioModels.contains(mainAudioList.get(i)))
+                                audioModels.add(mainAudioList.get(i));
+                            }
+
+                        }
 
                         playListModel = new PlayListModel(audioModels, videoList);
                         playListString = new Gson().toJson(playListModel);
 
                         allPlaylist.put(listkeys.get(position), playListString);
                         preferencesUtility.setPlaylists(allPlaylist);
-                        //PlaylistFragment.playListAdapter.notifyDataSetChanged();
+                        PlaylistFragment.playListAdapter.notifyDataSetChanged();
                         RxBus.getInstance().post(new UpdateAdapterEvent());
 
                     }

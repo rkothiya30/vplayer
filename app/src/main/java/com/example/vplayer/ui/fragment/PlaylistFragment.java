@@ -172,7 +172,7 @@ public class PlaylistFragment extends Fragment  {
 
         PlayListModel playListModel = new PlayListModel(new ArrayList<AudioModel>(), new ArrayList<Video>());
         String playListString = new Gson().toJson(playListModel);
-        if(preferencesUtility.getPlaylists().size() < 2) {
+        if(preferencesUtility.getPlaylists().size() < 1) {
             allPlaylist.put("My Favourites", playListString);
             preferencesUtility.setPlaylists(allPlaylist);
         }

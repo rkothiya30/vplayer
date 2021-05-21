@@ -1468,9 +1468,55 @@ public class MKPlayer {
             if (!lock) {
                 if (isShowing) {
                     hide(false);
-                } else {
-                    show(defaultTimeout);
 
+                    isShowMoreOption = false;
+                    $.id(R.id.video_playback_options).startAnimation(slideDownAnimation);
+//                    $.id(R.id.video_playback_options).gone();
+                    slideDownAnimation.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            $.id(R.id.video_playback_options).gone();
+                            $.id(R.id.video_playback_options).clearAnimation();
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                } else {
+
+                    if (isShowMoreOption) {
+                        isShowMoreOption = false;
+                        $.id(R.id.video_playback_options).startAnimation(slideDownAnimation);
+//                    $.id(R.id.video_playback_options).gone();
+                        slideDownAnimation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                $.id(R.id.video_playback_options).gone();
+                                $.id(R.id.video_playback_options).clearAnimation();
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+
+                    } else{
+                        show(defaultTimeout);
+
+                    }
                 }
             } else {
                 $.id(R.id.app_video_unlock_layout).visible();

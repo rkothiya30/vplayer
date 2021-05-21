@@ -2,7 +2,10 @@ package com.example.vplayer.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
@@ -12,7 +15,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.VideoView;
+
+import androidx.core.content.ContextCompat;
 
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
@@ -26,7 +33,10 @@ public class FloatingWidgetService extends Service {
     View floatingView;
     WindowManager.LayoutParams params;
     VideoView videoView;
+    RelativeLayout mainParentRelativeLayout;
     ImageView playPause, closeWindow, floatingWindow;
+    boolean toggle = true;
+    ProgressBar videoProgress;
 
     PreferencesUtility preferencesUtility;
     Video video;
@@ -68,12 +78,24 @@ public class FloatingWidgetService extends Service {
         playPause = floatingView.findViewById(R.id.playPause);
         closeWindow = floatingView.findViewById(R.id.closeWindow);
         floatingWindow = floatingView.findViewById(R.id.floatingWindow);
+        mainParentRelativeLayout = floatingView.findViewById(R.id.mainParentRelativeLayout);
+        videoProgress = floatingView.findViewById(R.id.videoProgress);
 
         videoView = floatingView.findViewById(R.id.videoView);
         if (video != null) {
             videoView.setVideoPath(video.getFullPath());
             videoView.seekTo(video.getVideoLastPlayPosition());
             videoView.start();
+            videoProgress.setVisibility(View.VISIBLE);
+            videoProgress.setMax(video.getVideoDuration());
+            double progress1 = Double.parseDouble(String.valueOf(video.getVideoLastPlayPosition()));
+            int progress = (int) progress1;
+
+            //progressBar.getProgressDrawable().setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                videoProgress.setProgressTintList(ColorStateList.valueOf(Color.RED));
+            }
+            videoProgress.setProgress(progress);
         }
 
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -83,6 +105,7 @@ public class FloatingWidgetService extends Service {
                 stopSelf();
             }
         });
+
 
         closeWindow.setImageResource(R.drawable.ic_close_white_24dp);
         closeWindow.setOnClickListener(new View.OnClickListener() {
@@ -108,9 +131,14 @@ public class FloatingWidgetService extends Service {
         });
 
         floatingWindow.setImageResource(R.drawable.floating_window);
+        floatingWindow.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white), PorterDuff.Mode.SRC_IN);
         floatingWindow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+               /* if (videoView.isPlaying()) {
+                    videoView.pause();
+                }*/
                 preferencesUtility.setIsFloatingVideo(false);
                 startActivity(VideoPlayerActivity.getInstance(getApplicationContext(), videoView.getCurrentPosition(), true).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 stopSelf();
@@ -134,6 +162,17 @@ public class FloatingWidgetService extends Service {
                         return true;
 
                     case MotionEvent.ACTION_UP:
+                        if(toggle){
+                            floatingWindow.setVisibility(View.VISIBLE);
+                            closeWindow.setVisibility(View.VISIBLE);
+                            playPause.setVisibility(View.VISIBLE);
+                            toggle = false;
+                        } else{
+                            floatingWindow.setVisibility(View.GONE);
+                            closeWindow.setVisibility(View.GONE);
+                            playPause.setVisibility(View.GONE);
+                            toggle = true;
+                        }
                         return true;
 
                     case MotionEvent.ACTION_MOVE:

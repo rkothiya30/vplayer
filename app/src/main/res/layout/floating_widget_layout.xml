@@ -52,5 +52,18 @@
             android:paddingTop="@dimen/_12sdp"
             android:paddingRight="@dimen/_12sdp"
             android:src="@drawable/hplib_ic_pause" />
+
+        <ProgressBar
+            android:id="@+id/videoProgress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_alignParentBottom="true"
+            android:progress="0"
+            android:visibility="visible" />
+
     </RelativeLayout>
+
+
+
 </FrameLayout>

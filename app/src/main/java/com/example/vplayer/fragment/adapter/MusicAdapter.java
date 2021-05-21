@@ -27,6 +27,7 @@ import com.bumptech.glide.request.target.Target;
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.interfaces.OuterClickListener;
 import com.example.vplayer.model.AudioModel;
+import com.example.vplayer.ui.fragment.OnMenuFragment;
 import com.example.vplayer.ui.fragment.OnPlaylistMenuFragment;
 
 import java.io.File;
@@ -153,7 +154,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
             holder.popup_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showShortDialog(position, currentString);
+                    showShortDialog(-3, audioList.get(position));
                 }
             });
 
@@ -161,11 +162,10 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
 
     }
 
-    public void showShortDialog ( int adapterPosition, String playlistName){
-        OnPlaylistMenuFragment bottomSheetDialog = OnPlaylistMenuFragment.newInstance(adapterPosition, playlistName);
+    public void showShortDialog ( int adapterPosition, AudioModel audioModel){
+        OnMenuFragment bottomSheetDialog = OnMenuFragment.newInstance(adapterPosition, audioModel);
         bottomSheetDialog.setOuterClickListener(this);
         bottomSheetDialog.show(( (FragmentActivity) context ).getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
-
 
     }
 

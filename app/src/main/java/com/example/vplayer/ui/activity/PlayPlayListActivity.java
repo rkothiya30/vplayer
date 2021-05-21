@@ -2,6 +2,7 @@ package com.example.vplayer.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,8 +13,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.adapter.MusicSAdapter;
 import com.example.vplayer.fragment.adapter.PlayListItemAdapter;
@@ -28,6 +36,7 @@ import com.example.vplayer.model.Video;
 import com.example.vplayer.ui.fragment.PlaylistFragment;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -47,6 +56,9 @@ public class PlayPlayListActivity extends AppCompatActivity {
     TextView text_title, play_mun;
     ImageView iv_back, iv_add;
     AppCompatImageView iv_music;
+    CardView card_view;
+    RelativeLayout ll_fav;
+
     String PlayName;
     PreferencesUtility preferencesUtility;
     public static List<Object> aList = new ArrayList<>();
@@ -76,6 +88,8 @@ public class PlayPlayListActivity extends AppCompatActivity {
         play_mun = findViewById(R.id.play_mun);
         iv_add = findViewById(R.id.iv_add);
         preferencesUtility = PreferencesUtility.getInstance(PlayPlayListActivity.this);
+        ll_fav = findViewById(R.id.ll_fav);
+        card_view = findViewById(R.id.card_view);
 
         initView();
         subscribeUpdateAdapterEvent();
@@ -138,6 +152,28 @@ public class PlayPlayListActivity extends AppCompatActivity {
         }
 
         text_title.setText(PlayName);
+
+        Object model = aList.get(0);
+        if(model instanceof Video) {
+            ll_fav.setVisibility(View.VISIBLE);
+            card_view.setVisibility(View.GONE);
+            Video video = (Video) model;
+            File file = new File(video.getFullPath());
+
+            RequestOptions option = new RequestOptions()
+                    .signature(new ObjectKey(file.getAbsolutePath() + file.lastModified()))
+                    .priority(Priority.LOW)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
+            Glide.with(getApplicationContext())
+                    .load(video.getFullPath()).apply(option)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(iv_music);
+
+        } else {
+                    ll_fav.setVisibility(View.GONE);
+                    card_view.setVisibility(View.VISIBLE);
+
+        }
         play_mun.setText(String.valueOf(aList.size()));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layoutManager);

@@ -48,21 +48,29 @@
 
                 </RelativeLayout>
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
                     android:id="@+id/ll_music"
                     android:layout_gravity="center"
 
                     android:visibility="gone">
-
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MP3"
+                        android:layout_alignParentRight="true"
+                        android:textColor="@color/black"
+                        android:layout_marginRight="@dimen/_1sdp"
+                        android:textSize="@dimen/_10sdp"></TextView>
                     <androidx.appcompat.widget.AppCompatImageView
 
-                        android:layout_width="@dimen/_24sdp"
-                        android:layout_height="@dimen/_24sdp"
+                        android:layout_width="@dimen/_22sdp"
+                        android:layout_height="@dimen/_22sdp"
+
                         android:layout_gravity="center"
                         android:padding="@dimen/_1sdp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_music"
+                        android:src="@drawable/ic_musical_note"
                         android:layout_centerInParent="true"
  />
 

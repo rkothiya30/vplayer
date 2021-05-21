@@ -12,6 +12,12 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.event.PlaylistItem;
 import com.example.vplayer.fragment.interfaces.OuterClickListener;
@@ -23,6 +29,7 @@ import com.example.vplayer.ui.fragment.OnMenuFragment;
 import com.example.vplayer.ui.fragment.OnPlaylistMenuFragment;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -65,6 +72,11 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.MyView
         listkeys.clear();
         listkeys = new ArrayList<>();
         listkeys.addAll(keys);
+
+        PlayListModel playListModel = new PlayListModel();
+        LinkedHashMap<String, String> playlists = preferencesUtility.getPlaylists();
+        String s = playlists.get(listkeys.get(position));
+
         if(position==0){
             holder.ll_fav.setVisibility(View.VISIBLE);
         }
@@ -74,14 +86,38 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.MyView
             holder.txt_folder_name.setText(listkeys.get(position));
 
 
-            LinkedHashMap<String, String> playlists = preferencesUtility.getPlaylists();
-            String s = playlists.get(listkeys.get(position));
+
             List<Object> aList = new ArrayList<>();
 
-            PlayListModel playListModel = new PlayListModel();
+
             if (s != null) {
                 playListModel = new Gson().fromJson(s, PlayListModel.class);
                 if (playListModel != null){
+                    Object model = new Object();
+
+                    if(playListModel.getVideoList() != null && playListModel.getVideoList().size() != 0)
+                    model = playListModel.getVideoList().get(0);
+                    if(model!= null)
+                    if(model instanceof Video) {
+                        holder.ll_video.setVisibility(View.VISIBLE);
+                        holder.ll_music.setVisibility(View.GONE);
+                        Video video = (Video) model;
+                        File file = new File(video.getFullPath());
+
+                        RequestOptions option = new RequestOptions()
+                                .signature(new ObjectKey(file.getAbsolutePath() + file.lastModified()))
+                                .priority(Priority.LOW)
+                                .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
+                        Glide.with(context)
+                                .load(video.getFullPath()).apply(option)
+                                .transition(DrawableTransitionOptions.withCrossFade())
+                                .into(holder.iv_video);
+
+                    } else {
+                        holder.ll_video.setVisibility(View.GONE);
+                        holder.ll_music.setVisibility(View.VISIBLE);
+
+                    }
 
                 }
                    /* if (playListModel.getVideoList() == null) {
@@ -107,15 +143,31 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.MyView
         holder.popup_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showShortDialog(position, playlist.get(position));
+                String sa = playlists.get(listkeys.get(position));
+                if(sa != null){
+                    List<Video> videoList;
+                    List<AudioModel> audioList;
+                    PlayListModel playListModel1 = new Gson().fromJson(sa, PlayListModel.class);
+                    if(playListModel1.getVideoList() != null && playListModel1.getVideoList().size() != 0)
+                        videoList = new ArrayList<>();
+
+                    if(playListModel1.getAudioList() != null && playListModel1.getAudioList().size() != 0)
+                        audioList = new ArrayList<>();
+
+                    videoList = playListModel1.getVideoList();
+                    audioList = playListModel1.getAudioList();
+                    showShortDialog(-1, videoList, audioList, listkeys.get(position));
+
+                }
+
             }
         });
 
 
     }
 
-    public void showShortDialog ( int adapterPosition, String playlistName){
-        OnPlaylistMenuFragment bottomSheetDialog = OnPlaylistMenuFragment.newInstance(adapterPosition, playlistName);
+    public void showShortDialog ( int adapterPosition, List<Video> videoList, List<AudioModel> audioList, String playListName){
+        OnMenuFragment bottomSheetDialog = OnMenuFragment.newInstance(adapterPosition, videoList, audioList, playListName);
         bottomSheetDialog.setOuterClickListener(this);
         bottomSheetDialog.show(( (FragmentActivity) context ).getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
 
@@ -166,6 +218,7 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.MyView
             ll_video = itemView.findViewById(R.id.ll_video);
             txt_folder_item = itemView.findViewById(R.id.txt_folder_item);
             txt_folder_name = itemView.findViewById(R.id.txt_folder_name);
+
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);

@@ -95,6 +95,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     public static Intent getInstance(Context context, int videoLastProgress, boolean isFloatingVideo) {
         Intent intent = new Intent(context, VideoPlayerActivity.class);
+
         intent.putExtra(EXTRA_FLOATING_VIDEO, videoLastProgress);
         intent.putExtra(EXTRA_IS_FLOATING_VIDEO, isFloatingVideo);
         return intent;
@@ -155,6 +156,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         isFloatingVideo = getIntent().getBooleanExtra(EXTRA_IS_FLOATING_VIDEO, false);
 
         if (isFloatingVideo) {
+            isResumeVideo = true;
             videoPosition = preferencesUtility.getFloatingVideoPosition();
             videoLastProgress = getIntent().getIntExtra(EXTRA_FLOATING_VIDEO, 0);
         }
@@ -233,9 +235,12 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     getRandomVideoPosition();
                 }
                 if (videoPosition != videosList.size()) {
+                    if(videosList.size()==1) {
+
+                        return;
+                    }
                     videoPosition = videoPosition + 1;
-                    if(videosList.size()==1)
-                        finish();
+
                     if (videosList.get(videoPosition).getLayoutType() == 1) {
                         videoPosition = videoPosition + 1;
                     }
@@ -252,8 +257,14 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 }
                 if (videoPosition != 0) {
                     videoPosition = videoPosition - 1;
-                    if(videosList.size()==1)
-                        finish();
+                    if(videosList.size()==1) {
+
+                        return;
+                    }
+                    if(videosList.size()==1) {
+
+                        return;
+                    }
                     if (videosList.get(videoPosition).getLayoutType() == 1) {
                         videoPosition = videoPosition - 1;
                     }
@@ -276,10 +287,12 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     setValue();
+                    mkPlayer.pause();
                     startService(new Intent(VideoPlayerActivity.this, FloatingWidgetService.class));
                     finish();
                 } else if (Settings.canDrawOverlays(VideoPlayerActivity.this)) {
                     setValue();
+                    mkPlayer.pause();
                     startService(new Intent(VideoPlayerActivity.this, FloatingWidgetService.class));
                     finish();
                 } else {

@@ -408,7 +408,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         }
 
-        public class GridHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+        public class GridHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
             ImageView videoThumbnail, popup_menu;
             TextView videoName, videoDuration, videoSize, videoTitle, tv_videos;
@@ -428,7 +428,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 tv_videos = itemView.findViewById(R.id.tv_videos);
 
                 itemView.setOnClickListener(this);
-                itemView.setOnLongClickListener(this);
+
             }
 
             @Override
@@ -436,11 +436,6 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 listener.onItemClick(getAdapterPosition(), view);
             }
 
-            @Override
-            public boolean onLongClick(View view) {
-                longClickListener.onItemLongClick(getAdapterPosition(), view);
-                return true;
-            }
         }
 
 

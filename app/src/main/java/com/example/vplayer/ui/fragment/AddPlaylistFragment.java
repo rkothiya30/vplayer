@@ -56,19 +56,39 @@ public class AddPlaylistFragment extends BottomSheetDialogFragment  {
     private static int check;
     private static Video video;
     private static String title;
+    static Context context;
+    private static AudioModel audioModel;
+    private static List<Video> videoList;
+    private static List<AudioModel> audioList;
 
 
-    public static AddPlaylistFragment newInstance(int adapterPosition) {
+    public static AddPlaylistFragment newInstance(int checks, List<Video> videoLis, List<AudioModel> audioLis, Context contex) {
         AddPlaylistFragment fragment = new AddPlaylistFragment();
-        position = adapterPosition;
+
+        videoList = videoLis;
+        audioList = audioLis;
+        check = checks;
+        preferencesUtility = PreferencesUtility.getInstance(contex);
+        context = contex;
         return fragment;
     }
 
 
-    public static AddPlaylistFragment newInstance(int checks, Video vide, Context context) {
+    public static AddPlaylistFragment newInstance(int checks, Video vide, Context contex) {
         AddPlaylistFragment fragment = new AddPlaylistFragment();
         title = vide.getTitle();
         video = vide;
+        check = checks;
+        preferencesUtility = PreferencesUtility.getInstance(contex);
+        context = contex;
+        return fragment;
+    }
+
+    public static AddPlaylistFragment newInstance(int checks, AudioModel audioMode, Context context) {
+        AddPlaylistFragment fragment = new AddPlaylistFragment();
+
+        audioModel = audioMode;
+        title = audioMode.getName();
         check = checks;
         preferencesUtility = PreferencesUtility.getInstance(context);
 
@@ -139,7 +159,7 @@ public class AddPlaylistFragment extends BottomSheetDialogFragment  {
                         PlaylistFragment.tempPlayListName = edtFileName.getText().toString();
 
                         addPlaylistAdapter.notifyDataSetChanged();
-                        startActivity(new Intent(getActivity(), SelectItemActivity.class));
+                        startActivity(new Intent(context, SelectItemActivity.class));
                     }
                 });
 
@@ -214,7 +234,12 @@ public class AddPlaylistFragment extends BottomSheetDialogFragment  {
             allPlaylist.put("My Favourites", playListString);
             preferencesUtility.setPlaylists(allPlaylist);
         }
-        addPlaylistAdapter = new AddPlaylistAdapter(getContext(), allPlaylist, video, getDialog());
+        if(check == -2)
+        addPlaylistAdapter = new AddPlaylistAdapter(check, getContext(), allPlaylist, video, getDialog());
+        else if(check == -3)
+            addPlaylistAdapter = new AddPlaylistAdapter(check, getContext(), allPlaylist, audioModel, getDialog());
+        else if(check == -1)
+            addPlaylistAdapter = new AddPlaylistAdapter(check, getContext(), allPlaylist, videoList, audioList, getDialog());
         sortList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         sortList.setNestedScrollingEnabled(false);

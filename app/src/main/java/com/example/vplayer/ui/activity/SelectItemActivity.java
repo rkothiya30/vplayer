@@ -134,8 +134,15 @@ public class SelectItemActivity extends AppCompatActivity {
                     PlayListModel playListModel1 = new Gson().fromJson(s, PlayListModel.class);
                     videoList = playListModel1.getVideoList();
                     audioModels = playListModel1.getAudioList();
-                    videoList.addAll(tempVideos);
-                    audioModels.addAll(tempAudios);
+                    for(int ik = 0; ik<tempVideos.size(); ik++){
+                        if(!videoList.contains(tempVideos.get(ik)))
+                        videoList.add(tempVideos.get(ik));
+                    }
+                    for(int ik = 0; ik<tempAudios.size(); ik++){
+                        if(!audioModels.contains(tempAudios.get(ik)))
+                            audioModels.add(tempAudios.get(ik));
+                    }
+
 
                     playListModel = new PlayListModel(audioModels, videoList);
                     playListString = new Gson().toJson(playListModel);
