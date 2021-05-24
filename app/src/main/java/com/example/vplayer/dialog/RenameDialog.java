@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,6 +35,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class RenameDialog extends DialogFragment {
 
@@ -74,6 +77,7 @@ public class RenameDialog extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        showKeyboard();
         preferencesUtility = PreferencesUtility.getInstance(context);
 
         //btnRename.setTextColor(ATEUtil.getThemeAccentColor(context));
@@ -170,6 +174,12 @@ public class RenameDialog extends DialogFragment {
         });
 
         validationDialog.show();
+    }
+
+    private void showKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInputFromWindow(renameText.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+        renameText.requestFocus();
     }
 
     private void reNameFile(File file, String newName) {

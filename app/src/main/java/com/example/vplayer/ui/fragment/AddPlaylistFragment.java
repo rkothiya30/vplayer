@@ -159,7 +159,7 @@ public class AddPlaylistFragment extends BottomSheetDialogFragment  {
                         PlaylistFragment.tempPlayListName = edtFileName.getText().toString();
 
                         addPlaylistAdapter.notifyDataSetChanged();
-                        startActivity(new Intent(context, SelectItemActivity.class));
+                        context.startActivity(new Intent(context, SelectItemActivity.class));
                     }
                 });
 

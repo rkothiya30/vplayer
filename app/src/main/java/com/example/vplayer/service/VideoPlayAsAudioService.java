@@ -19,6 +19,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
@@ -67,6 +68,7 @@ public class VideoPlayAsAudioService extends Service {
     int notificationId;
     boolean isRefresh = false;
 
+    MediaSessionCompat mediaSessionCompat;
     PreferencesUtility preferencesUtility;
     List<Video> videoList = new ArrayList<>();
     private static int videoPosition;
@@ -86,6 +88,8 @@ public class VideoPlayAsAudioService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        mediaSessionCompat = new MediaSessionCompat(getBaseContext(), "My Audio");
 
         mNotificationManager = NotificationManagerCompat.from(this);
         notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
@@ -190,7 +194,12 @@ public class VideoPlayAsAudioService extends Service {
         final String action = intent.getAction();
 
         if (NEXT_ACTION.equals(action)) {
-            if (videoPosition != videoList.size()) {
+            if(videoList.size()==1){
+                //handler.removeCallbacks(runnable);
+                videoPlay();
+                //return;
+            }
+            else if (videoPosition != videoList.size()) {
                 videoPosition = videoPosition + 1;
                 if (videoList.get(videoPosition).getLayoutType() == 1) {
                     videoPosition = videoPosition + 1;
@@ -295,6 +304,8 @@ public class VideoPlayAsAudioService extends Service {
 
         notificationBuilder.setSmallIcon(R.drawable.vplayer)
                 .setContentIntent(clickIntent)
+                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                        .setMediaSession(mediaSessionCompat.getSessionToken()))
                 .setCustomContentView(contentView)
                 .setCustomBigContentView(expandedView);
 

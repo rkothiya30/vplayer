@@ -313,6 +313,8 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
                  //   a.add(audio1);
             songsList = a;
                     position = getIntent().getIntExtra("Position", -1);
+        } else if(activityName.equals("OnMenuFragment")){
+            songsList = audioList;
         }
 
        /* if(activityName.equals("Album"))
@@ -785,7 +787,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
         musicService = myBinder.getService();
         musicService.setCallBack(this);
         seekBar.setMax(musicService.getDuration() / 1000);
-       // Toast.makeText(this, "Connected :" + musicService, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Connected :" + musicService, Toast.LENGTH_LONG).show();
         musicService.showNotification(R.drawable.ic_pause);
         musicService.onComplete();
         FIRST_OPEN = false;

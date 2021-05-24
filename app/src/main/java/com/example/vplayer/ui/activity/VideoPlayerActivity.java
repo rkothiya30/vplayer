@@ -293,6 +293,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 } else if (Settings.canDrawOverlays(VideoPlayerActivity.this)) {
                     setValue();
                     mkPlayer.pause();
+                    
                     startService(new Intent(VideoPlayerActivity.this, FloatingWidgetService.class));
                     finish();
                 } else {
@@ -384,7 +385,10 @@ public class VideoPlayerActivity extends AppCompatActivity {
         videoLastProgress = 0;
         if (videosList.size() > videoPosition) {
             resumeVideoList = preferencesUtility.getVideoLastPosition();
-            if (isResumeVideo) {
+            if(isFloatingVideo){
+                videoLastProgress = getIntent().getIntExtra(EXTRA_FLOATING_VIDEO, 0);
+            }
+            else if (isResumeVideo) {
                 if (resumeVideoList.containsKey(videosList.get(videoPosition).getFullPath())) {
                     double progress = Double.parseDouble(String.valueOf(resumeVideoList.get(videosList.get(videoPosition).getFullPath())));
                     videoLastProgress = (int) progress;

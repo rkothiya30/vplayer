@@ -133,7 +133,11 @@ public class MusicFragment extends Fragment {
                 String id = c.getString(4);
 
                 MediaMetadataRetriever mediaMetadataRetriever= new MediaMetadataRetriever();
-                mediaMetadataRetriever.setDataSource(path);
+                try {
+                    mediaMetadataRetriever.setDataSource(path);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
 
                 String duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
 

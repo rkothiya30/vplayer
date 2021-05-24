@@ -17,6 +17,7 @@ import com.example.vplayer.R;
 import com.example.vplayer.fragment.adapter.FragmentAdapter;
 import com.example.vplayer.fragment.adapter.MusicAdapter;
 import com.example.vplayer.fragment.adapter.MusicSAdapter;
+import com.example.vplayer.fragment.adapter.PlayListAdapter;
 import com.example.vplayer.fragment.adapter.VideoSAdapter;
 import com.example.vplayer.fragment.event.UpdateAdapterEvent;
 import com.example.vplayer.fragment.event.UpdateContinueWatchingEvent;
@@ -155,10 +156,18 @@ public class SelectItemActivity extends AppCompatActivity {
 
                 allPlaylist.put(tempPlayListName, playListString);
                 preferencesUtility.setPlaylists(allPlaylist);
-                PlaylistFragment.playListAdapter.notifyDataSetChanged();
-                RxBus.getInstance().post(new UpdateAdapterEvent());
 
                 onBackPressed();
+
+                PlaylistFragment.playListAdapter = new PlayListAdapter(getApplicationContext(), preferencesUtility.getPlaylists());
+                PlaylistFragment.videoLList.setAdapter(PlaylistFragment.playListAdapter);
+                RxBus.getInstance().post(new UpdateAdapterEvent());
+
+
+
+
+
+
             }
         });
 

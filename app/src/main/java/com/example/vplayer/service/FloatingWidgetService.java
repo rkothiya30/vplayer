@@ -36,7 +36,7 @@ public class FloatingWidgetService extends Service {
     RelativeLayout mainParentRelativeLayout;
     ImageView playPause, closeWindow, floatingWindow;
     boolean toggle = true;
-    ProgressBar videoProgress;
+    //ProgressBar videoProgress;
 
     PreferencesUtility preferencesUtility;
     Video video;
@@ -79,23 +79,23 @@ public class FloatingWidgetService extends Service {
         closeWindow = floatingView.findViewById(R.id.closeWindow);
         floatingWindow = floatingView.findViewById(R.id.floatingWindow);
         mainParentRelativeLayout = floatingView.findViewById(R.id.mainParentRelativeLayout);
-        videoProgress = floatingView.findViewById(R.id.videoProgress);
+        //videoProgress = floatingView.findViewById(R.id.videoProgress);
 
         videoView = floatingView.findViewById(R.id.videoView);
         if (video != null) {
             videoView.setVideoPath(video.getFullPath());
             videoView.seekTo(video.getVideoLastPlayPosition());
             videoView.start();
-            videoProgress.setVisibility(View.VISIBLE);
-            videoProgress.setMax(video.getVideoDuration());
+            //videoProgress.setVisibility(View.VISIBLE);
+            //videoProgress.setMax(video.getVideoDuration());
             double progress1 = Double.parseDouble(String.valueOf(video.getVideoLastPlayPosition()));
             int progress = (int) progress1;
 
             //progressBar.getProgressDrawable().setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 videoProgress.setProgressTintList(ColorStateList.valueOf(Color.RED));
             }
-            videoProgress.setProgress(progress);
+            videoProgress.setProgress(progress);*/
         }
 
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -140,7 +140,12 @@ public class FloatingWidgetService extends Service {
                     videoView.pause();
                 }*/
                 preferencesUtility.setIsFloatingVideo(false);
+
+                //preferencesUtility.setFloatingVideoPosition(videoView.getCurrentPosition());
                 startActivity(VideoPlayerActivity.getInstance(getApplicationContext(), videoView.getCurrentPosition(), true).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+
+
+
                 stopSelf();
             }
         });
@@ -185,6 +190,8 @@ public class FloatingWidgetService extends Service {
                 return false;
             }
         });
+
+
     }
 
     @Override

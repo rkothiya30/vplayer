@@ -61,7 +61,7 @@ public class PlaylistFragment extends Fragment  {
     View view;
 
     TextView playlist_nums;
-    RecyclerView videoLList;
+    public static RecyclerView videoLList;
     SwipeRefreshLayout refreshLayout;
     ImageView emptyString, iv_add;
     public static PlayListAdapter playListAdapter;
@@ -144,7 +144,7 @@ public class PlaylistFragment extends Fragment  {
                     }
                 });
 
-                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 dialog.show();
             }
         });

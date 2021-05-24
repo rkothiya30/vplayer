@@ -14,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,26 +39,23 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
 import static com.example.vplayer.ui.fragment.PlaylistFragment.allPlaylist;
 
-public class RenamePlaylistDialog extends DialogFragment {
+public class DeletePlaylistDialog extends DialogFragment {
 
     Context context;
     String title;
     long id;
     public static PreferencesUtility preferencesUtility;
-    EditText renameText;
-    TextView btnCancel, btnRename;
 
-    public static RenamePlaylistDialog getInstance(Activity context, String title) {
-        RenamePlaylistDialog dialog = new RenamePlaylistDialog();
+    TextView btnCancel, btnDelete;
+
+    public static DeletePlaylistDialog getInstance(Activity context, String title) {
+        DeletePlaylistDialog dialog = new DeletePlaylistDialog();
         dialog.context = context;
         dialog.title = title;
 
         dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.WideDialog);
-
-
         return dialog;
     }
 
@@ -68,12 +63,10 @@ public class RenamePlaylistDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.dialog_rename, container, false);
+        View v = inflater.inflate(R.layout.dialog_delete, container, false);
 
-        renameText = v.findViewById(R.id.renameText);
+        btnDelete = v.findViewById(R.id.btnDelete);
         btnCancel = v.findViewById(R.id.btnCancel);
-        btnRename = v.findViewById(R.id.btnRename);
-
 
 
         return v;
@@ -83,42 +76,39 @@ public class RenamePlaylistDialog extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         preferencesUtility = PreferencesUtility.getInstance(context);
 
         //btnRename.setTextColor(ATEUtil.getThemeAccentColor(context));
-       /* renameText.setText(title);*/
+        /* renameText.setText(title);*/
         //renameText.setSelection(title.length());
         btnCancel.setOnClickListener(view1 -> {
             getDialog().dismiss();
         });
 
-        btnRename.setOnClickListener(new View.OnClickListener() {
+        btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!renameText.getText().toString().isEmpty()) {
-                    if (!renameText.getText().toString().equalsIgnoreCase(title)) {
+               /* if (!renameText.getText().toString().isEmpty()) {
+                    if (!renameText.getText().toString().equalsIgnoreCase(title)) {*/
 
-                                    getDialog().dismiss();
-                                    // set rename
-                                    LinkedHashMap<String, String> playlists = preferencesUtility.getPlaylists();
-                                    if (playlists.containsKey(title)) {
-                                        String s = playlists.get(title);
-                                        playlists.remove(title);
-                                        //allPlaylist.remove(title);
-                                        playlists.put(renameText.getText().toString(), s);
 
-                                       // allPlaylist.put(renameText.getText().toString(), s);
-                                    }
-                                    preferencesUtility.setPlaylists(playlists);
+                        // set rename
+                        LinkedHashMap<String, String> playlists = preferencesUtility.getPlaylists();
+                        if (playlists.containsKey(title)) {
+                            getDialog().dismiss();
+
+                            playlists.remove(title);
+
+                        }
+                        preferencesUtility.setPlaylists(playlists);
 
                         PlaylistFragment.playListAdapter = new PlayListAdapter(getContext(), preferencesUtility.getPlaylists());
                         PlaylistFragment.videoLList.setAdapter(PlaylistFragment.playListAdapter);
                         //PlaylistFragment.playListAdapter.notifyDataSetChanged();
                         RxBus.getInstance().post(new UpdateAdapterEvent());
 
-                    } else {
+                   /* } else {
 
                         // set rename
                         getDialog().dismiss();
@@ -128,7 +118,7 @@ public class RenamePlaylistDialog extends DialogFragment {
 
                 } else {
                     Toast.makeText(getActivity(), "New name can't be empty.", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
     }
@@ -192,42 +182,5 @@ public class RenamePlaylistDialog extends DialogFragment {
         }
     }*/
 
-    private void showKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInputFromWindow(renameText.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
-        renameText.requestFocus();
-    }
 
-    public static void renameHistoryVideo(long videoId, String videoName) {
-        List<Video> historyVideo = new ArrayList<>();
-        historyVideo = preferencesUtility.getHistoryVideos();
-
-        Iterator<Video> iterator = historyVideo.iterator();
-        while (iterator.hasNext()) {
-            Video currentVideo = iterator.next();
-            // Do something with the value
-            if (currentVideo.getId() == videoId) {
-                currentVideo.setTitle(videoName);
-            }
-        }
-        preferencesUtility.updateHistoryVideo(historyVideo);
-
-        List<Video> continueWatchingVideo = new ArrayList<>();
-        continueWatchingVideo = preferencesUtility.getContinueWatchingVideos();
-
-        Iterator<Video> iterator1 = continueWatchingVideo.iterator();
-        while (iterator1.hasNext()) {
-            Video currentVideo = iterator1.next();
-            // Do something with the value
-            if (currentVideo.getId() == videoId) {
-                currentVideo.setTitle(videoName);
-            }
-        }
-
-        preferencesUtility.updateContinueWatchingVideo(continueWatchingVideo);
-
-       //RxBus.getInstance().post(new MediaUpdateEvent());
-       //RxBus.getInstance().post(new UpdateVideoStatusEvent());
-       //RxBus.getInstance().post(new HistoryEvent());
-    }
 }

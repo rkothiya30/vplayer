@@ -154,7 +154,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
             holder.popup_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showShortDialog(-3, audioList.get(position));
+                    showShortDialog(-3, audioList.get(position), position);
                 }
             });
 
@@ -162,8 +162,8 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
 
     }
 
-    public void showShortDialog ( int adapterPosition, AudioModel audioModel){
-        OnMenuFragment bottomSheetDialog = OnMenuFragment.newInstance(adapterPosition, audioModel);
+    public void showShortDialog ( int adapterPosition, AudioModel audioModel, int position){
+        OnMenuFragment bottomSheetDialog = OnMenuFragment.newInstance(adapterPosition, audioModel, position);
         bottomSheetDialog.setOuterClickListener(this);
         bottomSheetDialog.show(( (FragmentActivity) context ).getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
 

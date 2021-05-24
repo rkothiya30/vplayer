@@ -2,6 +2,8 @@ package com.example.vplayer.ui.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vplayer.R;
+import com.example.vplayer.dialog.DeletePlaylistDialog;
 import com.example.vplayer.dialog.RenameDialog;
 import com.example.vplayer.dialog.RenamePlaylistDialog;
 import com.example.vplayer.dialog.VideoDetailsDialog;
@@ -24,12 +27,15 @@ import com.example.vplayer.fragment.utils.PreferencesUtility;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
 import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.model.Video;
+import com.example.vplayer.service.MusicService;
+import com.example.vplayer.service.VideoPlayAsAudioService;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.vplayer.fragment.utils.Constant.EXTRA_VIDEO_POSITION;
 import static com.example.vplayer.service.VideoDataService.videobuckets;
 
 public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuAdapter.ItemListener {
@@ -46,28 +52,36 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
     private static AudioModel audioModel;
     private static String title;
     private static String playListName;
+    MusicService musicService;
+
+
+
+    boolean isBackgroundEnable = false;
 
     public static OnMenuFragment newInstance(int checks, List<Video> videoLis, List<AudioModel> audioLis,String playListNam) {
         OnMenuFragment fragment = new OnMenuFragment();
         audioList = audioLis;
         videoList = videoLis;
+
         check = checks;
         playListName = playListNam;
         return fragment;
     }
 
 
-    public static OnMenuFragment newInstance(int checks, Video vide) {
+    public static OnMenuFragment newInstance(int checks,int positio, List<Video> videoLis, Video vide) {
         OnMenuFragment fragment = new OnMenuFragment();
         title = vide.getTitle();
         video = vide;
+        videoList = videoLis;
+        position = positio;
         check = checks;
         return fragment;
     }
 
-    public static OnMenuFragment newInstance(int checks, AudioModel audioMode) {
+    public static OnMenuFragment newInstance(int checks, AudioModel audioMode, int positio) {
         OnMenuFragment fragment = new OnMenuFragment();
-
+        position = positio;
         audioModel = audioMode;
         title = audioMode.getName();
         check = checks;
@@ -84,7 +98,7 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
         final String[] sortList = getResources().getStringArray(R.array.menu_array);
         sortByList = new ArrayList<String>(Arrays.asList(sortList));
 
-
+        preferencesUtility = PreferencesUtility.getInstance(getActivity());
 
     }
 
@@ -97,6 +111,7 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
         TextView text_title = contentView.findViewById(R.id.text_title);
         if(check == -2){
             text_title.setText(title);
+
         }else if(check == -1){
             text_title.setText("Add to playlist");
         } else if(check == -3){
@@ -110,7 +125,7 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
         sortList.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        onMenuAdapter = new OnMenuAdapter(getContext(), sortByList, this, video);
+        onMenuAdapter = new OnMenuAdapter(getContext(),check, sortByList, this, video);
         sortList.setAdapter(onMenuAdapter);
     }
 
@@ -121,6 +136,32 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
         getDialog().dismiss();
 
         switch (item) {
+
+            case 0:
+
+                if(check == -2){
+
+                        isBackgroundEnable = true;
+
+                    startBackgroundVideoPlayService();
+                } else if(check == -1){
+
+                    isBackgroundEnable = true;
+                    position = 0;
+                    startBackgroundVideoPlayService();
+                } else if(check == -3){
+                    Intent intent = new Intent(getContext(), MusicService.class);
+                    intent.putExtra("ServicePosition", position);
+                    intent.putExtra("ActivityName", "OnMenuFragment");
+                    getContext().startService(intent);
+
+
+
+                    if(musicService != null) {
+                        musicService.showNotification(R.drawable.ic_pause);
+                    }
+                }
+                break;
 
             case 1:
                 if(check == -2)
@@ -144,8 +185,14 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
                 VideoPlayerUtils.shareVideo(OnMenuFragment.video.getId(), getActivity());
                 break;
             case 3:
-                long[] videoId = {OnMenuFragment.video.getId()};
-                VideoPlayerUtils.showDeleteDialog(getActivity(), OnMenuFragment.video.getTitle(), videoId);
+                if(check==-2) {
+                    long[] videoId = {OnMenuFragment.video.getId()};
+                    VideoPlayerUtils.showDeleteDialog(getActivity(), OnMenuFragment.video.getTitle(), videoId);
+
+                } else if(check == -1){
+                    DeletePlaylistDialog.getInstance(getActivity(), playListName)
+                            .show(getFragmentManager(), "");
+                }
                 break;
             case 5:
                 VideoDetailsDialog.getInstance(OnMenuFragment.video)
@@ -187,5 +234,22 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
         addPlaylistFragment.show(getFragmentManager(), "Bottom Sheet Dialog Fragment");
 
 
+    }
+
+    public void startBackgroundVideoPlayService() {
+        if (isBackgroundEnable) {
+            Video video =  videoList.get(position);
+            video.setVideoLastPlayPosition(0);
+            videoList.set(position, video);
+
+            preferencesUtility.setVideoList(videoList);
+
+            getContext().stopService(new Intent(getContext(), VideoPlayAsAudioService.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                getContext().startForegroundService(new Intent(getContext(), VideoPlayAsAudioService.class).putExtra(EXTRA_VIDEO_POSITION, position));
+            } else {
+                getContext().startService(new Intent(getContext(), VideoPlayAsAudioService.class).putExtra(EXTRA_VIDEO_POSITION, position));
+            }
+        }
     }
 }

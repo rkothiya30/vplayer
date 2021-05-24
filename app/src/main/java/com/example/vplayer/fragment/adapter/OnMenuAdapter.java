@@ -37,10 +37,20 @@ public class OnMenuAdapter extends RecyclerView.Adapter<OnMenuAdapter.ViewHolder
     int selectedItem;
     Context context;
     Video video;
+    int check;
     PreferencesUtility preferencesUtility;
 
     public OnMenuAdapter(Context context, List<String> items, ItemListener listener, Video video) {
         mItems = items;
+        this.context = context;
+        itemListener = listener;
+        this.video = video;
+        preferencesUtility = PreferencesUtility.getInstance(context);
+    }
+
+    public OnMenuAdapter(Context context,int check, List<String> items, ItemListener listener, Video video) {
+        mItems = items;
+        this.check = check;
         this.context = context;
         itemListener = listener;
         this.video = video;
@@ -58,6 +68,9 @@ public class OnMenuAdapter extends RecyclerView.Adapter<OnMenuAdapter.ViewHolder
         holder.text.setText(mItems.get(position));
         holder.item_image.setImageResource(mImages[position]);
         holder.item_image.setColorFilter(ContextCompat.getColor(holder.item_image.getContext(), R.color.white), PorterDuff.Mode.SRC_IN);
+        if(check == -1 && position == 5){
+            holder.fragment_item.setVisibility(View.GONE);
+        }
 
        // setOnPopupMenuListener(holder, position);
     }

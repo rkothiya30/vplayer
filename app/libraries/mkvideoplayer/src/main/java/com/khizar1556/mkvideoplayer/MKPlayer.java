@@ -320,10 +320,12 @@ public class MKPlayer {
 //                }
                 callbacks.onEqulizerClick();
             } else if (v.getId() == R.id.video_background_play) {
+
                 if (isBackgroundEnable) {
                     isBackgroundEnable = false;
                     $.id(R.id.video_background_play).background(R.drawable.bg_circle_tansparant);
                 } else {
+
                     isBackgroundEnable = true;
                     $.id(R.id.video_background_play).background(R.drawable.bg_circle_selected);
                 }

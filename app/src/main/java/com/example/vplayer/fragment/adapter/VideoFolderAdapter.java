@@ -308,9 +308,7 @@ public class VideoFolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         void onItemLongClick(int position, View v);
     }
 
-    public void setOnLongClickListener(LongClickListener longClickListener) {
-        this.longClickListener = longClickListener;
-    }
+
 
 
     @Override
@@ -335,7 +333,7 @@ public class VideoFolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
 
-    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView folderIcon;
         TextView folderTitle, videoCount;
@@ -350,7 +348,7 @@ public class VideoFolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             //popup_menu = itemView.findViewById(R.id.popup_menu);
 
             itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
+
 
             /*popup_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -368,10 +366,7 @@ public class VideoFolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             listener.onItemClick(getAdapterPosition(), view);
         }
 
-        public boolean onLongClick(View v) {
-            longClickListener.onItemLongClick(getAdapterPosition(), v);
-            return true;
-        }
+
     }
 
     public class ContinueVideoVideHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

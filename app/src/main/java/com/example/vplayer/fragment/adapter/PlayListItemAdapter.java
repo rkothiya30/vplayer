@@ -224,7 +224,7 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 videoViewHolder.popup_menu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showShortDialog1(-2, video);
+                        showShortDialog1(0, video);
                     }
                 });
                 videoViewHolder.ll_root.setOnClickListener(new View.OnClickListener() {
@@ -259,7 +259,9 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
     public void showShortDialog1 ( int adapterPosition, Video video){
-        OnMenuFragment bottomSheetDialog = OnMenuFragment.newInstance(adapterPosition, video);
+        List<Video> v = new ArrayList<>();
+        v.add(video);
+        OnMenuFragment bottomSheetDialog = OnMenuFragment.newInstance(-2, 0, v,video);
         bottomSheetDialog.setOuterClickListener(this);
         bottomSheetDialog.show(( (FragmentActivity) context ).getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
 
