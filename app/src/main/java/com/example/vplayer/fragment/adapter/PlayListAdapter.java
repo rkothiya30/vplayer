@@ -169,7 +169,7 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.MyView
     public void showShortDialog ( int adapterPosition, List<Video> videoList, List<AudioModel> audioList, String playListName){
         OnMenuFragment bottomSheetDialog = OnMenuFragment.newInstance(adapterPosition, videoList, audioList, playListName);
         bottomSheetDialog.setOuterClickListener(this);
-        bottomSheetDialog.show(getFragmentM "Bottom Sheet Dialog Fragment");
+        bottomSheetDialog.show(( (FragmentActivity) context ).getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
 
 
     }

@@ -29,6 +29,7 @@ import com.example.vplayer.fragment.event.RenameEvent;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
 import com.example.vplayer.fragment.utils.RxBus;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
+import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.model.Video;
 
 import java.io.File;
@@ -43,7 +44,9 @@ public class RenameDialog extends DialogFragment {
     Context context;
     String title;
     long id;
+    String audioId;
     Video video;
+    AudioModel audioModel;
     public static PreferencesUtility preferencesUtility;
     EditText renameText;
     TextView btnCancel, btnRename;
@@ -55,6 +58,16 @@ public class RenameDialog extends DialogFragment {
         dialog.title = title;
         dialog.id = id;
         dialog.video = video;
+        dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.WideDialog);
+        return dialog;
+    }
+
+    public static RenameDialog getInstance(Activity context, String title, String id, AudioModel audioModel) {
+        RenameDialog dialog = new RenameDialog();
+        dialog.context = context;
+        dialog.title = title;
+        dialog.audioId = id;
+        dialog.audioModel = audioModel;
         dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.WideDialog);
         return dialog;
     }
@@ -210,6 +223,7 @@ public class RenameDialog extends DialogFragment {
 
 
                 Toast.makeText(getContext(), "Rename file successfully", Toast.LENGTH_SHORT).show();
+
                 RxBus.getInstance().post(new RenameEvent(file, file2));
             } else {
                 Log.e("LOG", "File not renamed...");

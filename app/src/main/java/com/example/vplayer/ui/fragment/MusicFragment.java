@@ -43,8 +43,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.adapter.MusicAdapter;
 import com.example.vplayer.fragment.adapter.PlayListAdapter;
+import com.example.vplayer.fragment.event.RenameEvent;
 import com.example.vplayer.fragment.utils.Constant;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
+import com.example.vplayer.fragment.utils.RxBus;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
 import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.ui.activity.PlayingSongActivity;
@@ -53,6 +55,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static android.provider.MediaStore.Images.Thumbnails.IMAGE_ID;
 
@@ -92,7 +99,7 @@ public class MusicFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         refreshLayout.setEnabled(false);
         initView();
-
+        renameEvent();
 
     }
 
@@ -235,6 +242,56 @@ public class MusicFragment extends Fragment {
             recycler_view.setVisibility(View.GONE);
             emptyString.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void renameEvent() {
+        Subscription subscription = RxBus.getInstance().toObservable(RenameEvent.class).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).distinctUntilChanged().subscribe(new Action1<RenameEvent>() {
+            @Override
+            public void call(RenameEvent event) {
+                if (event.getNewFile() != null && event.getOldFile() != null) {
+
+                    if (event.getNewFile().exists()) {
+
+                        if (audioList != null && audioList.size() != 0)
+                            for (int i = 0; i < audioList.size(); i++) {
+
+                                if (event.getOldFile().getPath().equalsIgnoreCase(audioList.get(i).getPath())) {
+
+                                    audioList.get(i).setPath(event.getNewFile().getPath());
+                                    audioList.get(i).setName(event.getNewFile().getName());
+
+                                    break;
+                                }
+
+                            }
+
+                        /*if (videoAdapter != null) {
+                            videoAdapter.notifyDataSetChanged();
+                        } else {*/
+                        setAdapter();
+                        /* }*/
+
+                        /*if (documentList != null && documentList.size() != 0) {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            llEmpty.setVisibility(View.GONE);
+
+                        } else {
+                            recyclerView.setVisibility(View.GONE);
+                            llEmpty.setVisibility(View.VISIBLE);
+                        }*/
+
+
+                    }
+                }
+
+
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+            }
+        });
+        RxBus.getInstance().addSubscription(this, subscription);
     }
 
 }

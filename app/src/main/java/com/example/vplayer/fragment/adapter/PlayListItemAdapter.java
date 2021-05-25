@@ -60,7 +60,7 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     Context context;
     private static ClickListener listener;
 
-    ArrayList<Object> aList = new ArrayList<>();
+    public static ArrayList<Object> aList = new ArrayList<>();
 
     public static final int ITEM_VIDEO_TYPE = 2;
     public static final int ITEM_MUSIC_TYPE = 3;
@@ -231,8 +231,18 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     @Override
                     public void onClick(View v) {
                         List<Video> l = new ArrayList<>();
-                        l.add(video);
-                        context.startActivity(VideoPlayerActivity.getIntent(context, l, 0));
+                        for(int i = 0; i<aList.size();i++){
+                            if(aList.get(i) instanceof Video)
+                                l.add((Video) aList.get(i));
+                        }
+
+                        context.startActivity(VideoPlayerActivity.getIntent(context, aList, position, "PlayListItemAdapter"));
+
+                       /* Intent i = new Intent(context, PlayingSongActivity.class);
+                        i.putExtra("Position", position);
+                        i.putExtra("Audio", Parcels.wrap(aList));
+                        i.putExtra("ActivityName", "PlayPlayListActivity");
+                        context.startActivity(i);*/
                     }
                 });
                 break;

@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.adapter.VideoAdapter;
+import com.example.vplayer.fragment.event.DeleteEvent;
+import com.example.vplayer.fragment.event.RenameEvent;
 import com.example.vplayer.fragment.event.UpdateVideoList;
 import com.example.vplayer.fragment.utils.Constant;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
@@ -138,6 +140,8 @@ public class FolderInFolderActivity extends AppCompatActivity {
 
         isGrid = preferencesUtility.getDirList_Grid();
         initView();
+        renameEvent();
+
 
         videoAdapter.setOnItemClickListener(new VideoAdapter.ClickListener() {
             @Override
@@ -180,6 +184,11 @@ public class FolderInFolderActivity extends AppCompatActivity {
         else
             videoList.setLayoutManager(new LinearLayoutManager(this));
 
+        setAdapter();
+    }
+
+    private void setAdapter() {
+
         videoAdapter = new VideoAdapter(this, folderName, isGrid);
 
         videoList.setHasFixedSize(true);
@@ -212,6 +221,104 @@ public class FolderInFolderActivity extends AppCompatActivity {
         RxBus.getInstance().addSubscription(this, subscription);
     }
 
+    private void renameEvent() {
+        Subscription subscription = RxBus.getInstance().toObservable(RenameEvent.class).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).distinctUntilChanged().subscribe(new Action1<RenameEvent>() {
+            @Override
+            public void call(RenameEvent event) {
+                if (event.getNewFile() != null && event.getOldFile() != null) {
+
+                    if (event.getNewFile().exists()) {
+
+                        if (videobucketimagesDataHashMap.get(folderName) != null && videobucketimagesDataHashMap.get(folderName).size() != 0)
+                            for (int i = 0; i < videobucketimagesDataHashMap.get(folderName).size(); i++) {
+
+                                if (event.getOldFile().getPath().equalsIgnoreCase(videobucketimagesDataHashMap.get(folderName).get(i).getFullPath())) {
+
+                                    videobucketimagesDataHashMap.get(folderName).get(i).setFullPath(event.getNewFile().getPath());
+                                    videobucketimagesDataHashMap.get(folderName).get(i).setTitle(event.getNewFile().getName());
+
+                                    break;
+                                }
+
+                            }
+
+                        /*if (videoAdapter != null) {
+                            videoAdapter.notifyDataSetChanged();
+                        } else {*/
+                            setAdapter();
+                       /* }*/
+
+                        /*if (documentList != null && documentList.size() != 0) {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            llEmpty.setVisibility(View.GONE);
+
+                        } else {
+                            recyclerView.setVisibility(View.GONE);
+                            llEmpty.setVisibility(View.VISIBLE);
+                        }*/
+
+
+                    }
+                }
+
+
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+            }
+        });
+        RxBus.getInstance().addSubscription(this, subscription);
+    }
+
+    private void deleteEvent() {
+        Subscription subscription = RxBus.getInstance().toObservable(DeleteEvent.class).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).distinctUntilChanged().subscribe(new Action1<DeleteEvent>() {
+            @Override
+            public void call(DeleteEvent event) {
+                if (event.getId() != 0 ) {
+
+
+                        if (videobucketimagesDataHashMap.get(folderName) != null && videobucketimagesDataHashMap.get(folderName).size() != 0)
+                            for (int i = 0; i < videobucketimagesDataHashMap.get(folderName).size(); i++) {
+
+                                if (event.getId() == videobucketimagesDataHashMap.get(folderName).get(i).getId()) {
+                                    ArrayList<Video> videos = videobucketimagesDataHashMap.get(folderName);
+                                    Video video = videobucketimagesDataHashMap.get(folderName).get(i);
+                                    videos.remove(video);
+                                    videobucketimagesDataHashMap.put(folderName, videos);
+                                    break;
+                                }
+
+                            }
+
+                        /*if (videoAdapter != null) {
+                            videoAdapter.notifyDataSetChanged();
+                        } else {*/
+                        setAdapter();
+                        /* }*/
+
+                        /*if (documentList != null && documentList.size() != 0) {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            llEmpty.setVisibility(View.GONE);
+
+                        } else {
+                            recyclerView.setVisibility(View.GONE);
+                            llEmpty.setVisibility(View.VISIBLE);
+                        }*/
+
+
+
+                }
+
+
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+            }
+        });
+        RxBus.getInstance().addSubscription(this, subscription);
+    }
 
 
 }

@@ -39,7 +39,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.adapter.PlayListAdapter;
 import com.example.vplayer.fragment.adapter.VideoFolderAdapter;
+import com.example.vplayer.fragment.event.UpdateAdapterEvent;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
+import com.example.vplayer.fragment.utils.RxBus;
 import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.model.PlayListModel;
 import com.example.vplayer.model.Video;
@@ -53,6 +55,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static android.content.ContentValues.TAG;
 
@@ -101,6 +108,7 @@ public class PlaylistFragment extends Fragment  {
         super.onActivityCreated(savedInstanceState);
 
         initView();
+        subscribeUpdateAdapterEvent();
 
         iv_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,5 +204,27 @@ public class PlaylistFragment extends Fragment  {
         playlist_nums.setText(allPlaylist.size() +" Playlists");
 
         super.onResume();
+    }
+
+    private void subscribeUpdateAdapterEvent() {
+        Subscription subscription = RxBus.getInstance()
+                .toObservable(UpdateAdapterEvent.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged()
+                .subscribe(new Action1<UpdateAdapterEvent>() {
+                    @Override
+                    public void call(UpdateAdapterEvent event) {
+                        //videoList.remove(event.getPosition());
+                        PlaylistFragment.playListAdapter = new PlayListAdapter(getActivity(), preferencesUtility.getPlaylists());
+                        PlaylistFragment.videoLList.setAdapter(PlaylistFragment.playListAdapter);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
+        RxBus.getInstance().addSubscription(this, subscription);
     }
 }

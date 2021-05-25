@@ -103,8 +103,8 @@ public class DeletePlaylistDialog extends DialogFragment {
                         }
                         preferencesUtility.setPlaylists(playlists);
 
-                        PlaylistFragment.playListAdapter = new PlayListAdapter(getContext(), preferencesUtility.getPlaylists());
-                        PlaylistFragment.videoLList.setAdapter(PlaylistFragment.playListAdapter);
+                        /*PlaylistFragment.playListAdapter = new PlayListAdapter(getContext(), preferencesUtility.getPlaylists());
+                        PlaylistFragment.videoLList.setAdapter(PlaylistFragment.playListAdapter);*/
                         //PlaylistFragment.playListAdapter.notifyDataSetChanged();
                         RxBus.getInstance().post(new UpdateAdapterEvent());
 

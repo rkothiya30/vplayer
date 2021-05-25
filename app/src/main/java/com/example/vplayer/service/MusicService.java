@@ -24,8 +24,11 @@ import androidx.core.app.NotificationCompat;
 import com.example.vplayer.Notification.NotificationReceiver;
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.utils.ActionPlaying;
+import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.ui.activity.EmptyActivity;
 import com.example.vplayer.ui.activity.PlayingSongActivity;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,8 @@ import static com.example.vplayer.fragment.utils.Constant.ACTION_NEXT;
 import static com.example.vplayer.fragment.utils.Constant.ACTION_PLAY;
 import static com.example.vplayer.fragment.utils.Constant.ACTION_PREVIOUS;
 import static com.example.vplayer.ui.activity.PlayingSongActivity.IS_SHUFFLED;
+import static com.example.vplayer.ui.activity.PlayingSongActivity.activityName;
+import static com.example.vplayer.ui.activity.PlayingSongActivity.intent1;
 import static com.example.vplayer.ui.activity.PlayingSongActivity.songsList;
 import static com.example.vplayer.ui.fragment.MusicFragment.audioList;
 
@@ -85,7 +90,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             switch (actionName)
             {
                 case "playPause":
-                    Toast.makeText(this, "PlayPause", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, "PlayPause", Toast.LENGTH_LONG).show();
                     if(actionPlaying != null) {
                         Log.e("Msg", "PlayPause");
                         actionPlaying.playPauseButtonClick();
@@ -93,7 +98,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                     break;
 
                 case "next":
-                    Toast.makeText(this, "Next", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, "Next", Toast.LENGTH_LONG).show();
                     if(actionPlaying != null) {
                         Log.e("Msg", "PlayPause");
                         actionPlaying.nextButtonClick();
@@ -101,7 +106,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                     break;
 
                 case "previous":
-                   Toast.makeText(this, "Previous", Toast.LENGTH_LONG).show();
+                   //Toast.makeText(this, "Previous", Toast.LENGTH_LONG).show();
                     if(actionPlaying != null) {
                         Log.e("Msg", "PlayPause");
                         actionPlaying.previousButtonClick();
@@ -195,14 +200,43 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         {
             //uri = Uri.parse(shuffledList.get(position).getPath());
         }
+
+
+
         else
         {
             songsList = audioList;
+
+            if(activityName.equals("MusicFragment"))
+            {
+                songsList = audioList;
+                //position = getIntent().getIntExtra("Position", -1);
+            } else if(activityName.equals("PlayPlayListActivity")){
+                List<AudioModel> a = new ArrayList<>();
+                a =  Parcels.unwrap(intent1.getParcelableExtra("Audio"));
+
+                //   a.add(audio1);
+                songsList = a;
+                //position = getIntent().getIntExtra("Position", -1);
+            } else if(activityName.equals("PlayListItemAdapter")){
+                List<AudioModel> a = new ArrayList<>();
+                a =  Parcels.unwrap(intent1.getParcelableExtra("Audio"));
+
+                //   a.add(audio1);
+                songsList = a;
+                //position = getIntent().getIntExtra("Position", -1);
+            } else if(activityName.equals("OnMenuFragment")){
+                songsList = audioList;
+            }
+if(position >= songsList.size())
+    return;
             uri = Uri.parse(songsList.get(position).getPath());
         }
 
         mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
     }
+
+
 
     public int getCurrentPosition()
     {

@@ -29,6 +29,8 @@ import androidx.documentfile.provider.DocumentFile;
 import com.example.vplayer.R;
 import com.example.vplayer.dialog.DeleteDialog;
 import com.example.vplayer.dialog.RenameDialog;
+import com.example.vplayer.fragment.event.DeleteEvent;
+import com.example.vplayer.fragment.event.RenameEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -233,6 +235,40 @@ public class VideoPlayerUtils {
             Log.d("ListenerUtil", "Permission failed");
         }
     }
+    public static void shareAudio(String id, Context context) {
+        //if (PermissionManager.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+        if(ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            if (id.isEmpty()) {
+                return;
+            }
+            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+            Uri trackUri = Uri.parse(uri.toString() + "/" + id);
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_STREAM, trackUri);
+            intent.setType("audio/*");
+            context.startActivity(Intent.createChooser(intent, "Share Now"));
+        } else {
+            Log.d("ListenerUtil", "Permission failed");
+        }
+    }
+
+    public static void share(Context context,List<String> paths) {
+
+        if (paths == null || paths.size() == 0) {
+            return;
+        }
+        ArrayList<Uri> uris = new ArrayList<>();
+        Intent intent = new Intent();
+        intent.setAction(android.content.Intent.ACTION_SEND_MULTIPLE);
+        intent.setType("*/*");
+        for (String path : paths) {
+            File file = new File(path);
+            uris.add(Uri.fromFile(file));
+        }
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+        context.startActivity(Intent.createChooser(intent, "Share Now"));
+    }
 
     public static void showDeleteDialog(final Context context, final String name, final long[] list) {
         DeleteDialog.getInstance((Activity) context, name, list)
@@ -280,6 +316,7 @@ public class VideoPlayerUtils {
         }
 
         Toast.makeText(context, "Video delete successfully", Toast.LENGTH_SHORT).show();
+        RxBus.getInstance().post(new DeleteEvent(list[0]));
         context.getContentResolver().notifyChange(Uri.parse("content://media"), null);
     }
 

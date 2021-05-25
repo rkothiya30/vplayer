@@ -159,8 +159,8 @@ public class SelectItemActivity extends AppCompatActivity {
 
                 onBackPressed();
 
-                PlaylistFragment.playListAdapter = new PlayListAdapter(getApplicationContext(), preferencesUtility.getPlaylists());
-                PlaylistFragment.videoLList.setAdapter(PlaylistFragment.playListAdapter);
+                /*PlaylistFragment.playListAdapter = new PlayListAdapter(getApplicationContext(), preferencesUtility.getPlaylists());
+                PlaylistFragment.videoLList.setAdapter(PlaylistFragment.playListAdapter);*/
                 RxBus.getInstance().post(new UpdateAdapterEvent());
 
 

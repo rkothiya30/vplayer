@@ -34,6 +34,7 @@ import com.example.vplayer.fragment.utils.Constant;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
 import com.example.vplayer.fragment.utils.RxBus;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
+import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.model.Video;
 import com.example.vplayer.service.FloatingWidgetService;
 import com.example.vplayer.service.VideoPlayAsAudioService;
@@ -61,6 +62,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     MKPlayer mkPlayer;
     List<Video> videosList;
+    List<Object> unwrap;
     int videoPosition;
     boolean isResumeVideo = false;
     int videoLastProgress;
@@ -90,6 +92,16 @@ public class VideoPlayerActivity extends AppCompatActivity {
         videoList.add(video);*/
         intent.putExtra(Constant.EXTRA_VIDEO_LIST, Parcels.wrap(videoList));
         intent.putExtra(EXTRA_VIDEO_POSITION, position);
+        return intent;
+    }
+
+    public static Intent getIntent(Context context,  List<Object> videoList, int position, String activity) {
+        Intent intent = new Intent(context, VideoPlayerActivity.class);
+        /*List<Video> videoList = new ArrayList<>();
+        videoList.add(video);*/
+        intent.putExtra(Constant.EXTRA_VIDEO_LIST, Parcels.wrap(videoList));
+        intent.putExtra(EXTRA_VIDEO_POSITION, position);
+        intent.putExtra("Activity", activity);
         return intent;
     }
 
@@ -145,8 +157,20 @@ public class VideoPlayerActivity extends AppCompatActivity {
         startService(new Intent(this, VideoPlayAsAudioService.class).setAction(NOTIFICATION_CLICK_ACTION));
 
         if (getIntent() != null) {
-            videosList = Parcels.unwrap(getIntent().getParcelableExtra(Constant.EXTRA_VIDEO_LIST));
-            videoPosition = getIntent().getIntExtra(EXTRA_VIDEO_POSITION, 0);
+
+            if(getIntent().getStringExtra("Activity").equals("PlayListItemAdapter")){
+                videoPosition = getIntent().getIntExtra(EXTRA_VIDEO_POSITION, 0);
+                unwrap = Parcels.unwrap(getIntent().getParcelableExtra(Constant.EXTRA_VIDEO_LIST));
+                List<Video> l = new ArrayList<>();
+                for(int i = 0; i<unwrap.size();i++){
+                    if(unwrap.get(i) instanceof Video)
+                        l.add((Video) unwrap.get(i));
+                }
+                videosList = l;
+            } else {
+                videosList = Parcels.unwrap(getIntent().getParcelableExtra(Constant.EXTRA_VIDEO_LIST));
+                videoPosition = getIntent().getIntExtra(EXTRA_VIDEO_POSITION, 0);
+            }
         }
 
         if (videosList == null) {
@@ -235,11 +259,39 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     getRandomVideoPosition();
                 }
                 if (videoPosition != videosList.size()) {
-                    if(videosList.size()==1) {
+
+
+                    if (videosList.size() == 1) {
 
                         return;
+
                     }
+
+                }
+
+                if(videoPosition == (videosList.size()-1)){
+                    if (getIntent().getStringExtra("Activity").equals("PlayListItemAdapter")) {
+                        if (videoPosition == (videosList.size()-1)) {
+                            List<AudioModel> l = new ArrayList<>();
+                            for (int i = 0; i < unwrap.size(); i++) {
+                                if (unwrap.get(i) instanceof AudioModel)
+                                    l.add((AudioModel) unwrap.get(i));
+                            }
+                            mkPlayer.pause();
+                            finish();
+
+                            Intent i = new Intent(getApplicationContext(), PlayingSongActivity.class);
+                            i.putExtra("Position", 0);
+                            i.putExtra("Audio", Parcels.wrap(l));
+                            i.putExtra("ActivityName", "PlayListItemAdapter");
+                            startActivity(i);
+
+                        }
+                    }
+
+                } else{
                     videoPosition = videoPosition + 1;
+
 
                     if (videosList.get(videoPosition).getLayoutType() == 1) {
                         videoPosition = videoPosition + 1;
@@ -256,15 +308,14 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     getRandomVideoPosition();
                 }
                 if (videoPosition != 0) {
+                    if(videosList.size()==1) {
+
+                        return;
+                    }
+
+
                     videoPosition = videoPosition - 1;
-                    if(videosList.size()==1) {
 
-                        return;
-                    }
-                    if(videosList.size()==1) {
-
-                        return;
-                    }
                     if (videosList.get(videoPosition).getLayoutType() == 1) {
                         videoPosition = videoPosition - 1;
                     }
@@ -383,7 +434,12 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     public void setVideoResume() {
         videoLastProgress = 0;
-        if (videosList.size() > videoPosition) {
+        if(getIntent().getStringExtra("Activity") == "PlayListItemAdapter"){
+            if(videoPosition<videosList.size())
+            mkPlayer.play(videosList.get(videoPosition).getFullPath());
+            mkPlayer.setTitle(videosList.get(videoPosition).getTitle());
+            mkPlayer.seekTo(videoLastProgress, false);
+        } else if (videosList.size() > videoPosition) {
             resumeVideoList = preferencesUtility.getVideoLastPosition();
             if(isFloatingVideo){
                 videoLastProgress = getIntent().getIntExtra(EXTRA_FLOATING_VIDEO, 0);
@@ -553,6 +609,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setMessage("Are you sure you have to close this video ?")
                 .setCancelable(false)
+
                 .setPositiveButton(getString(R.string.action_yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
@@ -560,12 +617,12 @@ public class VideoPlayerActivity extends AppCompatActivity {
                             return;
                         }
                         Random random = new Random();
-                        int num = random.nextInt(4);
+                        /*int num = random.nextInt(4);
                         if (num == 2) {
-                           // showFullNativeAd();
-                        } else {
+
+                        } else {*/
                             finish();
-                        }
+                        /*}*/
                     }
                 })
                 .setNegativeButton(getString(R.string.action_no), new DialogInterface.OnClickListener() {

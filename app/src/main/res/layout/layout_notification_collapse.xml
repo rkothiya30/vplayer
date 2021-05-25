@@ -31,13 +31,15 @@
             <TextView
                 android:id="@+id/songName"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/artistName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp" />
+                android:layout_marginTop="2dp"
+                android:textColor="@color/black"/>
         </LinearLayout>
 
         <ImageView

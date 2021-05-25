@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.vplayer.R;
 import com.example.vplayer.dialog.DeletePlaylistDialog;
 import com.example.vplayer.dialog.RenameDialog;
+import com.example.vplayer.dialog.RenameMusicDialog;
 import com.example.vplayer.dialog.RenamePlaylistDialog;
 import com.example.vplayer.dialog.VideoDetailsDialog;
 import com.example.vplayer.fragment.adapter.OnMenuAdapter;
@@ -179,10 +180,28 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
                 } else if(check == -1){
                     RenamePlaylistDialog.getInstance(getActivity(), playListName)
                             .show(getFragmentManager(), "");
+                } else if(check == -3){
+                    RenameMusicDialog.getInstance(getActivity(),title, audioModel.getId(), audioModel)
+                            .show(getFragmentManager(), "");
                 }
+
                 break;
             case 4:
-                VideoPlayerUtils.shareVideo(OnMenuFragment.video.getId(), getActivity());
+                if(check == -2) {
+                    VideoPlayerUtils.shareVideo(OnMenuFragment.video.getId(), getActivity());
+                } else if(check == -1){
+                    List<String> paths = new ArrayList<>();
+                    for(int i = 0; i<videoList.size(); i++){
+                        paths.add(videoList.get(i).getFullPath());
+                    }
+                    for(int i = 0; i<audioList.size(); i++){
+                        paths.add(audioList.get(i).getPath());
+                    }
+                    VideoPlayerUtils.share( getContext(), paths);
+                } else if(check == -3){
+                    VideoPlayerUtils.shareAudio(OnMenuFragment.audioModel.getId(), getActivity());
+                }
+
                 break;
             case 3:
                 if(check==-2) {
@@ -191,6 +210,9 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
 
                 } else if(check == -1){
                     DeletePlaylistDialog.getInstance(getActivity(), playListName)
+                            .show(getFragmentManager(), "");
+                }  else if(check == -3){
+                    RenameMusicDialog.getInstance(getActivity(),title, audioModel.getId(), audioModel)
                             .show(getFragmentManager(), "");
                 }
                 break;

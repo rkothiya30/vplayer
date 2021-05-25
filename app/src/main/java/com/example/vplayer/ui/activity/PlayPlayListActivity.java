@@ -152,26 +152,33 @@ public class PlayPlayListActivity extends AppCompatActivity {
         }
 
         text_title.setText(PlayName);
+        if(aList != null && aList.size()!=0) {
 
-        Object model = aList.get(0);
-        if(model instanceof Video) {
-            ll_fav.setVisibility(View.VISIBLE);
-            card_view.setVisibility(View.GONE);
-            Video video = (Video) model;
-            File file = new File(video.getFullPath());
 
-            RequestOptions option = new RequestOptions()
-                    .signature(new ObjectKey(file.getAbsolutePath() + file.lastModified()))
-                    .priority(Priority.LOW)
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
-            Glide.with(getApplicationContext())
-                    .load(video.getFullPath()).apply(option)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(iv_music);
+            Object model = aList.get(0);
+            if (model instanceof Video) {
+                ll_fav.setVisibility(View.VISIBLE);
+                card_view.setVisibility(View.GONE);
+                Video video = (Video) model;
+                File file = new File(video.getFullPath());
 
+                RequestOptions option = new RequestOptions()
+                        .signature(new ObjectKey(file.getAbsolutePath() + file.lastModified()))
+                        .priority(Priority.LOW)
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
+                Glide.with(getApplicationContext())
+                        .load(video.getFullPath()).apply(option)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(iv_music);
+
+            } else {
+                ll_fav.setVisibility(View.GONE);
+                card_view.setVisibility(View.VISIBLE);
+
+            }
         } else {
-                    ll_fav.setVisibility(View.GONE);
-                    card_view.setVisibility(View.VISIBLE);
+            ll_fav.setVisibility(View.GONE);
+            card_view.setVisibility(View.VISIBLE);
 
         }
         play_mun.setText(String.valueOf(aList.size()));

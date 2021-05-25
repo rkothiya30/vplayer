@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,41 +25,40 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.vplayer.R;
-import com.example.vplayer.fragment.adapter.PlayListAdapter;
 import com.example.vplayer.fragment.event.RenameEvent;
-import com.example.vplayer.fragment.event.UpdateAdapterEvent;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
 import com.example.vplayer.fragment.utils.RxBus;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
+import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.model.Video;
-import com.example.vplayer.ui.fragment.PlaylistFragment;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
-import static com.example.vplayer.ui.fragment.PlaylistFragment.allPlaylist;
 
-public class RenamePlaylistDialog extends DialogFragment {
+public class RenameMusicDialog extends DialogFragment {
 
     Context context;
     String title;
-    long id;
+    String audioId;
+    AudioModel audioModel;
     public static PreferencesUtility preferencesUtility;
     EditText renameText;
     TextView btnCancel, btnRename;
+    String sdCardPath;
 
-    public static RenamePlaylistDialog getInstance(Activity context, String title) {
-        RenamePlaylistDialog dialog = new RenamePlaylistDialog();
+
+
+    public static RenameMusicDialog getInstance(Activity context, String title, String id, AudioModel audioModel) {
+        RenameMusicDialog dialog = new RenameMusicDialog();
         dialog.context = context;
         dialog.title = title;
-
+        dialog.audioId = id;
+        dialog.audioModel = audioModel;
         dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.WideDialog);
-
-
         return dialog;
     }
 
@@ -73,8 +71,7 @@ public class RenamePlaylistDialog extends DialogFragment {
         renameText = v.findViewById(R.id.renameText);
         btnCancel = v.findViewById(R.id.btnCancel);
         btnRename = v.findViewById(R.id.btnRename);
-
-
+        sdCardPath = VideoPlayerUtils.getExternalStoragePath(context, true);
 
         return v;
     }
@@ -83,12 +80,12 @@ public class RenamePlaylistDialog extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        showKeyboard();
         preferencesUtility = PreferencesUtility.getInstance(context);
 
         //btnRename.setTextColor(ATEUtil.getThemeAccentColor(context));
-       /* renameText.setText(title);*/
-        //renameText.setSelection(title.length());
+        renameText.setText(title);
+        renameText.setSelection(title.length());
         btnCancel.setOnClickListener(view1 -> {
             getDialog().dismiss();
         });
@@ -96,35 +93,62 @@ public class RenamePlaylistDialog extends DialogFragment {
         btnRename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                File file = new File(audioModel.getPath());
+                String mimeType = VideoPlayerUtils.getFilenameExtension(audioModel.getPath());
 
                 if (!renameText.getText().toString().isEmpty()) {
-                    if (!renameText.getText().toString().equalsIgnoreCase(title)) {
+                    if (renameText.getText().toString().equalsIgnoreCase(audioModel.getName())) {
+                        getDialog().show();
+                    } else if (!file.isDirectory()) {
+                        String currentString = renameText.getText().toString();
+                        String[] separated = currentString.split("\\.");
+                        String type = separated[separated.length - 1];
 
+                        if (!type.equalsIgnoreCase(mimeType)) {
+                            // show dialog
+//                            Log.e("", "show mimeType dialog");
+                            Dialog validationDialog = new Dialog(getContext(), R.style.WideDialog);
+                            validationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            validationDialog.setCancelable(true);
+                            validationDialog.setContentView(R.layout.dialog_rename_validation);
+                            validationDialog.setCanceledOnTouchOutside(true);
+                            validationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            validationDialog.getWindow().setGravity(Gravity.CENTER);
+
+                            validationDialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    validationDialog.dismiss();
+                                    renameText.setText(file.getName());
+
+                                }
+                            });
+
+                            validationDialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    validationDialog.dismiss();
                                     getDialog().dismiss();
                                     // set rename
-                                    LinkedHashMap<String, String> playlists = preferencesUtility.getPlaylists();
-                                    if (playlists.containsKey(title)) {
-                                        String s = playlists.get(title);
-                                        playlists.remove(title);
-                                        //allPlaylist.remove(title);
-                                        playlists.put(renameText.getText().toString(), s);
+                                    reNameFile(file, renameText.getText().toString());
+                                }
+                            });
 
-                                       // allPlaylist.put(renameText.getText().toString(), s);
-                                    }
-                                    preferencesUtility.setPlaylists(playlists);
+                            validationDialog.show();
 
-                        /*PlaylistFragment.playListAdapter = new PlayListAdapter(, preferencesUtility.getPlaylists());
-                        PlaylistFragment.videoLList.setAdapter(PlaylistFragment.playListAdapter);*/
+                        } else {
+                            // set rename
+                            Log.e("", "rename");
+                            getDialog().dismiss();
+                            reNameFile(file, renameText.getText().toString());
 
-                        //PlaylistFragment.playListAdapter.notifyDataSetChanged();
-                        RxBus.getInstance().post(new UpdateAdapterEvent());
 
+                        }
                     } else {
 
                         // set rename
                         getDialog().dismiss();
-                        Toast.makeText(context, "Same playlist name cannot be updated", Toast.LENGTH_SHORT).show();
-
+                        reNameFile(file, renameText.getText().toString());
                     }
 
                 } else {
@@ -134,7 +158,7 @@ public class RenamePlaylistDialog extends DialogFragment {
         });
     }
 
-   /* private void showRenameValidationDialog() {
+    private void showRenameValidationDialog() {
         Dialog validationDialog = new Dialog(getContext(), R.style.WideDialog);
         validationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         validationDialog.setCancelable(true);
@@ -154,8 +178,14 @@ public class RenamePlaylistDialog extends DialogFragment {
 
         validationDialog.show();
     }
-*/
-  /*  private void reNameFile(File file, String newName) {
+
+    private void showKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInputFromWindow(renameText.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+        renameText.requestFocus();
+    }
+
+    private void reNameFile(File file, String newName) {
         File file2 = new File(file.getParent() + "/" + newName);
         Log.e("1", "file name: " + file.getPath());
         Log.e("2", "file2 name: " + file2.getPath());
@@ -183,6 +213,7 @@ public class RenamePlaylistDialog extends DialogFragment {
 
 
                 Toast.makeText(getContext(), "Rename file successfully", Toast.LENGTH_SHORT).show();
+
                 RxBus.getInstance().post(new RenameEvent(file, file2));
             } else {
                 Log.e("LOG", "File not renamed...");
@@ -191,12 +222,6 @@ public class RenamePlaylistDialog extends DialogFragment {
 //            getFilesList(arrayListFilePaths.get(arrayListFilePaths.size() - 1));
 
         }
-    }*/
-
-    private void showKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInputFromWindow(renameText.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
-        renameText.requestFocus();
     }
 
     public static void renameHistoryVideo(long videoId, String videoName) {

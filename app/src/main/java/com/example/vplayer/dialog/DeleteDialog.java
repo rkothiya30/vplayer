@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
+import com.example.vplayer.fragment.utils.RxBus;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
 import com.example.vplayer.model.Video;
 import com.example.vplayer.ui.activity.VideoPlayerActivity;
@@ -70,6 +71,7 @@ public class DeleteDialog extends DialogFragment {
             //loadAds.showFullAd(3);
             VideoPlayerUtils.deleteTracks(context, videoId);
             deleteHistoryVideo(videoId[0]);
+
             getDialog().dismiss();
 
             if (((Activity) context) instanceof VideoPlayerActivity) {
