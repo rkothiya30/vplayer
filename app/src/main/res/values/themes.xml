@@ -14,5 +14,9 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Theme.VPlayer.NoActionBar" parent="Theme.VPlayer">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
 </resources>

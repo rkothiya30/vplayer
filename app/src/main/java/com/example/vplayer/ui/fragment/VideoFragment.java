@@ -1,9 +1,11 @@
 package com.example.vplayer.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -36,6 +39,7 @@ import com.example.vplayer.model.Video;
 import com.example.vplayer.service.VideoDataService;
 import com.example.vplayer.ui.activity.FolderInFolderActivity;
 import com.example.vplayer.ui.activity.SeeMoreActivity;
+import com.example.vplayer.ui.activity.SettingsActivity;
 import com.google.gson.Gson;
 
 
@@ -233,6 +237,11 @@ public class VideoFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_video, menu);
 
+
+        Context wrapper = new ContextThemeWrapper(this, R.style.YOURSTYLE);
+        PopupMenu popup = new PopupMenu(wrapper, inflater);
+
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -240,26 +249,13 @@ public class VideoFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_search:
-                Toast.makeText(getContext(), "Search Clicked", Toast.LENGTH_SHORT).show();
-                return true;
-
-
-            case R.id.action_select:
-                Toast.makeText(getContext(), "Select Clicked", Toast.LENGTH_SHORT).show();
-                return true;
-
-            case R.id.action_refresh:
-                Toast.makeText(getContext(), "Refresh Clicked", Toast.LENGTH_SHORT).show();
-                return true;
-
-            case R.id.action_equalizer:
-                Toast.makeText(getContext(), "Equalizer Clicked", Toast.LENGTH_SHORT).show();
-                return true;
 
             case R.id.action_settings:
-                Toast.makeText(getContext(), "Settings Clicked", Toast.LENGTH_SHORT).show();
+                Intent inc = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(inc);
+
                 return true;
+                break;
 
         }
 

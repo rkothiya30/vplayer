@@ -27,6 +27,8 @@
     <string name="action_no">No</string>
     <string name="image_desc">Ad image</string>
     <string name="icon_desc">Ad icon</string>
+    <string name="feedback_email">mayursmaiyani1@gmail.com</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 
 
     <string-array name="menu_array">

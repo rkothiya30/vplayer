@@ -26,4 +26,9 @@
         <item name="android:windowMinWidthMinor">95%</item>
     </style>
 
+    <style name="YOURSTYLE" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:itemBackground">@android:color/holo_red_light</item>
+    </style>
+
 </resources>

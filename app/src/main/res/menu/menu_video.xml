@@ -17,24 +17,7 @@
         app:showAsAction="always" >
 
         <menu>
-            <item
-                android:id="@+id/action_select"
-                android:title="Select"
 
-                android:icon="@drawable/action_select"
-                app:showAsAction="always"></item>
-            <item
-                android:id="@+id/action_refresh"
-                android:title="Refresh"
-
-                android:icon="@drawable/action_refresh"
-                app:showAsAction="always"></item>
-            <item
-                android:id="@+id/action_equalizer"
-                android:title="Equalizer"
-
-                android:icon="@drawable/action_equalizer"
-                app:showAsAction="always"></item>
             <item
                 android:id="@+id/action_settings"
                 android:title="Settings"

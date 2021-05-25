@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/theme_color"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="5dp">
+
+        <ImageView
+            android:id="@+id/back_setting"
+            android:layout_width="42dp"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_6sdp"
+            android:paddingVertical="@dimen/_6sdp"
+            app:tint="@color/white"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Settings"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0.6dp"
+        android:background="@color/gray_divider"
+        android:visibility="visible" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:orientation="vertical">
+
+
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:background="@color/gray_divider"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingRight="@dimen/_15sdp"
+                android:visibility="gone" />
+
+
+
+
+            <RelativeLayout
+                android:id="@+id/lout_rate_us"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingTop="15dp"
+                android:paddingRight="@dimen/_12sdp"
+                android:paddingBottom="15dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_rate_us"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentLeft="true"
+                    app:tint="@color/white"
+                    android:src="@drawable/ic_setting_rate_us" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/_15sdp"
+                    android:layout_toRightOf="@+id/iv_rate_us"
+                    android:text="Rate Us"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:layout_marginLeft="@dimen/_15sdp"
+                android:layout_marginRight="@dimen/_15sdp"
+                android:background="@color/gray_divider"
+                android:visibility="visible" />
+
+            <RelativeLayout
+                android:id="@+id/lout_share_us"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingTop="@dimen/_10sdp"
+                android:paddingRight="@dimen/_12sdp"
+                android:paddingBottom="15dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_share_us"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:tint="@color/white"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/ic_setting_share_us" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/_15sdp"
+                    android:layout_toRightOf="@+id/iv_share_us"
+                    android:text="Share Us"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:layout_marginLeft="@dimen/_15sdp"
+                android:layout_marginRight="@dimen/_15sdp"
+                android:background="@color/gray_divider"
+                android:visibility="visible" />
+
+            <RelativeLayout
+                android:id="@+id/lout_about_us"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingTop="@dimen/_10sdp"
+                android:paddingRight="@dimen/_12sdp"
+                android:paddingBottom="15dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_about_us"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentLeft="true"
+                    app:tint="@color/white"
+                    android:src="@drawable/ic_setting_about_us" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/_15sdp"
+                    android:layout_toRightOf="@+id/iv_about_us"
+                    android:text="Feedback &amp; Contact Us"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:layout_marginLeft="@dimen/_15sdp"
+                android:layout_marginRight="@dimen/_15sdp"
+                android:background="@color/gray_divider"
+                android:visibility="visible" />
+
+            <RelativeLayout
+                android:id="@+id/lout_privacy_policy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingTop="@dimen/_10sdp"
+                android:paddingRight="@dimen/_12sdp"
+                android:paddingBottom="15dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_privacy"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentLeft="true"
+                    app:tint="@color/white"
+                    android:src="@drawable/ic_setting_privacy" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/_15sdp"
+                    android:layout_toRightOf="@+id/iv_privacy"
+                    android:text="Privacy Policy"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:layout_marginLeft="@dimen/_15sdp"
+                android:layout_marginRight="@dimen/_15sdp"
+                android:background="@color/gray_divider"
+                android:visibility="visible" />
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

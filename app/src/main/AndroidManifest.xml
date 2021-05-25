@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.VPlayer">
-        <activity android:name=".ui.activity.PlayPlayListActivity"></activity>
+        <activity android:name=".ui.activity.PrivacyPolicyActivity"></activity>
+        <activity android:name=".ui.activity.PlayPlayListActivity" />
         <activity android:name=".ui.activity.EmptyActivity" />
         <activity android:name=".ui.activity.SelectItemActivity" />
         <activity android:name=".ui.activity.SeeMoreActivity" />
@@ -25,6 +25,10 @@
         <activity android:name=".ui.activity.FolderInFolderActivity" />
         <activity android:name=".ui.activity.PermissionActivity" />
         <activity android:name=".ui.activity.PlayingSongActivity" />
+        <activity
+            android:name=".ui.activity.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/Theme.VPlayer.NoActionBar" />
         <activity android:name=".ui.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
