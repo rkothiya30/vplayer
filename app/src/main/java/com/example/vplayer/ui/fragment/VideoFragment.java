@@ -238,8 +238,7 @@ public class VideoFragment extends Fragment {
         inflater.inflate(R.menu.menu_video, menu);
 
 
-        Context wrapper = new ContextThemeWrapper(this, R.style.YOURSTYLE);
-        PopupMenu popup = new PopupMenu(wrapper, inflater);
+
 
 
         super.onCreateOptionsMenu(menu, inflater);
@@ -254,8 +253,14 @@ public class VideoFragment extends Fragment {
                 Intent inc = new Intent(getActivity(), SettingsActivity.class);
                 startActivity(inc);
 
-                return true;
                 break;
+
+            case R.id.action_search:
+
+                break;
+
+
+
 
         }
 

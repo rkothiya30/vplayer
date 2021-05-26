@@ -166,12 +166,32 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 myViewHolder.ll_root.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+/*
 
                         Intent i = new Intent(context, PlayingSongActivity.class);
                         i.putExtra("Position", position);
                         i.putExtra("Audio", Parcels.wrap(aList));
                         i.putExtra("ActivityName", "PlayPlayListActivity");
                         context.startActivity(i);
+*/
+
+
+
+                                List<AudioModel> l = new ArrayList<>();
+                                for (int i = 0; i < aList.size(); i++) {
+                                    if (aList.get(i) instanceof AudioModel)
+                                        l.add((AudioModel) aList.get(i));
+                                }
+
+
+                                Intent in = new Intent(context, PlayingSongActivity.class);
+                                in.putExtra("Position", 0);
+                                in.putExtra("Audio", Parcels.wrap(l));
+                                in.putExtra("ActivityName", "PlayListItemAdapter");
+                                context.startActivity(in);
+
+
+
                     }
                 });
                 break;

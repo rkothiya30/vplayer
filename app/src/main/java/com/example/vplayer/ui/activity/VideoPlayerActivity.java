@@ -158,7 +158,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
 
-            if(getIntent().getStringExtra("Activity").equals("PlayListItemAdapter")){
+
+            if(getIntent().getExtras().getString("Activity","").equals("PlayListItemAdapter")){
                 videoPosition = getIntent().getIntExtra(EXTRA_VIDEO_POSITION, 0);
                 unwrap = Parcels.unwrap(getIntent().getParcelableExtra(Constant.EXTRA_VIDEO_LIST));
                 List<Video> l = new ArrayList<>();
@@ -269,7 +270,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
                 }
 
-                if(videoPosition == (videosList.size()-1)){
+                if((videoPosition == (videosList.size()-1)) || videosList.size()==0){
                     if (getIntent().getStringExtra("Activity").equals("PlayListItemAdapter")) {
                         if (videoPosition == (videosList.size()-1)) {
                             List<AudioModel> l = new ArrayList<>();

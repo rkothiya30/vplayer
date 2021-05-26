@@ -29,6 +29,8 @@ import com.example.vplayer.model.Video;
 
 import java.util.List;
 
+import static android.view.View.GONE;
+
 public class OnMenuAdapter extends RecyclerView.Adapter<OnMenuAdapter.ViewHolder> {
 
     private List<String> mItems;
@@ -69,7 +71,10 @@ public class OnMenuAdapter extends RecyclerView.Adapter<OnMenuAdapter.ViewHolder
         holder.item_image.setImageResource(mImages[position]);
         holder.item_image.setColorFilter(ContextCompat.getColor(holder.item_image.getContext(), R.color.white), PorterDuff.Mode.SRC_IN);
         if(check == -1 && position == 5){
-            holder.fragment_item.setVisibility(View.GONE);
+            holder.fragment_item.setVisibility(GONE);
+        }
+        if(check == -4 && position == 2){
+            holder.fragment_item.setVisibility(GONE);
         }
 
        // setOnPopupMenuListener(holder, position);

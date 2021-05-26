@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -47,11 +48,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     private static final String CHANNEL_ID2 = "n_channel";
     IBinder mBinder = new MyBinder();
     public static MediaPlayer mediaPlayer;
-   // List<AudioModel> myList = new ArrayList<>();
+    // List<AudioModel> myList = new ArrayList<>();
     Uri uri;
     int position = -1;
     ActionPlaying actionPlaying;
     MediaSessionCompat mediaSessionCompat;
+    NotificationManager notificationManager;
 
     @Override
     public void onCreate() {
@@ -59,6 +61,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
         mediaSessionCompat = new MediaSessionCompat(getBaseContext(), "My Audio");
     }
+
 
     @Nullable
     @Override
@@ -68,10 +71,8 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         return mBinder;
     }
 
-    public class MyBinder extends Binder
-    {
-        public MusicService getService()
-        {
+    public class MyBinder extends Binder {
+        public MusicService getService() {
             return MusicService.this;
         }
     }
@@ -81,17 +82,15 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
         int myPosition = intent.getIntExtra("ServicePosition", -1);
         String actionName = intent.getStringExtra("ActionName");
-        if(myPosition != -1) {
+        if (myPosition != -1) {
             playMedia(myPosition);
         }
 
-        if(actionName != null)
-        {
-            switch (actionName)
-            {
+        if (actionName != null) {
+            switch (actionName) {
                 case "playPause":
                     //Toast.makeText(this, "PlayPause", Toast.LENGTH_LONG).show();
-                    if(actionPlaying != null) {
+                    if (actionPlaying != null) {
                         Log.e("Msg", "PlayPause");
                         actionPlaying.playPauseButtonClick();
                     }
@@ -99,15 +98,15 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
                 case "next":
                     //Toast.makeText(this, "Next", Toast.LENGTH_LONG).show();
-                    if(actionPlaying != null) {
+                    if (actionPlaying != null) {
                         Log.e("Msg", "PlayPause");
                         actionPlaying.nextButtonClick();
                     }
                     break;
 
                 case "previous":
-                   //Toast.makeText(this, "Previous", Toast.LENGTH_LONG).show();
-                    if(actionPlaying != null) {
+                    //Toast.makeText(this, "Previous", Toast.LENGTH_LONG).show();
+                    if (actionPlaying != null) {
                         Log.e("Msg", "PlayPause");
                         actionPlaying.previousButtonClick();
                     }
@@ -144,133 +143,114 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         }*/
 
         position = startPosition;
-        if(mediaPlayer != null)
-        {
-            mediaPlayer.stop();
+        if (mediaPlayer != null) {
+
+
             mediaPlayer.release();
-            if(songsList != null)
-            {
+            if (songsList != null) {
 
                 createMediaPlayer(position);
                 mediaPlayer.start();
             }
-        }
-        else
-        {
+        } else {
             createMediaPlayer(position);
             mediaPlayer.start();
         }
     }
 
 
-    public void start()
-    {
+    public void start() {
         mediaPlayer.start();
     }
 
-    public boolean isPlaying()
-    {
+    public boolean isPlaying() {
         return mediaPlayer.isPlaying();
     }
 
-    public void stop()
-    {
+    public void stop() {
         mediaPlayer.stop();
     }
 
-    public void release()
-    {
+    public void release() {
         mediaPlayer.release();
     }
 
-    public int getDuration()
-    {
+    public int getDuration() {
         return mediaPlayer.getDuration();
     }
 
-    public void seekTo(int position)
-    {
+    public void seekTo(int position) {
         mediaPlayer.seekTo(position);
     }
 
-    public void createMediaPlayer(int positionInner)
-    {
+    public void createMediaPlayer(int positionInner) {
         position = positionInner;
-        if(IS_SHUFFLED)
-        {
+        if (IS_SHUFFLED) {
             //uri = Uri.parse(shuffledList.get(position).getPath());
-        }
-
-
-
-        else
-        {
+        } else {
             songsList = audioList;
 
-            if(activityName.equals("MusicFragment"))
-            {
+            if (activityName.equals("MusicFragment")) {
                 songsList = audioList;
                 //position = getIntent().getIntExtra("Position", -1);
-            } else if(activityName.equals("PlayPlayListActivity")){
+            } else if (activityName.equals("PlayPlayListActivity")) {
                 List<AudioModel> a = new ArrayList<>();
-                a =  Parcels.unwrap(intent1.getParcelableExtra("Audio"));
+                a = Parcels.unwrap(intent1.getParcelableExtra("Audio"));
 
                 //   a.add(audio1);
                 songsList = a;
                 //position = getIntent().getIntExtra("Position", -1);
-            } else if(activityName.equals("PlayListItemAdapter")){
+            } else if (activityName.equals("PlayListItemAdapter")) {
                 List<AudioModel> a = new ArrayList<>();
-                a =  Parcels.unwrap(intent1.getParcelableExtra("Audio"));
+                a = Parcels.unwrap(intent1.getParcelableExtra("Audio"));
 
                 //   a.add(audio1);
                 songsList = a;
                 //position = getIntent().getIntExtra("Position", -1);
-            } else if(activityName.equals("OnMenuFragment")){
+            } else if (activityName.equals("OnMenuFragment")) {
                 songsList = audioList;
             }
-if(position >= songsList.size())
-    return;
+            if (position >= songsList.size())
+                return;
             uri = Uri.parse(songsList.get(position).getPath());
         }
 
         mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
     }
 
+    int lastPosition;
 
-
-    public int getCurrentPosition()
-    {
-        return mediaPlayer.getCurrentPosition();
+    public int getCurrentPosition() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            lastPosition = mediaPlayer.getCurrentPosition();
+            return mediaPlayer.getCurrentPosition();
+        } else {
+            return lastPosition;
+        }
     }
 
-    public void pause()
-    {
+    public void pause() {
         mediaPlayer.pause();
     }
 
-    public void reset()
-    {
+    public void reset() {
         mediaPlayer.reset();
     }
 
-    public void prepare()
-    {
+    public void prepare() {
         mediaPlayer.prepareAsync();
     }
 
-    public void onComplete()
-    {
+    public void onComplete() {
         mediaPlayer.setOnCompletionListener(this);
     }
 
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        if(actionPlaying != null)
-        {
+        if (actionPlaying != null) {
             actionPlaying.nextButtonClick();
-            if(mediaPlayer != null)
-            {
+            if (mediaPlayer != null) {
                 createMediaPlayer(position);
                 start();
                 onComplete();
@@ -281,15 +261,18 @@ if(position >= songsList.size())
         start();*/
     }
 
-    public void setCallBack(ActionPlaying actionPlaying)
-    {
+    public void setCallBack(ActionPlaying actionPlaying) {
         this.actionPlaying = actionPlaying;
     }
 
-    public void showNotification(int playPauseButton)
-    {
+    public void removeNotification(){
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(2);
+    }
 
-       // tvDuration.setText(formattedTime(Integer.parseInt(songsList.get(position).getDuration()) / 1000));
+    public void showNotification(int playPauseButton) {
+
+        // tvDuration.setText(formattedTime(Integer.parseInt(songsList.get(position).getDuration()) / 1000));
         Intent intent = new Intent(this, PlayingSongActivity.class);
         //intent.putExtra("ActivityName","MusicFragment");
         //intent.putExtra("Position", position);
@@ -312,14 +295,12 @@ if(position >= songsList.size())
         picture = getAlbumArt(songsList.get(position).getPath());
         Bitmap thumb = null;
 
-        if(picture != null)
-        {
+        if (picture != null) {
             thumb = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+        } else {
+            thumb = BitmapFactory.decodeResource(getResources(), R.drawable.ic_music_icon_foreground);
         }
-        else
-        {
-            thumb = BitmapFactory.decodeResource(getResources(), R.drawable.thumb);
-        }
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID2)
                 .setSmallIcon(R.drawable.ic_play)
@@ -335,21 +316,30 @@ if(position >= songsList.size())
                 .setOnlyAlertOnce(true)
                 .setContentIntent(contentIntent)
 
-               // .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                // .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .build();
 
        /* NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);*/
 
+
         startForeground(2, notification);
-        if(!isPlaying()) {
+
+        if (!isPlaying()) {
             stopForeground(false);
-           // stopSelf();
+            // stopSelf();
         }
+
     }
 
-    public byte[] getAlbumArt(String uri)
-    {
+    @Override
+    public void onDestroy() {
+       // stopForeground(true);
+
+        super.onDestroy();
+    }
+
+    public byte[] getAlbumArt(String uri) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(uri);
         byte[] art = retriever.getEmbeddedPicture();

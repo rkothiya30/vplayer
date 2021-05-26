@@ -105,8 +105,21 @@ public class AddPlaylistAdapter extends RecyclerView.Adapter<AddPlaylistAdapter.
         listkeys.clear();
         listkeys = new ArrayList<>();
         listkeys.addAll(keys);
+
+        PlayListModel playListModel = new PlayListModel();
+        LinkedHashMap<String, String> playlists = preferencesUtility.getPlaylists();
+        String s = playlists.get(listkeys.get(position));
         if(position==0){
             holder.ll_fav.setVisibility(View.VISIBLE);
+
+            if (s != null) {
+                playListModel = new Gson().fromJson(s, PlayListModel.class);
+                holder.txt_folder_item.setText(playListModel.getAudioList().size() + " song, " + playListModel.getVideoList().size() +" video");
+            }
+
+
+
+
         }
         else {
             holder.ll_fav.setVisibility(View.GONE);
@@ -114,11 +127,9 @@ public class AddPlaylistAdapter extends RecyclerView.Adapter<AddPlaylistAdapter.
             holder.txt_folder_name.setText(listkeys.get(position));
 
 
-            LinkedHashMap<String, String> playlists = preferencesUtility.getPlaylists();
-            String s = playlists.get(listkeys.get(position));
-            List<Object> aList = new ArrayList<>();
 
-            PlayListModel playListModel = new PlayListModel();
+
+
             if (s != null) {
                 playListModel = new Gson().fromJson(s, PlayListModel.class);
                 if (playListModel != null){
@@ -192,7 +203,53 @@ public class AddPlaylistAdapter extends RecyclerView.Adapter<AddPlaylistAdapter.
             });
         }
 
+        holder.ll_root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                PlayListModel playListModel = new PlayListModel(); // new PlayListModel(tempAudios, tempVideos);
+                String playListString = "";
 
+                List<Video> videoList = new ArrayList<>();
+                List<AudioModel> audioModels = new ArrayList<>();
+
+                LinkedHashMap<String, String> playlists = preferencesUtility.getPlaylists();
+                if(playlists.containsKey(listkeys.get(position))){
+                    String s = playlists.get(listkeys.get(position));
+                    PlayListModel playListModel1 = new Gson().fromJson(s, PlayListModel.class);
+                    videoList = playListModel1.getVideoList();
+                    audioModels = playListModel1.getAudioList();
+                    if(check==-2) {
+                        if(!videoList.contains(video))
+                            videoList.add(video);
+                    }
+                    else if(check==-3) {
+                        if(!audioModels.contains(audioModel))
+                            audioModels.add(audioModel);
+                    }
+                    else if(check == -1){
+                        for(int i = 0; i<mainVideoList.size(); i++){
+                            if(!videoList.contains(mainVideoList.get(i)))
+                                videoList.add(mainVideoList.get(i));
+                        }
+                        for(int i = 0; i<mainAudioList.size(); i++){
+                            if(!audioModels.contains(mainAudioList.get(i)))
+                                audioModels.add(mainAudioList.get(i));
+                        }
+
+                    }
+
+                    playListModel = new PlayListModel(audioModels, videoList);
+                    playListString = new Gson().toJson(playListModel);
+
+                    allPlaylist.put(listkeys.get(position), playListString);
+                    preferencesUtility.setPlaylists(allPlaylist);
+                    PlaylistFragment.playListAdapter.notifyDataSetChanged();
+                    RxBus.getInstance().post(new UpdateAdapterEvent());
+
+                }
+            }
+        });
 
 
     }

@@ -23,21 +23,27 @@ import com.example.vplayer.dialog.RenameMusicDialog;
 import com.example.vplayer.dialog.RenamePlaylistDialog;
 import com.example.vplayer.dialog.VideoDetailsDialog;
 import com.example.vplayer.fragment.adapter.OnMenuAdapter;
+import com.example.vplayer.fragment.event.UpdateAdapterEvent;
 import com.example.vplayer.fragment.interfaces.OuterClickListener;
 import com.example.vplayer.fragment.utils.PreferencesUtility;
+import com.example.vplayer.fragment.utils.RxBus;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
 import com.example.vplayer.model.AudioModel;
+import com.example.vplayer.model.PlayListModel;
 import com.example.vplayer.model.Video;
 import com.example.vplayer.service.MusicService;
 import com.example.vplayer.service.VideoPlayAsAudioService;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static com.example.vplayer.fragment.utils.Constant.EXTRA_VIDEO_POSITION;
 import static com.example.vplayer.service.VideoDataService.videobuckets;
+import static com.example.vplayer.ui.fragment.PlaylistFragment.allPlaylist;
 
 public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuAdapter.ItemListener {
 
@@ -145,7 +151,7 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
                         isBackgroundEnable = true;
 
                     startBackgroundVideoPlayService();
-                } else if(check == -1){
+                } else if(check == -1 || check == -4){
 
                     isBackgroundEnable = true;
                     position = 0;
@@ -167,9 +173,9 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
             case 1:
                 if(check == -2)
                 showShortDialog(-2, video);
-                else if(check == -3)
+                else if(check == -3 )
                     showShortDialog(-3, audioModel);
-                else if(check == -1)
+                else if(check == -1 || check == -4)
                     showShortDialog(-1, videoList, audioList);
                 break;
 
@@ -183,13 +189,15 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
                 } else if(check == -3){
                     RenameMusicDialog.getInstance(getActivity(),title, audioModel.getId(), audioModel)
                             .show(getFragmentManager(), "");
+                } else if(check == -4){
+
                 }
 
                 break;
             case 4:
                 if(check == -2) {
                     VideoPlayerUtils.shareVideo(OnMenuFragment.video.getId(), getActivity());
-                } else if(check == -1){
+                } else if(check == -1 || check == -4){
                     List<String> paths = new ArrayList<>();
                     for(int i = 0; i<videoList.size(); i++){
                         paths.add(videoList.get(i).getFullPath());
@@ -214,6 +222,31 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
                 }  else if(check == -3){
                     RenameMusicDialog.getInstance(getActivity(),title, audioModel.getId(), audioModel)
                             .show(getFragmentManager(), "");
+                } else if(check == -4){
+                    LinkedHashMap<String, String> playlists = preferencesUtility.getPlaylists();
+                    String playListString;
+                    if (playlists.containsKey(playListName)) {
+
+                        String s = playlists.get(playListName);
+
+                        PlayListModel playListModel1 = new Gson().fromJson(s, PlayListModel.class);
+                        List<Video> videoList1 = playListModel1.getVideoList();
+                        videoList1.clear();
+                        List<AudioModel> audioList1 = playListModel1.getAudioList();
+                        audioList1.clear();
+
+
+
+                        playListModel1 =new PlayListModel(audioList1, videoList1);
+                        playListString =new Gson().toJson(playListModel1);
+
+                    allPlaylist.put(playListName, playListString);
+
+
+
+                    }
+                    preferencesUtility.setPlaylists(allPlaylist);
+                    RxBus.getInstance().post(new UpdateAdapterEvent());
                 }
                 break;
             case 5:
