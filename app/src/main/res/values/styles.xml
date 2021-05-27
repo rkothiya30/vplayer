@@ -26,9 +26,11 @@
         <item name="android:windowMinWidthMinor">95%</item>
     </style>
 
-    <style name="YOURSTYLE" parent="Widget.AppCompat.PopupMenu">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:itemBackground">@android:color/holo_red_light</item>
+
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/theme_color</item>
+        <item name="textColorAlertDialogListItem">@color/white</item>
     </style>
 
 </resources>

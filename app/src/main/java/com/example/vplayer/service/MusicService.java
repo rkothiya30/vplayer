@@ -1,6 +1,7 @@
 package com.example.vplayer.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -13,6 +14,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.example.vplayer.Notification.NotificationReceiver;
@@ -37,11 +40,11 @@ import java.util.List;
 import static com.example.vplayer.fragment.utils.Constant.ACTION_NEXT;
 import static com.example.vplayer.fragment.utils.Constant.ACTION_PLAY;
 import static com.example.vplayer.fragment.utils.Constant.ACTION_PREVIOUS;
+import static com.example.vplayer.service.MusicDataService.audioList;
 import static com.example.vplayer.ui.activity.PlayingSongActivity.IS_SHUFFLED;
 import static com.example.vplayer.ui.activity.PlayingSongActivity.activityName;
 import static com.example.vplayer.ui.activity.PlayingSongActivity.intent1;
 import static com.example.vplayer.ui.activity.PlayingSongActivity.songsList;
-import static com.example.vplayer.ui.fragment.MusicFragment.audioList;
 
 public class MusicService extends Service implements MediaPlayer.OnCompletionListener {
 
@@ -209,6 +212,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 //position = getIntent().getIntExtra("Position", -1);
             } else if (activityName.equals("OnMenuFragment")) {
                 songsList = audioList;
+
             }
             if (position >= songsList.size())
                 return;
@@ -270,6 +274,9 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         notificationManager.cancel(2);
     }
 
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void showNotification(int playPauseButton) {
 
         // tvDuration.setText(formattedTime(Integer.parseInt(songsList.get(position).getDuration()) / 1000));
@@ -302,6 +309,18 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         }
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
+        //NotificationChannel mChannel = notificationManager.getNotificationChannel(CHANNEL_ID2);
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            NotificationChannel channel2 = new NotificationChannel(CHANNEL_ID2, CHANNEL_ID2, NotificationManager.IMPORTANCE_LOW);
+            channel2.setDescription("Channel 2 desc...");
+            channel2.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+// notificationManager.createNotificationChannel(channel1);
+            notificationManager.createNotificationChannel(channel2);
+        }
+
+
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID2)
                 .setSmallIcon(R.drawable.ic_play)
                 .setLargeIcon(thumb)
@@ -314,10 +333,26 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         .setMediaSession(mediaSessionCompat.getSessionToken()))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setOnlyAlertOnce(true)
-                .setContentIntent(contentIntent)
+                .setContentIntent(contentIntent).build();
 
-                // .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .build();
+      /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // You only need to create the channel on API 26+ devices
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationManager
+                        mNotificationManager =
+                        (NotificationManager) this
+                                .getSystemService(Context.NOTIFICATION_SERVICE);
+                NotificationChannel mChannel = mNotificationManager.getNotificationChannel(CHANNEL_ID2);
+                if (mChannel != null) {
+                    mNotificationManager.deleteNotificationChannel(CHANNEL_ID2);
+                    createChannel();
+                } else {
+                    createChannel();
+                }
+            }
+        }*/
+
+
 
        /* NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);*/
@@ -330,6 +365,24 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             // stopSelf();
         }
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createChannel() {
+        NotificationManager mNotificationManager = (NotificationManager) getApplicationContext()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        // The user-visible name of the channel.
+        CharSequence name = "VPlayer Service";
+        // The user-visible description of the channel.
+        String description = "VPlayer";
+        int importance = NotificationManager.IMPORTANCE_LOW;
+        NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID2, name, importance);
+        // Configure the notification channel.
+        mChannel.setDescription(description);
+        mChannel.setSound(null, null);
+        mChannel.setShowBadge(false);
+        assert mNotificationManager != null;
+        mNotificationManager.createNotificationChannel(mChannel);
     }
 
     @Override

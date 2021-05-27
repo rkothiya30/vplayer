@@ -28,6 +28,7 @@ import com.example.vplayer.model.HashMapModel;
 import com.example.vplayer.model.HistoryVideo;
 import com.example.vplayer.model.PlayListModel;
 import com.example.vplayer.model.Video;
+import com.example.vplayer.service.MusicDataService;
 import com.example.vplayer.ui.fragment.MusicFragment;
 import com.example.vplayer.ui.fragment.MusicSFragment;
 import com.example.vplayer.ui.fragment.PlaylistFragment;
@@ -39,7 +40,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static com.example.vplayer.ui.fragment.MusicFragment.audioList;
 import static com.example.vplayer.ui.fragment.PlaylistFragment.allPlaylist;
 import static com.example.vplayer.ui.fragment.PlaylistFragment.tempPlayListName;
 
@@ -110,10 +110,10 @@ public class SelectItemActivity extends AppCompatActivity {
                 ArrayList<Video> tempVideos = new ArrayList<>();
                 ArrayList<AudioModel> tempAudios = new ArrayList<>();
 
-                for(int i = 0; i<audioList.size(); i++)
+                for(int i = 0; i<MusicDataService.audioList.size(); i++)
                 {
-                    if(audioList.get(i).isSelected()){
-                        tempAudios.add(audioList.get(i));
+                    if(MusicDataService.audioList.get(i).isSelected()){
+                        tempAudios.add(MusicDataService.audioList.get(i));
                     }
                 }
                 for(int j=0; j< VideoSAdapter.videoList.size(); j++){
@@ -176,9 +176,9 @@ public class SelectItemActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         MusicSAdapter.Selection = false;
-        for(int i = 0; i<audioList.size(); i++)
+        for(int i = 0; i< MusicDataService.audioList.size(); i++)
         {
-            audioList.get(i).setSelected(false);
+            MusicDataService.audioList.get(i).setSelected(false);
         }
         for(int j=0; j< VideoSAdapter.videoList.size(); j++){
             VideoSAdapter.videoList.get(j).setSelected(false);

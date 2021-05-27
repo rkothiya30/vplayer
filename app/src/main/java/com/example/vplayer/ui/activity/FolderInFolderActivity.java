@@ -56,7 +56,7 @@ public class FolderInFolderActivity extends AppCompatActivity {
     VideoAdapter videoAdapter;
     TextView text_title, videoTitle, tv_size;
     ImageView iv_back;
-    AppCompatImageView iv_list_grid;
+    AppCompatImageView iv_list_grid, iv_search;
 
     PreferencesUtility preferencesUtility;
     boolean isGrid = false;
@@ -100,6 +100,8 @@ public class FolderInFolderActivity extends AppCompatActivity {
         //appbar = findViewById(R.id.appbar);
         videoTitle = findViewById(R.id.videoTitle);
         tv_size = findViewById(R.id.tv_size);
+        iv_search = findViewById(R.id.iv_search);
+
         iv_list_grid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,6 +155,14 @@ public class FolderInFolderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+        iv_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(FolderInFolderActivity.this, SearchActivity.class);
+                i.putExtra("Activity", "Video");
+                startActivity(i);
             }
         });
 

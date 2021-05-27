@@ -38,6 +38,7 @@ import com.example.vplayer.model.HistoryVideo;
 import com.example.vplayer.model.Video;
 import com.example.vplayer.service.VideoDataService;
 import com.example.vplayer.ui.activity.FolderInFolderActivity;
+import com.example.vplayer.ui.activity.SearchActivity;
 import com.example.vplayer.ui.activity.SeeMoreActivity;
 import com.example.vplayer.ui.activity.SettingsActivity;
 import com.google.gson.Gson;
@@ -256,7 +257,9 @@ public class VideoFragment extends Fragment {
                 break;
 
             case R.id.action_search:
-
+                Intent i = new Intent(getActivity(), SearchActivity.class);
+                i.putExtra("Activity", "Video");
+                startActivity(i);
                 break;
 
 

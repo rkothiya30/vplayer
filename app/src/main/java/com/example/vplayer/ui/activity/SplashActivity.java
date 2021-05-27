@@ -17,6 +17,7 @@ import android.view.WindowManager;
 
 import com.example.vplayer.MainActivity;
 import com.example.vplayer.R;
+import com.example.vplayer.service.MusicDataService;
 import com.example.vplayer.service.VideoDataService;
 
 public class SplashActivity extends AppCompatActivity {
@@ -49,9 +50,11 @@ public class SplashActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //                startForegroundService(new Intent(SplashActivity.this, ImageDataService.class));
                 startService(new Intent(SplashActivity.this, VideoDataService.class));
+                startService(new Intent(SplashActivity.this, MusicDataService.class));
             } else {
 
                 startService(new Intent(SplashActivity.this, VideoDataService.class));
+                startService(new Intent(SplashActivity.this, MusicDataService.class));
             }
         }
 

@@ -42,6 +42,7 @@ import com.example.vplayer.fragment.interfaces.OuterClickListener;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
 import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.model.Video;
+import com.example.vplayer.service.MusicDataService;
 import com.example.vplayer.ui.activity.PlayPlayListActivity;
 import com.example.vplayer.ui.activity.PlayingSongActivity;
 import com.example.vplayer.ui.activity.VideoPlayerActivity;
@@ -104,7 +105,7 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         switch (viewType) {
             case ITEM_MUSIC_TYPE:
                 MyViewHolder myViewHolder = (MyViewHolder) holder;
-                AudioModel audioFile = MusicFragment.audioList.get(0);
+                AudioModel audioFile = MusicDataService.audioList.get(0);
                 try {
                      audioFile = (AudioModel) aList.get(position);
                 } catch(Exception e){

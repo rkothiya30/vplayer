@@ -13,6 +13,15 @@ public class AudioModel {
     String path;
     boolean isPlay;
     boolean isSelected;
+    Long albumId;
+
+    public Long getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(Long albumId) {
+        this.albumId = albumId;
+    }
 
     public String getId() {
         return Id;

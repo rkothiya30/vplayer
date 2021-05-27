@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.Settings;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -607,11 +608,11 @@ public class VideoPlayerActivity extends AppCompatActivity {
     }
 
     public void showLeaveDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setMessage("Are you sure you have to close this video ?")
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme)
+                .setMessage(Html.fromHtml("<font color='#FFFFFF'>Are you sure you have to close this video ?</font>"))
                 .setCancelable(false)
 
-                .setPositiveButton(getString(R.string.action_yes), new DialogInterface.OnClickListener() {
+                .setPositiveButton(Html.fromHtml("<font color='#FFFFFF'>YES</font>"), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                         if (mkPlayer != null && mkPlayer.onBackPressed()) {
@@ -626,14 +627,15 @@ public class VideoPlayerActivity extends AppCompatActivity {
                         /*}*/
                     }
                 })
-                .setNegativeButton(getString(R.string.action_no), new DialogInterface.OnClickListener() {
+                .setNegativeButton(Html.fromHtml("<font color='#FFFFFF'>NO</font>"), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         mkPlayer.start();
                     }
                 });
         AlertDialog alert = builder.create();
-        alert.setTitle("VPlayer");
+        alert.setTitle(Html.fromHtml("<font color='#FFFFFF'>VPlayer</font>"));
+
         alert.show();
     }
 

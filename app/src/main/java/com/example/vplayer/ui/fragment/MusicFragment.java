@@ -49,7 +49,10 @@ import com.example.vplayer.fragment.utils.PreferencesUtility;
 import com.example.vplayer.fragment.utils.RxBus;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
 import com.example.vplayer.model.AudioModel;
+import com.example.vplayer.service.MusicDataService;
 import com.example.vplayer.ui.activity.PlayingSongActivity;
+import com.example.vplayer.ui.activity.SearchActivity;
+import com.example.vplayer.ui.activity.SettingsActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -62,12 +65,13 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 import static android.provider.MediaStore.Images.Thumbnails.IMAGE_ID;
+import static com.example.vplayer.service.MusicDataService.audioList;
 
 
 public class MusicFragment extends Fragment {
 
     View view;
-    public static ArrayList<AudioModel> audioList = new ArrayList<>();
+
     RecyclerView recycler_view;
     ImageView emptyString;
     public static MusicAdapter adapter;
@@ -78,6 +82,7 @@ public class MusicFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -117,78 +122,95 @@ public class MusicFragment extends Fragment {
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_video, menu);
+
+
+
+
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.action_settings:
+                Intent inc = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(inc);
+
+                break;
+
+            case R.id.action_search:
+                Intent i = new Intent(getActivity(), SearchActivity.class);
+                i.putExtra("Activity", "Music");
+                startActivity(i);
+                break;
+
+
+
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void getAllAudioList() {
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.ALBUM,
-                MediaStore.Audio.ArtistColumns.ARTIST, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media._ID};
-        Cursor c = getActivity().getContentResolver().query(uri, projection, null, null,
-                "LOWER(" + MediaStore.Audio.Media.DATE_MODIFIED + ") DESC");
 
-
-        if (c != null) {
-            /*ArrayList<String> favList = PreferencesManager.getFavouriteList(this);
-            if (favList == null) {
-                favList = new ArrayList<>();
-            }*/
-            while (c.moveToNext()) {
-
-                AudioModel audioModel = new AudioModel();
-                String path = c.getString(0);
-                String album = c.getString(1);
-                String artist = c.getString(2);
-                Long albumId = c.getLong(3);
-                String id = c.getString(4);
-
-                MediaMetadataRetriever mediaMetadataRetriever= new MediaMetadataRetriever();
-                try {
-                    mediaMetadataRetriever.setDataSource(path);
-                } catch(Exception e){
-                    e.printStackTrace();
-                }
-
-                String duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-
-
-                File file = new File(path);
-                Uri sArtworkUri = Uri
-                        .parse("content://media/external/audio/albumart");
-                Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
-
-
-                Bitmap bitmap = null;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), albumArtUri);
-
-                } catch (FileNotFoundException exception) {
-                } catch (IOException e) {
-
-                    e.printStackTrace();
-                }
-
-
-                String name = path.substring(path.lastIndexOf("/") + 1);
-
-                if (file.exists()) {
-                    audioModel.setName(name);
-                    audioModel.setAlbum(album);
-                    audioModel.setArtist(artist);
-                    audioModel.setPath(path);
-                    audioModel.setDuration(duration);
-                    /*if (favList.contains(path)) {
-                        audioModel.setFavorite(true);
-                    } else {
-                        audioModel.setFavorite(false);
-                    }*/
-                    audioModel.setId(id);
-                    audioModel.setPlay(false);
-                    audioModel.setSelected(false);
-                    audioModel.setCheckboxVisible(false);
-                    audioModel.setBitmap(bitmap);
-
-                    audioList.add(audioModel);
-                }
+        while (true) {
+            if (MusicDataService.isComplete) {
+                break;
             }
-            c.close();
+        }
+        new Thread(this::resumeServiceData).start();
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+
+                setAdapter();
+            }
+        });
+
+    }
+
+    private void resumeServiceData() {
+        for(int i =0; i<audioList.size(); i++) {
+
+            MediaMetadataRetriever mediaMetadataRetriever= new MediaMetadataRetriever();
+            try {
+                mediaMetadataRetriever.setDataSource(audioList.get(i).getPath());
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+
+            String duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+
+            File file = new File(audioList.get(i).getPath());
+            Uri sArtworkUri = Uri
+                    .parse("content://media/external/audio/albumart");
+            Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, audioList.get(i).getAlbumId());
+
+
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), albumArtUri);
+
+            } catch (FileNotFoundException exception) {
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+
+            audioList.get(i).setDuration(duration);
+            audioList.get(i).setBitmap(bitmap);
+
+
         }
 
         getActivity().runOnUiThread(new Runnable() {

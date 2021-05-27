@@ -167,30 +167,31 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.MyView
 
             }
             holder.txt_folder_item.setText(playListModel.getAudioList().size() + " song, " + playListModel.getVideoList().size() +" video");
-        }
+            holder.popup_menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String sa = playlists.get(listkeys.get(position));
+                    if(sa != null){
+                        List<Video> videoList;
+                        List<AudioModel> audioList;
+                        PlayListModel playListModel1 = new Gson().fromJson(sa, PlayListModel.class);
+                        if(playListModel1.getVideoList() != null && playListModel1.getVideoList().size() != 0)
+                            videoList = new ArrayList<>();
 
-        holder.popup_menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String sa = playlists.get(listkeys.get(position));
-                if(sa != null){
-                    List<Video> videoList;
-                    List<AudioModel> audioList;
-                    PlayListModel playListModel1 = new Gson().fromJson(sa, PlayListModel.class);
-                    if(playListModel1.getVideoList() != null && playListModel1.getVideoList().size() != 0)
-                        videoList = new ArrayList<>();
+                        if(playListModel1.getAudioList() != null && playListModel1.getAudioList().size() != 0)
+                            audioList = new ArrayList<>();
 
-                    if(playListModel1.getAudioList() != null && playListModel1.getAudioList().size() != 0)
-                        audioList = new ArrayList<>();
+                        videoList = playListModel1.getVideoList();
+                        audioList = playListModel1.getAudioList();
+                        showShortDialog(-1, videoList, audioList, listkeys.get(position));
 
-                    videoList = playListModel1.getVideoList();
-                    audioList = playListModel1.getAudioList();
-                    showShortDialog(-1, videoList, audioList, listkeys.get(position));
+                    }
 
                 }
+            });
+        }
 
-            }
-        });
+
 
 
     }

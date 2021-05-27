@@ -72,12 +72,16 @@ public class OnMenuAdapter extends RecyclerView.Adapter<OnMenuAdapter.ViewHolder
         holder.item_image.setColorFilter(ContextCompat.getColor(holder.item_image.getContext(), R.color.white), PorterDuff.Mode.SRC_IN);
         if(check == -1 && position == 5){
             holder.fragment_item.setVisibility(GONE);
+
         }
         if(check == -4 && position == 2){
             holder.fragment_item.setVisibility(GONE);
         }
+        if(check == -4 && position == 5){
+            holder.fragment_item.setVisibility(GONE);
+        }
 
-       // setOnPopupMenuListener(holder, position);
+        // setOnPopupMenuListener(holder, position);
     }
 
     @Override

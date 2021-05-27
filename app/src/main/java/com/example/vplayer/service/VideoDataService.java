@@ -36,12 +36,13 @@ public class VideoDataService extends Service {
 
     public static boolean isImageComplate = false;
     public static int videoCount = 0;
-    public static LinkedHashMap<String, ArrayList<Video>> videoDataHashMap = new LinkedHashMap<>();
+    //public static LinkedHashMap<String, ArrayList<Video>> videoDataHashMap = new LinkedHashMap<>();
     public static LinkedHashMap<String, ArrayList<Video>> videobucketimagesDataHashMap = new LinkedHashMap<>();
     public static ArrayList<Video> videoList = new ArrayList();
     public static ArrayList<FolderInfo> videobuckets = new ArrayList<>();
     static List<String> folderNameList = new ArrayList<>();
     public static boolean isParent = false;
+    ArrayList<String> listkeys = new ArrayList<>();
 
     @Nullable
     @Override
@@ -78,7 +79,7 @@ public class VideoDataService extends Service {
         }*/
 
         isImageComplate = false;
-        videoDataHashMap = new LinkedHashMap<>();
+        //videoDataHashMap = new LinkedHashMap<>();
         videoList = new ArrayList();
 
         new AsyncTaskRunner().execute();
@@ -93,7 +94,7 @@ public class VideoDataService extends Service {
             super.onPreExecute();
             videobuckets = new ArrayList();
             videobucketimagesDataHashMap = new LinkedHashMap<>();
-            videoDataHashMap = new LinkedHashMap<>();
+            //videoDataHashMap = new LinkedHashMap<>();
             videoList = new ArrayList();
         }
 
@@ -115,7 +116,7 @@ public class VideoDataService extends Service {
                     int duration = cursor.getInt(5);
                     long size = cursor.getLong(6);
                     String resolution = cursor.getString(7);
-                    int frameRate = getVideoFrameRate(path);
+                    //int frameRate = getVideoFrameRate(path);
                     file = new File(path);
                     Video video = new Video();
                     video.setFullPath(path);
@@ -139,7 +140,7 @@ public class VideoDataService extends Service {
                         } else {
                             video.setResolution("0");
                         }
-                        video.setFrameRate(frameRate);
+                        //video.setFrameRate(frameRate);
 
                         File folderFile = new File(VideoPlayerUtils.getParentPath(path));
                         getFolderName(folderFile);
@@ -165,7 +166,7 @@ public class VideoDataService extends Service {
                 cursor.close();
             }
             Set<String> keys = videobucketimagesDataHashMap.keySet();
-            ArrayList<String> listkeys = new ArrayList<>();
+            listkeys = new ArrayList<>();
             listkeys.addAll(keys);
 
             for (int i = 0; i < listkeys.size(); i++) {
@@ -187,6 +188,7 @@ public class VideoDataService extends Service {
         @Override
         protected void onPostExecute(String result) {
             isImageComplate = true;
+
 
         }
 

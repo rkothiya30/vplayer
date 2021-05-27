@@ -30,6 +30,7 @@ import com.example.vplayer.fragment.adapter.MusicSAdapter;
 import com.example.vplayer.fragment.adapter.VideoSAdapter;
 import com.example.vplayer.fragment.utils.VideoPlayerUtils;
 import com.example.vplayer.model.AudioModel;
+import com.example.vplayer.service.MusicService;
 import com.example.vplayer.service.VideoDataService;
 import com.example.vplayer.ui.activity.SelectItemActivity;
 
@@ -38,7 +39,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.example.vplayer.ui.fragment.MusicFragment.audioList;
+import static com.example.vplayer.service.MusicDataService.audioList;
+
 
 public class MusicSFragment extends Fragment {
 

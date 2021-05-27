@@ -16,6 +16,7 @@ import android.view.WindowManager;
 
 import com.example.vplayer.MainActivity;
 import com.example.vplayer.R;
+import com.example.vplayer.service.MusicDataService;
 import com.example.vplayer.service.VideoDataService;
 
 import java.util.ArrayList;
@@ -67,9 +68,11 @@ public class PermissionActivity extends AppCompatActivity {
     private void showHomeScreen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startService(new Intent(PermissionActivity.this, VideoDataService.class));
+            startService(new Intent(PermissionActivity.this, MusicDataService.class));
             //startService(new Intent(PermissionActivity.this, ImageDataService.class));
         } else {
             startService(new Intent(PermissionActivity.this, VideoDataService.class));
+            startService(new Intent(PermissionActivity.this, MusicDataService.class));
         }
 
 

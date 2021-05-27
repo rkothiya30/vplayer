@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.VPlayer">
-        <activity android:name=".ui.activity.PrivacyPolicyActivity"></activity>
+        <activity android:name=".ui.activity.SearchActivity"></activity>
+        <activity android:name=".ui.activity.PrivacyPolicyActivity" />
         <activity android:name=".ui.activity.PlayPlayListActivity" />
         <activity android:name=".ui.activity.EmptyActivity" />
         <activity android:name=".ui.activity.SelectItemActivity" />
@@ -51,6 +52,9 @@
         <service
             android:name=".service.VideoDataService"
             android:foregroundServiceType="location" />
+        <service
+            android:name=".service.MusicDataService"
+             />
         <service
             android:name=".service.FloatingWidgetService"
             android:enabled="true"

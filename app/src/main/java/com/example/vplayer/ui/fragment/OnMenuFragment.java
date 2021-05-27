@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,6 +34,7 @@ import com.example.vplayer.model.PlayListModel;
 import com.example.vplayer.model.Video;
 import com.example.vplayer.service.MusicService;
 import com.example.vplayer.service.VideoPlayAsAudioService;
+import com.example.vplayer.ui.activity.PlayingSongActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.gson.Gson;
 
@@ -136,6 +138,7 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
         sortList.setAdapter(onMenuAdapter);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onItemClick(int item) {
        // preferencesUtility.setSortByVideo(sortByList.indexOf(item));
@@ -157,6 +160,8 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
                     position = 0;
                     startBackgroundVideoPlayService();
                 } else if(check == -3){
+                    PlayingSongActivity.activityName = "OnMenuFragment";
+
                     Intent intent = new Intent(getContext(), MusicService.class);
                     intent.putExtra("ServicePosition", position);
                     intent.putExtra("ActivityName", "OnMenuFragment");

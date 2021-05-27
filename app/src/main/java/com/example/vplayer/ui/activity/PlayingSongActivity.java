@@ -36,6 +36,7 @@ import com.example.vplayer.fragment.utils.Constant;
 import com.example.vplayer.fragment.utils.DbHelper;
 import com.example.vplayer.fragment.utils.Utilities;
 import com.example.vplayer.model.AudioModel;
+import com.example.vplayer.service.MusicDataService;
 import com.example.vplayer.service.MusicService;
 import com.example.vplayer.ui.fragment.AddPlaylistFragment;
 import com.example.vplayer.ui.fragment.OnPlaylistMenuFragment;
@@ -51,8 +52,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.example.vplayer.fragment.adapter.PlayListItemAdapter.aList;
+import static com.example.vplayer.service.MusicDataService.audioList;
 import static com.example.vplayer.service.MusicService.mediaPlayer;
-import static com.example.vplayer.ui.fragment.MusicFragment.audioList;
 
 public class PlayingSongActivity extends AppCompatActivity implements ActionPlaying, ServiceConnection/*, MediaPlayer.OnCompletionListener*/ {
 
@@ -321,6 +322,9 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
             position = getIntent().getIntExtra("Position", -1);
         } else if (activityName.equals("OnMenuFragment")) {
             songsList = audioList;
+        } else if (activityName.equals("MusicSearch")) {
+            songsList = audioList;
+            position =0;
         }
 
        /* if(activityName.equals("Album"))
@@ -526,8 +530,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
 
     @Override
     public void onBackPressed() {
-        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
+
         super.onBackPressed();
         //overridePendingTransition( R.anim.slide_in_down, R.anim.slide_out_down );
         finish();
@@ -543,6 +546,12 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
                 currentSongIndex = 0;
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        musicService.stopForeground(true);
+        super.onDestroy();
     }
 
     @Override
