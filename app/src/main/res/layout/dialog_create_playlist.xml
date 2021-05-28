@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:cardBackgroundColor="@color/theme_color"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="@dimen/_10sdp"
     android:layout_marginBottom="@dimen/_5sdp"
     app:cardElevation="0dp">
@@ -21,7 +21,7 @@
             android:layout_marginTop="@dimen/_15sdp"
             android:text="Create Playlist"
             android:layout_marginLeft="20dp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="@dimen/_20sdp"
             android:textStyle="bold" />
 
@@ -53,14 +53,14 @@
                 android:layout_marginTop="@dimen/_7sdp"
                 android:layout_marginRight="@dimen/_6sdp"
                 android:layout_marginBottom="@dimen/_7sdp"
-                android:background="@color/theme_color"
+                android:background="@color/white"
+                android:hint="ENTER PLAYLIST NAME"
                 android:imeOptions="actionGo"
-                android:textColorHighlight="@color/white"
                 android:inputType="text"
                 android:singleLine="true"
 
-                android:hint="ENTER PLAYLIST NAME"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
+                android:textColorHighlight="@color/Grey_600"
                 android:textColorHint="@color/Grey_500"
                 android:textSize="@dimen/_16sdp" />
 

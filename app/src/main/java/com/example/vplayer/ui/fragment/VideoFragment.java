@@ -1,7 +1,9 @@
 package com.example.vplayer.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -119,7 +121,7 @@ public class VideoFragment extends Fragment {
         videoListWithAd.addAll(videoList);
 
         //videoFolderAdapter.setVideoList(videoListWithAd, true);
-        refreshLayout.setRefreshing(false);
+
     }
 
     @Override
@@ -158,9 +160,11 @@ public class VideoFragment extends Fragment {
 
 
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
 
         new DownloadWebPageTask().execute();
     }
@@ -168,15 +172,15 @@ public class VideoFragment extends Fragment {
     public void initView() {
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3, RecyclerView.VERTICAL, false);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        /*gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 if(position==0)
                     return 3;
                 return 1;
             }
-        });
-        videoLList.setLayoutManager(gridLayoutManager);
+        });*/
+        videoLList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         videoLList.setNestedScrollingEnabled(false);
         videoLList.setHasFixedSize(true);
@@ -196,7 +200,7 @@ public class VideoFragment extends Fragment {
                     if (firstPos > 0) {
                         refreshLayout.setEnabled(false);
                     } else {
-                        refreshLayout.setEnabled(true);
+                        refreshLayout.setEnabled(false);
                         if (videoLList.getScrollState() == 1)
                             if (refreshLayout.isRefreshing())
                                 videoLList.stopScroll();
@@ -208,12 +212,6 @@ public class VideoFragment extends Fragment {
             }
         });
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new DownloadWebPageTask().execute();
-            }
-        });
 
         videoFolderAdapter.setOnItemClickListener(new VideoFolderAdapter.ClickListener() {
             @Override
@@ -276,7 +274,7 @@ public class VideoFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            refreshLayout.setRefreshing(true);
+
             emptyString.setVisibility(View.GONE);
         }
 
@@ -332,7 +330,7 @@ public class VideoFragment extends Fragment {
                     }
                     //sortList();
                 }
-                refreshLayout.setRefreshing(false);
+
 
             } catch (Exception e) {
             }
@@ -396,7 +394,7 @@ public class VideoFragment extends Fragment {
                 }
             }
             /*     sortList();*/
-            refreshLayout.setRefreshing(false);
+
         }
     }
 

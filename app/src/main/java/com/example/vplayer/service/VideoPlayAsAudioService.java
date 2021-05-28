@@ -157,12 +157,17 @@ public class VideoPlayAsAudioService extends Service {
             public void onCompletion(MediaPlayer mp) {
                 if (videoPosition != videoList.size()) {
                     videoPosition = videoPosition + 1;
-                    if (videoList.get(videoPosition).getLayoutType() == 1) {
-                        videoPosition = videoPosition + 1;
+                    if(videoPosition >= (videoList.size()))
+                    {
+
                     }
-                    isRefresh = true;
-                    handler.removeCallbacks(runnable);
-                    videoPlay();
+                    else if (videoList.get(videoPosition).getLayoutType() == 1) {
+                        videoPosition = videoPosition + 1;
+                        isRefresh = true;
+                        handler.removeCallbacks(runnable);
+                        videoPlay();
+                    }
+
                 }
             }
         });
@@ -302,12 +307,21 @@ public class VideoPlayAsAudioService extends Service {
         expandedView.setTextViewText(R.id.artistName, text);
         expandedView.setImageViewResource(R.id.play_pause, playButtonResId);
 
-        notificationBuilder.setSmallIcon(R.drawable.vplayer)
-                .setContentIntent(clickIntent)
-                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                        .setMediaSession(mediaSessionCompat.getSessionToken()))
-                .setCustomContentView(contentView)
-                .setCustomBigContentView(expandedView);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationBuilder.setSmallIcon(R.drawable.vplayer)
+                    .setContentIntent(clickIntent)
+
+                    .setCustomContentView(contentView)
+                    .setCustomBigContentView(expandedView);
+        }else {
+
+            notificationBuilder.setSmallIcon(R.drawable.vplayer)
+                    .setContentIntent(clickIntent)
+                    .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                            .setMediaSession(mediaSessionCompat.getSessionToken()))
+                    .setCustomContentView(contentView)
+                    .setCustomBigContentView(expandedView);
+        }
 
         if (isPlaying) {
             contentView.setOnClickPendingIntent(R.id.play_pause, retrievePlaybackAction(PAUSE_ACTION));

@@ -50,8 +50,8 @@ public class MusicDataService extends Service {
         isComplete = false;
 
         Observable.fromCallable(() -> {
-            Log.e("ImageGet", "com.gallery.picture.foto.service photo getting start....");
-            Log.d("servicetime", String.valueOf(Calendar.getInstance().getTime()));
+           // Log.e("ImageGet", "com.gallery.picture.foto.service photo getting start....");
+           // Log.d("servicetime", String.valueOf(Calendar.getInstance().getTime()));
             audioList.clear();
 
             getAllAudioList();
@@ -68,7 +68,7 @@ public class MusicDataService extends Service {
                     isComplete = true;
                     Intent intent1 = new Intent("LoardDataComplete");
                     intent1.putExtra("completed", true);
-                    Log.e("ImageGet", "com.gallery.picture.foto.service photo set list....");
+                    //Log.e("ImageGet", "com.gallery.picture.foto.service photo set list....");
                     sendBroadcast(intent1);
                 });
 

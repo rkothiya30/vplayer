@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/theme_bg"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".ui.activity.SearchActivity">
 
@@ -13,7 +13,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/theme_color"
+        android:background="@color/tab_selected_color"
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp"
         app:layout_collapseMode="pin"
@@ -31,8 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                app:cardBackgroundColor="@color/theme_color"
                 app:cardCornerRadius="@dimen/_15sdp"
+                app:cardBackgroundColor="#63a3f3"
                 android:visibility="visible"
                 app:cardElevation="0dp">
 
@@ -136,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_no_data"
                 android:text="No Video"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_18sdp" />
 
         </LinearLayout>

@@ -93,7 +93,7 @@
 
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_18sdp" />
             <!--android:marqueeRepeatLimit="marquee_forever"-->
 
@@ -151,7 +151,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:paddingBottom="@dimen/_3sdp"
                     android:textSize="@dimen/_14sdp" />
             </LinearLayout>
@@ -174,7 +174,7 @@
 
                 android:layout_centerVertical="true"
                 android:background="?actionBarItemBackground"
-                app:tint="@color/white"
+                app:tint="@color/black"
 
                 android:src="@drawable/ic_baseline_more_vert_24" />
 
@@ -185,7 +185,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:background="?actionBarItemBackground"
-                app:tint="@color/white"
+                app:tint="@color/black"
                 android:visibility="gone"
                 android:src="@drawable/ic_unchecked" />
             <ImageView

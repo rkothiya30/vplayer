@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#090d11"
+    android:background="@color/white"
 
     android:orientation="vertical">
 
@@ -17,10 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/_12sdp"
-            android:paddingTop="@dimen/_8sdp"
-            android:paddingBottom="@dimen/_8sdp"
-            android:paddingRight="@dimen/_12sdp">
+            android:padding="@dimen/_12sdp">
 
             <TextView
 
@@ -31,9 +28,9 @@
                 android:singleLine="true"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:textColor="@color/white"
+                android:textColor="@color/Grey_500"
                 android:text="VPlayer"
-                android:textSize="@dimen/_18sdp" />
+                android:textSize="@dimen/_16sdp" />
 
 
         </LinearLayout>

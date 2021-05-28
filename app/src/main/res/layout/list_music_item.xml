@@ -7,7 +7,7 @@
     android:layout_marginLeft="@dimen/_10sdp"
     android:layout_marginTop="@dimen/_7sdp"
     android:layout_marginRight="@dimen/_10sdp"
-    android:background="@color/theme_bg"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -16,16 +16,16 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="@dimen/_44sdp"
+            android:layout_width="@dimen/_60sdp"
             android:layout_height="wrap_content">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_main_view"
-                android:layout_width="@dimen/_40sdp"
-                android:layout_height="@dimen/_40sdp"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_60sdp"
                 android:layout_marginTop="@dimen/_3sdp"
                 android:visibility="visible"
-                app:cardBackgroundColor="@color/Grey_300"
+                app:cardBackgroundColor="#f5fafa"
                 app:cardCornerRadius="@dimen/_4sdp"
                 app:cardElevation="0dp">
 
@@ -37,8 +37,8 @@
                    >
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="@dimen/_40sdp"
-                        android:layout_height="@dimen/_40sdp"
+                        android:layout_width="@dimen/_60sdp"
+                        android:layout_height="@dimen/_60sdp"
                         android:layout_gravity="center"
 
                         android:scaleType="centerCrop"
@@ -48,27 +48,16 @@
 
 
                 </RelativeLayout>
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:cardCornerRadius="@dimen/_2sdp">
-
-                    <LinearLayout
-                        android:layout_width="@dimen/_40sdp"
-                        android:layout_height="@dimen/_40sdp"
-                        android:gravity="center">
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/iv_mime_type"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="match_parent"
                             android:layout_gravity="center"
+                            android:visibility="gone"
                             android:src="@drawable/ic_musical_note" />
 
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+
 
 
             </androidx.cardview.widget.CardView>
@@ -94,7 +83,7 @@
                 android:ellipsize="middle"
                 android:singleLine="true"
                 android:text="My Favourites"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_16sdp" />
 
 
@@ -103,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/txt_folder_name"
-                android:layout_alignParentLeft="true"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:layout_below="@id/txt_music_name"
                 android:layout_marginRight="@dimen/_7sdp"
                 android:orientation="horizontal">
@@ -114,10 +103,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
 
-                    android:layout_gravity="center_vertical"
+
                     android:singleLine="true"
                     android:text="0 song, 0 video"
-                    android:textColor="@color/white"
+                    android:textColor="#dadde4"
                     android:textSize="@dimen/_14sdp" />
 
             </LinearLayout>
@@ -135,8 +124,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="?actionBarItemBackground"
-                    app:tint="@color/white"
+                    android:background="@color/white"
+                    app:tint="@color/black"
 
                     android:src="@drawable/ic_baseline_more_vert_24" />
 

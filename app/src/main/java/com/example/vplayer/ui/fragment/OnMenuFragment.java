@@ -195,14 +195,37 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
                     RenameMusicDialog.getInstance(getActivity(),title, audioModel.getId(), audioModel)
                             .show(getFragmentManager(), "");
                 } else if(check == -4){
+                    LinkedHashMap<String, String> playlists = preferencesUtility.getPlaylists();
+                    String playListString;
+                    if (playlists.containsKey(playListName)) {
 
+                        String s = playlists.get(playListName);
+
+                        PlayListModel playListModel1 = new Gson().fromJson(s, PlayListModel.class);
+                        List<Video> videoList1 = playListModel1.getVideoList();
+                        videoList1.clear();
+                        List<AudioModel> audioList1 = playListModel1.getAudioList();
+                        audioList1.clear();
+
+
+
+                        playListModel1 =new PlayListModel(audioList1, videoList1);
+                        playListString =new Gson().toJson(playListModel1);
+
+                        allPlaylist.put(playListName, playListString);
+
+
+
+                    }
+                    preferencesUtility.setPlaylists(allPlaylist);
+                    RxBus.getInstance().post(new UpdateAdapterEvent());
                 }
 
                 break;
             case 4:
                 if(check == -2) {
                     VideoPlayerUtils.shareVideo(OnMenuFragment.video.getId(), getActivity());
-                } else if(check == -1 || check == -4){
+                } else if(check == -1){
                     List<String> paths = new ArrayList<>();
                     for(int i = 0; i<videoList.size(); i++){
                         paths.add(videoList.get(i).getFullPath());
@@ -228,38 +251,23 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
                     RenameMusicDialog.getInstance(getActivity(),title, audioModel.getId(), audioModel)
                             .show(getFragmentManager(), "");
                 } else if(check == -4){
-                    LinkedHashMap<String, String> playlists = preferencesUtility.getPlaylists();
-                    String playListString;
-                    if (playlists.containsKey(playListName)) {
-
-                        String s = playlists.get(playListName);
-
-                        PlayListModel playListModel1 = new Gson().fromJson(s, PlayListModel.class);
-                        List<Video> videoList1 = playListModel1.getVideoList();
-                        videoList1.clear();
-                        List<AudioModel> audioList1 = playListModel1.getAudioList();
-                        audioList1.clear();
-
-
-
-                        playListModel1 =new PlayListModel(audioList1, videoList1);
-                        playListString =new Gson().toJson(playListModel1);
-
-                    allPlaylist.put(playListName, playListString);
-
-
-
+                    List<String> paths = new ArrayList<>();
+                    for(int i = 0; i<videoList.size(); i++){
+                        paths.add(videoList.get(i).getFullPath());
                     }
-                    preferencesUtility.setPlaylists(allPlaylist);
-                    RxBus.getInstance().post(new UpdateAdapterEvent());
+                    for(int i = 0; i<audioList.size(); i++){
+                        paths.add(audioList.get(i).getPath());
+                    }
+                    VideoPlayerUtils.share( getContext(), paths);
                 }
                 break;
             case 5:
-                VideoDetailsDialog.getInstance(OnMenuFragment.video)
-                        .show(((AppCompatActivity) getContext())
-                                .getSupportFragmentManager(), "");
+                if(check == -2) {
+                    VideoDetailsDialog.getInstance(OnMenuFragment.video)
+                            .show(( (AppCompatActivity) getContext() )
+                                    .getSupportFragmentManager(), "");
 
-
+                }
                 break;
 
         }
@@ -304,9 +312,9 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
 
             preferencesUtility.setVideoList(videoList);
 
-            getContext().stopService(new Intent(getContext(), VideoPlayAsAudioService.class));
+            getActivity().stopService(new Intent(getActivity(), VideoPlayAsAudioService.class));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                getContext().startForegroundService(new Intent(getContext(), VideoPlayAsAudioService.class).putExtra(EXTRA_VIDEO_POSITION, position));
+                getContext().startService(new Intent(getContext(), VideoPlayAsAudioService.class).putExtra(EXTRA_VIDEO_POSITION, position));
             } else {
                 getContext().startService(new Intent(getContext(), VideoPlayAsAudioService.class).putExtra(EXTRA_VIDEO_POSITION, position));
             }

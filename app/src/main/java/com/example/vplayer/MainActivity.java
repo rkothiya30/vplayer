@@ -29,16 +29,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.black, this.getTheme()));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.tab_selected_color, this.getTheme()));
             getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.black));
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.black));
-            getWindow().setStatusBarColor(getResources().getColor(R.color.black));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.tab_selected_color));
         }
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 
         //toolbar = findViewById(R.id.toolbar);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.darkGray)));
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.tab_selected_color)));
 
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).addToBackStack("").commit();

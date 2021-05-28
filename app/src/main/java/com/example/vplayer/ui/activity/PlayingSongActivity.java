@@ -1,10 +1,12 @@
 package com.example.vplayer.ui.activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
+import android.animation.ObjectAnimator;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,6 +15,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -24,21 +27,27 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.vplayer.MainActivity;
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.adapter.PlayListItemAdapter;
 import com.example.vplayer.fragment.utils.ActionPlaying;
 import com.example.vplayer.fragment.utils.Constant;
 import com.example.vplayer.fragment.utils.DbHelper;
 import com.example.vplayer.fragment.utils.Utilities;
+import com.example.vplayer.fragment.utils.VideoPlayerUtils;
 import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.service.MusicDataService;
 import com.example.vplayer.service.MusicService;
 import com.example.vplayer.ui.fragment.AddPlaylistFragment;
+import com.example.vplayer.ui.fragment.OnMenuFragment;
 import com.example.vplayer.ui.fragment.OnPlaylistMenuFragment;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
@@ -63,11 +72,12 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
     private Uri songAlbumArt;
     private boolean isJustOpen = false;
     public static int position, currentSongIndex;
-    private CircularImageView ivSongImage;
+    private CircularImageView ivSongImage, civDiskPhoto;
     private TextView tvSongName, tvArtistName, tvDuration, tvSongPlayedTime;
     // public static MediaPlayer mp;
     public static ImageView ivPlayPause;
     private ImageView ivPrevious, ivNext;
+    private ImageView ivShareSong;
     private AppCompatSeekBar seekBar;
 
     Handler mHandler;
@@ -79,6 +89,9 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
     SharedPreferences.Editor editor;
     DbHelper DB;
     public static List<String> createdPlaylist;
+    Animation rotation;
+    private ObjectAnimator anim;
+
 
     private Intent playIntent;
     private boolean musicBound = false;
@@ -138,6 +151,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
 
         ivBAck = findViewById(R.id.ivBackSong);
         ivSongImage = findViewById(R.id.civSongPhoto);
+        civDiskPhoto = findViewById(R.id.civDiskPhoto);
         tvSongName = findViewById(R.id.tvSongName);
         tvArtistName = findViewById(R.id.tvArtistName);
         tvDuration = findViewById(R.id.tvSongTotalTime);
@@ -148,6 +162,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
         seekBar = findViewById(R.id.sbSongDuration);
         ivFavouritesSong = findViewById(R.id.ivFavouritesSong);
         ivAddToPlaylist = findViewById(R.id.ivAddToPlaylist);
+        ivShareSong = findViewById(R.id.ivShareSong);
 
         ivShuffleSong = findViewById(R.id.ivShuffleSong);
         //ivSearch = findViewById(R.id.ivSearch);
@@ -169,6 +184,12 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
             }
         });
 
+        ivShareSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VideoPlayerUtils.shareAudio(songsList.get(position).getId(), PlayingSongActivity.this);
+            }
+        });
         /*ivPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,9 +215,9 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
                     Collections.shuffle(shuffledList);
                     IS_SHUFFLED = true;
                     Toast.makeText(PlayingSongActivity.this, "Songs Shuffled", Toast.LENGTH_SHORT).show();
-                    ivShuffleSong.setColorFilter(ContextCompat.getColor(PlayingSongActivity.this, R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    ivShuffleSong.setColorFilter(ContextCompat.getColor(PlayingSongActivity.this, R.color.white), PorterDuff.Mode.SRC_IN);
                 } else {
-                    ivShuffleSong.setColorFilter(ContextCompat.getColor(PlayingSongActivity.this, R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    ivShuffleSong.setColorFilter(ContextCompat.getColor(PlayingSongActivity.this, R.color.white), PorterDuff.Mode.SRC_IN);
                     IS_SHUFFLED = false;
                     Toast.makeText(PlayingSongActivity.this, "Playing in original sequence", Toast.LENGTH_SHORT).show();
                 }
@@ -213,13 +234,13 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
                     boolean checkAdd = DB.addToFavourites(songPath, songTitle, artistName, songAlbum, songDuration, songId, songAlbumArt.toString());
                     if (checkAdd) {
                         Toast.makeText(PlayingSongActivity.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
-                        ivFavouritesSong.setColorFilter(ContextCompat.getColor(PlayingSongActivity.this, R.color.tab_selected_color), android.graphics.PorterDuff.Mode.MULTIPLY);
+                        ivFavouritesSong.setColorFilter(ContextCompat.getColor(PlayingSongActivity.this, R.color.tab_selected_color), PorterDuff.Mode.SRC_IN);
                     }
                 } else {
                     boolean checkDelFav = DB.removeFromFavourites(songsList.get(position).getName());
                     if (checkDelFav) {
                         Toast.makeText(PlayingSongActivity.this, "Remove from Favourites", Toast.LENGTH_SHORT).show();
-                        ivFavouritesSong.setColorFilter(ContextCompat.getColor(PlayingSongActivity.this, R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
+                        ivFavouritesSong.setColorFilter(ContextCompat.getColor(PlayingSongActivity.this, R.color.white), PorterDuff.Mode.SRC_IN);
                     }
                 }
             }
@@ -296,6 +317,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
         }
     }
 
+
     public void getIntentMethod() {
 
 
@@ -364,12 +386,12 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
             Intent intent = new Intent(this, MusicService.class);
             intent.putExtra("ServicePosition", position);
             startService(intent);
-            ivPlayPause.setImageResource(R.drawable.ic_pause);
+            ivPlayPause.setImageResource(R.drawable.ic_pause_outlined);
         } else if (currentSongIndex != position) {
             Intent intent = new Intent(this, MusicService.class);
             intent.putExtra("ServicePosition", position);
             startService(intent);
-            ivPlayPause.setImageResource(R.drawable.ic_pause);
+            ivPlayPause.setImageResource(R.drawable.ic_pause_outlined);
         }
         /*else if(!currentActivityName.equals(activityName))
         {
@@ -435,6 +457,21 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
         } else {
             ivSongImage.setImageResource(R.drawable.ic_music_icon_round);
         }
+        rotation = AnimationUtils.loadAnimation(PlayingSongActivity.this, R.anim.rotate);
+        rotation.setFillAfter(true);
+        rotation.setInterpolator(new LinearInterpolator());
+        civDiskPhoto.startAnimation(rotation);
+        rotation = AnimationUtils.loadAnimation(PlayingSongActivity.this, R.anim.rotate);
+        rotation.setFillAfter(true);
+        rotation.setInterpolator(new LinearInterpolator());
+        ivSongImage.startAnimation(rotation);
+
+
+        /*anim = ObjectAnimator.ofFloat(ivPlayPause, "rotation", 0, 360);
+        anim.setDuration(1000);
+        anim.setRepeatCount(5);
+        anim.setRepeatMode(ObjectAnimator.RESTART);*/
+
         currentSongIndex = position;
 
         tvArtistName.setText(artistName);
@@ -446,9 +483,9 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
 
         Cursor checkFavUser = DB.getFavouritesFromId(songsList.get(position).getName());
         if (checkFavUser.getCount() > 0) {
-            ivFavouritesSong.setColorFilter(ContextCompat.getColor(this, R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
+            ivFavouritesSong.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_IN);
         } else {
-            ivFavouritesSong.setColorFilter(ContextCompat.getColor(this, R.color.md_green_500), android.graphics.PorterDuff.Mode.MULTIPLY);
+            ivFavouritesSong.setColorFilter(ContextCompat.getColor(this, R.color.md_green_500), PorterDuff.Mode.SRC_IN);
         }
 
         Cursor checkUser = DB.getRecentSongFromId(songsList.get(position).getId());
@@ -600,7 +637,8 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
         if (musicService.isPlaying()) {
             musicService.pause();
             musicService.showNotification(R.drawable.ic_play);
-            ivPlayPause.setImageResource(R.drawable.ic_play);
+
+            ivPlayPause.setImageResource(R.drawable.ic_play_outlined);
             seekBar.setMax(musicService.getDuration() / 1000);
             PlayingSongActivity.this.runOnUiThread(new Runnable() {
                 @Override
@@ -616,7 +654,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
         } else {
             musicService.start();
             musicService.showNotification(R.drawable.ic_pause);
-            ivPlayPause.setImageResource(R.drawable.ic_pause);
+            ivPlayPause.setImageResource(R.drawable.ic_pause_outlined);
             seekBar.setMax(musicService.getDuration() / 1000);
             PlayingSongActivity.this.runOnUiThread(new Runnable() {
                 @Override
@@ -699,7 +737,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
                 });
 
                 musicService.onComplete();
-                ivPlayPause.setImageResource(R.drawable.ic_pause);
+                ivPlayPause.setImageResource(R.drawable.ic_pause_outlined);
                 musicService.start();
                 musicService.showNotification(R.drawable.ic_pause);
             }
@@ -723,7 +761,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
                 }
             });
             musicService.onComplete();
-            ivPlayPause.setImageResource(R.drawable.ic_pause);
+            ivPlayPause.setImageResource(R.drawable.ic_pause_outlined);
             musicService.showNotification(R.drawable.ic_pause);
         }
     }
@@ -769,7 +807,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
                         }
                     });
                     musicService.onComplete();
-                    ivPlayPause.setImageResource(R.drawable.ic_pause);
+                    ivPlayPause.setImageResource(R.drawable.ic_pause_outlined);
                     musicService.start();
                     musicService.showNotification(R.drawable.ic_pause);
                 }
@@ -791,7 +829,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
                 }
             });
             musicService.onComplete();
-            ivPlayPause.setImageResource(R.drawable.ic_pause);
+            ivPlayPause.setImageResource(R.drawable.ic_pause_outlined);
             musicService.start();
             musicService.showNotification(R.drawable.ic_pause);
         }
@@ -814,7 +852,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
                 }
             });
             musicService.onComplete();
-            ivPlayPause.setImageResource(R.drawable.ic_pause);
+            ivPlayPause.setImageResource(R.drawable.ic_pause_outlined);
             musicService.showNotification(R.drawable.ic_pause);
         }
     }
@@ -830,9 +868,9 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
         musicService.onComplete();
         FIRST_OPEN = false;
         if (mediaPlayer.isPlaying()) {
-            ivPlayPause.setImageResource(R.drawable.ic_pause);
+            ivPlayPause.setImageResource(R.drawable.ic_pause_outlined);
         } else {
-            ivPlayPause.setImageResource(R.drawable.ic_play);
+            ivPlayPause.setImageResource(R.drawable.ic_play_outlined);
         }
         // setBottomLayout();
         /*Intent intent = new Intent(this, MusicService.class);

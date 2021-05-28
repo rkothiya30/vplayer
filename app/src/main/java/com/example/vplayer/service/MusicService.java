@@ -276,7 +276,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     public void showNotification(int playPauseButton) {
 
         // tvDuration.setText(formattedTime(Integer.parseInt(songsList.get(position).getDuration()) / 1000));
@@ -309,31 +309,47 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         }
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
+        Notification notification;
         //NotificationChannel mChannel = notificationManager.getNotificationChannel(CHANNEL_ID2);
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             NotificationChannel channel2 = new NotificationChannel(CHANNEL_ID2, CHANNEL_ID2, NotificationManager.IMPORTANCE_LOW);
             channel2.setDescription("Channel 2 desc...");
             channel2.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            NotificationManager notificationManager =(NotificationManager) getSystemService(NotificationManager.class);
 // notificationManager.createNotificationChannel(channel1);
             notificationManager.createNotificationChannel(channel2);
+
+            notification = new Notification.Builder(this, CHANNEL_ID2)
+                    .setSmallIcon(R.drawable.ic_play)
+                    .setLargeIcon(thumb)
+                    .setContentTitle(songsList.get(position).getName())
+                    .setContentText(songsList.get(position).getArtist())
+                    .addAction(R.drawable.ic_previous, "previous", prevPending)
+                    .addAction(playPauseButton, "Pause", pausePending)
+                    .addAction(R.drawable.ic_next, "Next", nextPending)
+
+                    .setOnlyAlertOnce(true)
+                    .setContentIntent(contentIntent)
+                    .build();
+        } else {
+
+
+            notification = new NotificationCompat.Builder(this, CHANNEL_ID2)
+                    .setSmallIcon(R.drawable.ic_play)
+                    .setLargeIcon(thumb)
+                    .setContentTitle(songsList.get(position).getName())
+                    .setContentText(songsList.get(position).getArtist())
+                    .addAction(R.drawable.ic_previous, "previous", prevPending)
+                    .addAction(playPauseButton, "Pause", pausePending)
+                    .addAction(R.drawable.ic_next, "Next", nextPending)
+                    .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                            .setMediaSession(mediaSessionCompat.getSessionToken()))
+                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                    .setOnlyAlertOnce(true)
+                    .setContentIntent(contentIntent)
+                    .build();
         }
-
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID2)
-                .setSmallIcon(R.drawable.ic_play)
-                .setLargeIcon(thumb)
-                .setContentTitle(songsList.get(position).getName())
-                .setContentText(songsList.get(position).getArtist())
-                .addAction(R.drawable.ic_previous, "previous", prevPending)
-                .addAction(playPauseButton, "Pause", pausePending)
-                .addAction(R.drawable.ic_next, "Next", nextPending)
-                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                        .setMediaSession(mediaSessionCompat.getSessionToken()))
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setOnlyAlertOnce(true)
-                .setContentIntent(contentIntent).build();
 
       /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             // You only need to create the channel on API 26+ devices
@@ -387,7 +403,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public void onDestroy() {
-       // stopForeground(true);
+       stopForeground(true);
 
         super.onDestroy();
     }

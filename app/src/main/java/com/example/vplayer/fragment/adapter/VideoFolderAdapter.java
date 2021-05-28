@@ -120,7 +120,7 @@ public class VideoFolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         switch (viewType) {
             case ITEM_VIDEO_TYPE:
-                return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.folder_grid_item, parent, false));
+                return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.folder_list_item, parent, false));
             case ITEM_CONTINUE_TYPE:
                 return new ContinueVideoVideHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.continue_watching, parent, false));
 

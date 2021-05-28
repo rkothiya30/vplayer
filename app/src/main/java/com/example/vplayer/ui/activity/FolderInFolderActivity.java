@@ -54,7 +54,7 @@ public class FolderInFolderActivity extends AppCompatActivity {
     RecyclerView videoList;
     List<Video> videoListList;
     VideoAdapter videoAdapter;
-    TextView text_title, videoTitle, tv_size;
+    TextView text_title, videoTitle;
     ImageView iv_back;
     AppCompatImageView iv_list_grid, iv_search;
 
@@ -82,11 +82,11 @@ public class FolderInFolderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_folder_in_folder);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.black, this.getTheme()));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.tab_selected_color, this.getTheme()));
             getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.black));
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.black));
-            getWindow().setStatusBarColor(getResources().getColor(R.color.black));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.tab_selected_color));
         }
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 
@@ -99,7 +99,7 @@ public class FolderInFolderActivity extends AppCompatActivity {
         iv_list_grid = findViewById(R.id.iv_list_grid);
         //appbar = findViewById(R.id.appbar);
         videoTitle = findViewById(R.id.videoTitle);
-        tv_size = findViewById(R.id.tv_size);
+
         iv_search = findViewById(R.id.iv_search);
 
         iv_list_grid.setOnClickListener(new View.OnClickListener() {
@@ -137,12 +137,13 @@ public class FolderInFolderActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         text_title.setText(folderName);
         File f = new File(videobucketimagesDataHashMap.get(folderName).get(0).getFullPath());
-        tv_size.setText(VideoPlayerUtils.formateSize(folderSize(new File(f.getParentFile().getAbsolutePath()))));
+        //tv_size.setText(VideoPlayerUtils.formateSize(folderSize(new File(f.getParentFile().getAbsolutePath()))));
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.darkGray)));
 
         isGrid = preferencesUtility.getDirList_Grid();
         initView();
         renameEvent();
+        DeleteEvent();
 
 
         videoAdapter.setOnItemClickListener(new VideoAdapter.ClickListener() {
@@ -252,23 +253,8 @@ public class FolderInFolderActivity extends AppCompatActivity {
 
                             }
 
-                        /*if (videoAdapter != null) {
-                            videoAdapter.notifyDataSetChanged();
-                        } else {*/
                             setAdapter();
-                       /* }*/
-
-                        /*if (documentList != null && documentList.size() != 0) {
-                            recyclerView.setVisibility(View.VISIBLE);
-                            llEmpty.setVisibility(View.GONE);
-
-                        } else {
-                            recyclerView.setVisibility(View.GONE);
-                            llEmpty.setVisibility(View.VISIBLE);
-                        }*/
-
-
-                    }
+                       }
                 }
 
 
@@ -281,7 +267,7 @@ public class FolderInFolderActivity extends AppCompatActivity {
         RxBus.getInstance().addSubscription(this, subscription);
     }
 
-    private void deleteEvent() {
+    private void DeleteEvent() {
         Subscription subscription = RxBus.getInstance().toObservable(DeleteEvent.class).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).distinctUntilChanged().subscribe(new Action1<DeleteEvent>() {
             @Override
             public void call(DeleteEvent event) {

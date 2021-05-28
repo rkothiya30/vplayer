@@ -69,7 +69,7 @@ public class MusicSAdapter extends RecyclerView.Adapter<MusicSAdapter.MyViewHold
         String currentString = file.getName();
         String mimeType = currentString.substring(currentString.lastIndexOf(".") + 1);
 
-        holder.card_view.setVisibility(View.VISIBLE);
+        holder.iv_mime_type.setVisibility(View.VISIBLE);
         holder.iv_music.setVisibility(View.GONE);
         holder.txt_authors.setText(audioList.get(position).getArtist());
 
@@ -79,7 +79,7 @@ public class MusicSAdapter extends RecyclerView.Adapter<MusicSAdapter.MyViewHold
 
 
             holder.iv_music.setVisibility(View.VISIBLE);
-            holder.card_view.setVisibility(View.GONE);
+            holder.iv_mime_type.setVisibility(View.GONE);
 
             Glide.with(context).load(audioList.get(position).getBitmap()).
                     placeholder(R.drawable.ic_image_placeholder)
@@ -89,7 +89,7 @@ public class MusicSAdapter extends RecyclerView.Adapter<MusicSAdapter.MyViewHold
                             // holder.ivFolder.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_audio_file));
                             //  holder.ivFolder.setColorFilter(context.getResources().getColor(R.color.theme_color), PorterDuff.Mode.SRC_IN);
                             //  holder.ivFolder.setVisibility(View.VISIBLE);
-                            holder.card_view.setVisibility(View.GONE);
+                            holder.iv_mime_type.setVisibility(View.GONE);
                             return false;
                         }
 
@@ -102,7 +102,7 @@ public class MusicSAdapter extends RecyclerView.Adapter<MusicSAdapter.MyViewHold
 
         } else {
 
-            holder.card_view.setVisibility(View.VISIBLE);
+            holder.iv_mime_type.setVisibility(View.VISIBLE);
 
         }
 
@@ -194,8 +194,8 @@ public class MusicSAdapter extends RecyclerView.Adapter<MusicSAdapter.MyViewHold
 
         AppCompatImageView iv_music;
         AppCompatTextView txt_music_name, txt_authors;
-        ImageView popup_menu;
-        CardView card_view;
+        ImageView popup_menu, iv_mime_type;
+
         ImageView iv_empty_checkbox, iv_selected_checkbox;
 
 
@@ -206,7 +206,7 @@ public class MusicSAdapter extends RecyclerView.Adapter<MusicSAdapter.MyViewHold
             iv_music = itemView.findViewById(R.id.iv_music);
             txt_music_name = itemView.findViewById(R.id.txt_music_name);
             txt_authors = itemView.findViewById(R.id.txt_authors);
-            card_view = itemView.findViewById(R.id.card_view);
+            iv_mime_type = itemView.findViewById(R.id.iv_mime_type);
             iv_empty_checkbox = itemView.findViewById(R.id.iv_empty_checkbox);
             iv_selected_checkbox = itemView.findViewById(R.id.iv_selected_checkbox);
             if(Selection = true){

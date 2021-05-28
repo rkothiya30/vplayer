@@ -103,6 +103,8 @@ public class MusicFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         refreshLayout.setEnabled(false);
+
+
         initView();
         renameEvent();
 
@@ -199,7 +201,7 @@ public class MusicFragment extends Fragment {
 
             Bitmap bitmap = null;
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), albumArtUri);
+                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getApplicationContext().getContentResolver(), albumArtUri);
 
             } catch (FileNotFoundException exception) {
             } catch (IOException e) {

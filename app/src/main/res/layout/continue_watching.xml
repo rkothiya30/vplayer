@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="Continue Watching"
             android:layout_alignParentLeft="true"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="@dimen/_18sdp" />
 
             <TextView
@@ -36,7 +36,7 @@
                 android:paddingRight="@dimen/_10sdp"
                 android:layout_alignParentRight="true"
                 android:textStyle="bold"
-                android:textSize="@dimen/_18sdp" />
+                android:textSize="@dimen/_16sdp" />
 
         </RelativeLayout>
 

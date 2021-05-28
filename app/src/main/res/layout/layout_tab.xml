@@ -10,17 +10,18 @@
 
     <ImageView
         android:id="@+id/tabIcon"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="@dimen/_32sdp"
+        android:layout_height="@dimen/_32sdp"
         android:padding="@dimen/_2sdp"
         android:layout_gravity="center"
-        app:tint="@color/tab_color" />
+        app:tint="@color/tab_selected_color" />
 
     <TextView
         android:id="@+id/tabTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/tab_color"
+        android:textColor="@color/tab_selected_color"
         android:layout_marginTop="2dp"
+        android:textSize="@dimen/_12sdp"
         android:layout_gravity="center"/>
 </LinearLayout>

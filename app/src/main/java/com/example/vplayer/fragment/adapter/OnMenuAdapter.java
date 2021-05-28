@@ -35,6 +35,8 @@ public class OnMenuAdapter extends RecyclerView.Adapter<OnMenuAdapter.ViewHolder
 
     private List<String> mItems;
     private Integer[] mImages = {R.drawable.background_play, R.drawable.add_to_playlist, R.drawable.rename, R.drawable.ic_delete, R.drawable.is_share, R.drawable.ic_properties};
+    private Integer[] mImages1 = {R.drawable.background_play, R.drawable.add_to_playlist, R.drawable.rename, R.drawable.ic_delete, R.drawable.is_share};
+    private Integer[] mImages4 = {R.drawable.background_play, R.drawable.add_to_playlist, R.drawable.ic_delete, R.drawable.is_share};
     private ItemListener itemListener;
     int selectedItem;
     Context context;
@@ -68,19 +70,17 @@ public class OnMenuAdapter extends RecyclerView.Adapter<OnMenuAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.text.setText(mItems.get(position));
-        holder.item_image.setImageResource(mImages[position]);
-        holder.item_image.setColorFilter(ContextCompat.getColor(holder.item_image.getContext(), R.color.white), PorterDuff.Mode.SRC_IN);
+
         if(check == -1 && position == 5){
-            holder.fragment_item.setVisibility(GONE);
+            holder.item_image.setImageResource(mImages1[position]);
 
         }
         if(check == -4 && position == 2){
-            holder.fragment_item.setVisibility(GONE);
-        }
-        if(check == -4 && position == 5){
-            holder.fragment_item.setVisibility(GONE);
-        }
-
+            holder.item_image.setImageResource(mImages4[position]);
+              }else{
+            holder.item_image.setImageResource(mImages[position]);
+             }
+        holder.item_image.setColorFilter(ContextCompat.getColor(holder.item_image.getContext(), R.color.icon_color), PorterDuff.Mode.SRC_IN);
         // setOnPopupMenuListener(holder, position);
     }
 

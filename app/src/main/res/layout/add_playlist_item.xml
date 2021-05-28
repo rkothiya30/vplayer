@@ -5,8 +5,9 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/_7sdp"
     android:id="@+id/ll_root"
-    android:background="@color/theme_color"
+    android:background="@color/white"
     android:paddingLeft="@dimen/_10sdp"
+    android:layout_marginVertical="@dimen/_10sdp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -98,6 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/_13sdp"
+
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -109,7 +111,7 @@
                 android:ellipsize="middle"
                 android:singleLine="true"
                 android:text="My Favourites"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_16sdp" />
 
 
@@ -132,7 +134,7 @@
                     android:layout_gravity="center_vertical"
                     android:singleLine="true"
                     android:text="0 song, 0 video"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp" />
 
             </LinearLayout>

@@ -28,13 +28,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/theme_color"
+                android:background="@color/white"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@color/white"
                 app:tabIndicatorHeight="0dp"
                 app:tabMode="fixed"
-                app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="@color/white" />
+                android:elevation="@dimen/_25sdp"
+                app:tabSelectedTextColor="@color/tab_selected_color"
+                app:tabTextColor="@color/tab_selected_color" />
 
         </RelativeLayout>
     </RelativeLayout>
