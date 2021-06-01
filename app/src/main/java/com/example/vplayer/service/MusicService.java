@@ -42,13 +42,15 @@ import static com.example.vplayer.fragment.utils.Constant.ACTION_PLAY;
 import static com.example.vplayer.fragment.utils.Constant.ACTION_PREVIOUS;
 import static com.example.vplayer.service.MusicDataService.audioList;
 import static com.example.vplayer.ui.activity.PlayingSongActivity.IS_SHUFFLED;
-import static com.example.vplayer.ui.activity.PlayingSongActivity.activityName;
+
 import static com.example.vplayer.ui.activity.PlayingSongActivity.intent1;
 import static com.example.vplayer.ui.activity.PlayingSongActivity.songsList;
+import static com.example.vplayer.ui.fragment.MainFragment.activityName;
 
 public class MusicService extends Service implements MediaPlayer.OnCompletionListener {
 
     private static final String CHANNEL_ID2 = "n_channel";
+
     IBinder mBinder = new MyBinder();
     public static MediaPlayer mediaPlayer;
     // List<AudioModel> myList = new ArrayList<>();
@@ -403,7 +405,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public void onDestroy() {
-       stopForeground(true);
+
 
         super.onDestroy();
     }

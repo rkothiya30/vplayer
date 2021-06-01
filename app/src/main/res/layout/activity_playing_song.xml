@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/playing_song_layout"
     tools:context=".ui.activity.PlayingSongActivity"
     android:background="@color/theme_grey"
     >
@@ -27,10 +28,11 @@
                 android:id="@+id/ivBackSong"
                 android:layout_width="@dimen/_32sdp"
                 android:layout_height="@dimen/_32sdp"
-                android:src="@drawable/ic_close"
                 android:layout_marginStart="@dimen/_10sdp"
-android:padding="@dimen/_4sdp"
+                android:padding="@dimen/_4sdp"
+                android:src="@drawable/ic_close"
                 app:tint="@color/white" />
+
             <ImageView
                 android:id="@+id/ivShareSong"
                 android:layout_width="@dimen/_32sdp"

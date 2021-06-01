@@ -1,146 +1,82 @@
 package com.example.vplayer.ui.fragment;
 
-import android.animation.ObjectAnimator;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.media.MediaMetadataRetriever;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.provider.MediaStore;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.animation.Animation;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatSeekBar;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.slidingpanelayout.widget.SlidingPaneLayout;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.vplayer.R;
 import com.example.vplayer.fragment.adapter.MusicAdapter;
-import com.example.vplayer.fragment.adapter.PlayListAdapter;
 import com.example.vplayer.fragment.event.RenameEvent;
-import com.example.vplayer.fragment.utils.Constant;
-import com.example.vplayer.fragment.utils.DbHelper;
-import com.example.vplayer.fragment.utils.PreferencesUtility;
 import com.example.vplayer.fragment.utils.RxBus;
-import com.example.vplayer.fragment.utils.Utilities;
-import com.example.vplayer.fragment.utils.VideoPlayerUtils;
-import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.service.MusicDataService;
-import com.example.vplayer.service.MusicService;
-import com.example.vplayer.ui.activity.PlayingSongActivity;
 import com.example.vplayer.ui.activity.SearchActivity;
 import com.example.vplayer.ui.activity.SettingsActivity;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-import static android.provider.MediaStore.Images.Thumbnails.IMAGE_ID;
 import static com.example.vplayer.service.MusicDataService.audioList;
-import static com.example.vplayer.ui.fragment.MainFragment.ActivityName;
-import static com.example.vplayer.ui.fragment.MainFragment.position1;
 
 
-public class MusicFragment extends Fragment {
+public class SlidingFragment extends Fragment {
 
-    View view;
-
-    RelativeLayout rl_slide;
+    SlidingUpPanelLayout sliding_layout;
+    LinearLayout ll_root;
     RecyclerView recycler_view;
     ImageView emptyString;
     public static MusicAdapter adapter;
-    ProgressDialog loadingDialog;
+
     SwipeRefreshLayout refreshLayout;
 
-RelativeLayout playing_song_layout;
-
-    boolean temp = false;
-
-
-
-
-
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_sliding, container, false);
 
-        setHasOptionsMenu(true);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_music, container, false);
-
+        sliding_layout = view.findViewById(R.id.sliding_layout);
+        ll_root = (LinearLayout) view.findViewById(R.id.ll_root);
         recycler_view = view.findViewById(R.id.recycler_view);
         emptyString = view.findViewById(R.id.emptyString);
         // progress_bar = view.findViewById(R.id.progress_bar);
         refreshLayout = view.findViewById(R.id.refreshLayout);
 
-        rl_slide = view.findViewById(R.id.rl_slide);
-        playing_song_layout = view.findViewById(R.id.playing_song_layout);
 
-        //MainFragment.sliding_layout.setPanelHeight(0);
-       // MainFragment.sliding_layout.addPanelSlideListener(onSlideListener());
-        /*sliding_layout.setFadeOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            }
-        });*/
+        sliding_layout.addPanelSlideListener(onSlideListener());
 
-
-
-        return view;
+        return  view;
     }
+
 
 
     @Override
@@ -284,25 +220,28 @@ RelativeLayout playing_song_layout;
                 public void onItemClick(int position, View v) {
 
 
-                           /* File file = new File(audioList.get(position).getPath());
-                            Uri uri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", file);
-                            Intent intent = new Intent();
-                            intent.setAction(Intent.ACTION_VIEW);
-                            intent.setDataAndType(uri, VideoPlayerUtils.getMimeTypeFromFilePath(file.getPath()));
-                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                       /* File file = new File(audioList.get(position).getPath());
+                        Uri uri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", file);
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.setDataAndType(uri, VideoPlayerUtils.getMimeTypeFromFilePath(file.getPath()));
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                            startActivity(Intent.createChooser(intent, "Open with"));*/
-                    MainFragment.ll_root.setVisibility(View.VISIBLE);
+                        startActivity(Intent.createChooser(intent, "Open with"));*/
 
+                    /*Intent i = new Intent(getActivity(), PlayingSongActivity.class);
+                    i.putExtra("Position", position);
+                    i.putExtra("ActivityName", "MusicFragment");
+                    getActivity().startActivity(i);*/
 
-                        position1 = position;
-                    ActivityName = "MusicFragment";
-                        /*Intent i = new Intent(getActivity(), PlayingSongActivity.class);
-                        i.putExtra("Position", position);
-                        i.putExtra("ActivityName", "MusicFragment");
-                        getActivity().startActivity(i);*/
+                    refreshLayout.setVisibility(View.GONE);
+                    SlidingFragment fragment2 = new SlidingFragment();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.container_id, fragment2);
+                    fragmentTransaction.addToBackStack(null);
 
-
+                    fragmentTransaction.commit();
 
                 }
             });
@@ -364,5 +303,29 @@ RelativeLayout playing_song_layout;
         RxBus.getInstance().addSubscription(this, subscription);
     }
 
+    private SlidingUpPanelLayout.PanelSlideListener onSlideListener() {
+        return new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View view, float v) {
+                //textView.setText("panel is sliding");
 
+                //  ll_root.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    ll_root.setVisibility(View.GONE);
+                    //here you can set the visibility of the panel you want to hide to GONE
+                } else {
+                    ll_root.setVisibility(View.VISIBLE);
+                    //and here you would set the panel to VISIBLE again
+                }
+            }
+
+
+
+        };
+
+    }
 }

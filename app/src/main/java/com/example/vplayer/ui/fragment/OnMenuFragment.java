@@ -314,8 +314,16 @@ public class OnMenuFragment extends BottomSheetDialogFragment implements OnMenuA
 
             getActivity().stopService(new Intent(getActivity(), VideoPlayAsAudioService.class));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                PlayingSongActivity.musicService.pause();
+                if (PlayingSongActivity.musicService != null) {
+                    PlayingSongActivity.musicService.showNotification(R.drawable.ic_pause);
+                }
                 getContext().startService(new Intent(getContext(), VideoPlayAsAudioService.class).putExtra(EXTRA_VIDEO_POSITION, position));
             } else {
+                PlayingSongActivity.musicService.pause();
+                if (PlayingSongActivity.musicService != null) {
+                    PlayingSongActivity.musicService.showNotification(R.drawable.ic_pause);
+                }
                 getContext().startService(new Intent(getContext(), VideoPlayAsAudioService.class).putExtra(EXTRA_VIDEO_POSITION, position));
             }
         }

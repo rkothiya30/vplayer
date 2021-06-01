@@ -117,7 +117,7 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 String currentString = file1.getName();
                 String mimeType = currentString.substring(currentString.lastIndexOf(".") + 1);
 
-                myViewHolder.card_view.setVisibility(View.VISIBLE);
+                //myViewHolder.card_view.setVisibility(View.VISIBLE);
                 myViewHolder.iv_music.setVisibility(View.GONE);
                 myViewHolder.txt_authors.setText(audioFile.getArtist());
 
@@ -126,7 +126,7 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
                     myViewHolder.iv_music.setVisibility(View.VISIBLE);
-                    myViewHolder.card_view.setVisibility(View.GONE);
+                    //myViewHolder.card_view.setVisibility(View.GONE);
 
                     Glide.with(context).load(audioFile.getBitmap()).
                             placeholder(R.drawable.ic_image_placeholder)
@@ -134,7 +134,7 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 @Override
                                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
-                                    myViewHolder.card_view.setVisibility(View.GONE);
+                                    //myViewHolder.card_view.setVisibility(View.GONE);
                                     return false;
                                 }
 
@@ -147,7 +147,7 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 } else {
 
-                    myViewHolder.card_view.setVisibility(View.VISIBLE);
+                    //myViewHolder.card_view.setVisibility(View.VISIBLE);
 
                 }
 
@@ -322,7 +322,7 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         AppCompatImageView iv_music;
         AppCompatTextView txt_music_name, txt_authors;
         ImageView popup_menu;
-        CardView card_view;
+
         ImageView iv_empty_checkbox, iv_selected_checkbox;
         LinearLayout ll_root;
 
@@ -334,7 +334,7 @@ public class PlayListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             iv_music = itemView.findViewById(R.id.iv_music);
             txt_music_name = itemView.findViewById(R.id.txt_music_name);
             txt_authors = itemView.findViewById(R.id.txt_authors);
-            card_view = itemView.findViewById(R.id.card_view);
+
             iv_empty_checkbox = itemView.findViewById(R.id.iv_empty_checkbox);
             iv_selected_checkbox = itemView.findViewById(R.id.iv_selected_checkbox);
             ll_root = itemView.findViewById(R.id.ll_root);

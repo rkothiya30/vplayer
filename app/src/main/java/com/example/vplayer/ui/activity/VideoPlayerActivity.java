@@ -38,7 +38,9 @@ import com.example.vplayer.fragment.utils.VideoPlayerUtils;
 import com.example.vplayer.model.AudioModel;
 import com.example.vplayer.model.Video;
 import com.example.vplayer.service.FloatingWidgetService;
+import com.example.vplayer.service.MusicService;
 import com.example.vplayer.service.VideoPlayAsAudioService;
+import com.example.vplayer.ui.fragment.MainFragment;
 import com.khizar1556.mkvideoplayer.MKPlayer;
 
 import org.parceler.Parcels;
@@ -86,6 +88,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
     TextView app_video_title;
 
     PreferencesUtility preferencesUtility;
+
+
+
 
     public static Intent getIntent(Context context,  List<Video> videoList, int position) {
         Intent intent = new Intent(context, VideoPlayerActivity.class);
@@ -154,6 +159,11 @@ public class VideoPlayerActivity extends AppCompatActivity {
         preferencesUtility = PreferencesUtility.getInstance(this);
         isResumeVideo = preferencesUtility.isResumeVideo();
         isAutoPlay = preferencesUtility.isAutoPlayVideo();
+
+        MainFragment.musicService.pause();
+        if (MainFragment.musicService != null) {
+            MainFragment.musicService.showNotification(R.drawable.ic_pause);
+        }
 
         startService(new Intent(this, VideoPlayAsAudioService.class).setAction(NOTIFICATION_CLICK_ACTION));
 
@@ -341,12 +351,19 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     setValue();
                     mkPlayer.pause();
+                    MainFragment.musicService.pause();
+                    if (MainFragment.musicService != null) {
+                        MainFragment.musicService.showNotification(R.drawable.ic_pause);
+                    }
                     startService(new Intent(VideoPlayerActivity.this, FloatingWidgetService.class));
                     finish();
                 } else if (Settings.canDrawOverlays(VideoPlayerActivity.this)) {
                     setValue();
                     mkPlayer.pause();
-                    
+                    MainFragment.musicService.pause();
+                    if (MainFragment.musicService != null) {
+                        MainFragment.musicService.showNotification(R.drawable.ic_pause);
+                    }
                     startService(new Intent(VideoPlayerActivity.this, FloatingWidgetService.class));
                     finish();
                 } else {
@@ -649,8 +666,16 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
             stopService(new Intent(this, VideoPlayAsAudioService.class));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                MainFragment.musicService.pause();
+                if (MainFragment.musicService != null) {
+                    MainFragment.musicService.showNotification(R.drawable.ic_pause);
+                }
                 startForegroundService(new Intent(this, VideoPlayAsAudioService.class).putExtra(EXTRA_VIDEO_POSITION, videoPosition));
             } else {
+                MainFragment.musicService.pause();
+                if (MainFragment.musicService != null) {
+                    MainFragment.musicService.showNotification(R.drawable.ic_pause);
+                }
                 startService(new Intent(this, VideoPlayAsAudioService.class).putExtra(EXTRA_VIDEO_POSITION, videoPosition));
             }
         }

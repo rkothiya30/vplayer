@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="@string/action_search"
+
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/iv_list_grid"
+        android:icon="@drawable/ic_grid"
+        android:title="@string/action_search"
+
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/action_menu"
+        android:title="@string/action_menu"
+        android:icon="@drawable/ic_baseline_more_vert_24"
+        app:showAsAction="always" >
+
+        <menu>
+
+            <item
+                android:id="@+id/action_settings"
+                android:title="Settings"
+
+                android:icon="@drawable/action_settings"
+                app:showAsAction="always"></item>
+        </menu>
+    </item>
+
+
+
+</menu>

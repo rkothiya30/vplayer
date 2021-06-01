@@ -97,7 +97,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
     private boolean musicBound = false;
     Bitmap bitmap = null;
 
-    MusicService musicService;
+    public static MusicService musicService;
     public static String activityName;
     public Uri uri;
     private Handler handler = new Handler();
@@ -323,7 +323,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
 
         intent1 = getIntent();
 
-        activityName = getIntent().getStringExtra("ActivityName");
+        activityName = getIntent().getExtras().getString("ActivityName", "");
 
         if (activityName.equals("MusicFragment")) {
             songsList = audioList;
@@ -347,6 +347,8 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
         } else if (activityName.equals("MusicSearch")) {
             songsList = audioList;
             position =0;
+        } else {
+            songsList = audioList;
         }
 
        /* if(activityName.equals("Album"))
@@ -587,7 +589,7 @@ public class PlayingSongActivity extends AppCompatActivity implements ActionPlay
 
     @Override
     protected void onDestroy() {
-        musicService.stopForeground(true);
+
         super.onDestroy();
     }
 

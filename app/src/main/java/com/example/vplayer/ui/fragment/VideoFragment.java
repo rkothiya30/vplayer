@@ -23,6 +23,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -218,9 +220,28 @@ public class VideoFragment extends Fragment {
             public void onItemClick(int position, View v) {
                 position--;
                 if (videobuckets.get(position).getFolderList() != null && videobuckets.get(position).getFolderList().size() != 0) {
-                    startActivity(FolderInFolderActivity.getInstance(getActivity(), position, videobuckets.get(position).folderPath, videobuckets.get(position).getFolderList().get(0)));
+                    refreshLayout.setVisibility(View.GONE);
+
+                    FolderInFolderFragment.getInstance(getActivity(), position, videobuckets.get(position).folderPath, videobuckets.get(position).getFolderList().get(0));
+                    FolderInFolderFragment fragment2 = new FolderInFolderFragment();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.container_id, fragment2);
+                        fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    //startActivity(FolderInFolderActivity.getInstance(getActivity(), position, videobuckets.get(position).folderPath, videobuckets.get(position).getFolderList().get(0)));
                 } else {
-                    startActivity(FolderInFolderActivity.getInstance(getActivity(), position, videobuckets.get(position).folderPath));
+
+                    refreshLayout.setVisibility(View.GONE);
+                    FolderInFolderFragment.getInstance(getActivity(), position, videobuckets.get(position).folderPath);
+                    FolderInFolderFragment fragment2 = new FolderInFolderFragment();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.container_id, fragment2);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+
+                    //startActivity(FolderInFolderActivity.getInstance(getActivity(), position, videobuckets.get(position).folderPath));
                 }
             }
         });

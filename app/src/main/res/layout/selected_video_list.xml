@@ -57,7 +57,7 @@
                     android:layout_width="@dimen/_35sdp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:visibility="gone"
+
                     android:src="@drawable/ic_musical_note" />
 
 
